@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script type="module" src="./js/listorders.js" defer></script>
+    <title>QuickRectify - Lista</title>
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="index.html">QuickRectify</a>
+        <a href="newOrder.html">Nova O.S</a>
+        <a class="active" href="listOrders.html">Ordens de Serviço</a>
+        <a href="clients.html">Clientes</a>
+
+        <a target="_blank" href="https://nfe.prefeitura.sp.gov.br/login.aspx">Nota Fiscal Eletronica</a>
+        <a target="_blank" href="https://www.simploonline.com/#/">Simplo</a>
+
+        <a href="about.html">Sobre</a>
+    </div>
+
+    <div id="container">
+        <h1>Lista de Ordens</h1>
+
+        <div id="searchCriteria">
+            <span>Mês:</span>
+            <select id="selectMonthSearch">
+                <option value="">Todos</option>
+                <option value="">Janeiro</option>
+                <option value="">Fevereiro</option>
+                <option value="">Março</option>
+                <option value="">Abril</option>
+                <option value="">Maio</option>
+                <option value="">Junho</option>
+                <option value="">Julho</option>
+                <option value="">Agosto</option>
+                <option value="">Setembro</option>
+                <option value="">Outubro</option>
+                <option value="">Novembro</option>
+                <option value="">Dezembro</option>
+            </select>
+
+            <span>Data Inicial:</span>
+            <input type="date" name="" id="inputInitialDateSearch" />
+            <span>Data Final:</span>
+            <input type="date" name="" id="inputFinalDateSearch" />
+
+            <span>Serviço:</span>
+            <select id="selectPartSearch">
+                <option value="">Todos</option>
+                <option value="">Bielas</option>
+                <option value="">Bloco</option>
+                <option value="">Cabeçote</option>
+                <option value="">Solda</option>
+                <option value="">Virabrequim</option>
+                <option value="">Volante</option>
+                <option value="">Outros</option>
+            </select>
+            <span>Cliente:</span>
+            <input id="inputSearchClient" type="text" />
+            <button id="buttonSearchCriteria">Buscar</button>
+            <button id="buttonSearchClient">Encontrar Cliente</button>
+        </div>
+
+        <hr>
+
+        <div id="partsList">
+            <table id="partsTable">
+                <tr>
+                    <th>Data</th>
+                    <th>N°</th>
+                    <th>Cliente</th>
+                    <th>Descrição Geral</th>
+                    <th>Peça</th>
+                    <th>Serviço</th>
+                    <th>Descrição Peça</th>
+                    <th>Qtd.</th>
+                    <th>Peça Unitario</th>
+                    <th>Peça Total</th>
+                    <th>Editar</th>
+                    <th>2° Via</th>
+                </tr>
+            </table>
+        </div>
+
+        <hr>
+
+        <div id="listButtons">
+            <button id="buttonPrint">Imprimir</button>
+            <button id="buttonSaveAsPDF">Salvar em PDF</button>
+            <button id="buttonSaveAsCSV">Salvar em Planilha</button>
+        </div>
+    </div>
+
+    <dialog class="modal" id="modalEditOrder">
+        <div id="editOrder">
+            <h1 id="editOrderTitle">Editar OS N°1</h1>
+            <span>Data:</span>
+            <input id="editOrderDate" disabled class="modalInput" type="date" />
+            <span>Cliente:</span>
+            <input id="editOrderClient" disabled class="modalInput" type="text" />
+            <br>
+            <span>Descrição Geral:</span>
+            <input id="editOrderDescription" class="modalInput" type="text" />
+
+            <hr>
+
+            <div id="addParts">
+                <span>Adicionar Peças:</span>
+                <button id="buttonPartBielas">Bielas</button>
+                <button id="buttonPartBloco">Bloco</button>
+                <button id="buttonPartCabeçote">Cabeçote</button>
+                <button id="buttonPartSolda">Solda</button>
+                <button id="buttonPartVirabrequim">Virabrequim</button>
+                <button id="buttonPartVolante">Volante</button>
+                <button id="buttonPartOutros">Outros</button>
+            </div>
+
+            <div id="parts">
+
+            <table id="tableParts">
+                <tr>
+                    <th>Peça</th>
+                    <th>Serviço</th>
+                    <th>Descrição</th>
+                    <th>Qtd.</th>
+                    <th>Valor Unitario</th>
+                    <th>Valor Total</th>
+                    <th>Excluir</th>
+                </tr>
+            </table>
+
+            </div>
+
+
+            <span>Sub Total:</span>
+            <input class="modalInput" id="orderSubTotal" disabled type="number" />
+            <span>Desconto %:</span>
+            <input class="modalInput" id="orderDiscountPercent" onchange="sumTotalNote()" type="number" id="" />
+            <span>Desconto Valor:</span>
+            <input class="modalInput" id="orderDiscountValue" onchange="sumTotalNote()" type="number" n id="" />
+            <br>
+            <span>Total Geral:</span>
+            <input class="modalInput" id="orderTotal" disabled type="number" />
+
+            <hr>
+
+            <div id="modalEditOrderSaveButtons">
+
+                <button id="buttonSaveOrder">Salvar OS</button>
+                <button id="buttonDeleteOrder" class="cellButton">Excluir OS</button>
+
+            </div>
+        
+
+        </div>
+    </dialog>
+
+    <dialog class="modal" id="modalSearchClient">
+        <div id="searchClient">
+        </div>
+        
+    </dialog>
+
+    <div id="toastyMessage"></div>
+
+    
+
+</body>
+
+</html>

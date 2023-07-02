@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="./js/clients.js" defer></script>
+    <title>QuickRectify - Clientes</title>
+</head>
+
+<body>
+
+    <div class="topnav">
+        <a href="index.html">QuickRectify</a>
+        <a href="newOrder.html">Nova O.S</a>
+        <a href="listOrders.html">Ordens de Serviço</a>
+        <a class="active" href="clients.html">Clientes</a>
+
+        <a target="_blank" href="https://nfe.prefeitura.sp.gov.br/login.aspx">Nota Fiscal Eletronica</a>
+        <a target="_blank" href="https://www.simploonline.com/#/">Simplo</a>
+
+        <a href="about.html">Sobre</a>
+    </div>
+
+    <div id="container">
+        <h1>Lista Clientes</h1>
+
+        <div id="searchCriteria">
+
+            <span>Cliente:</span>
+            <input id="inputSearchClient" style="width: 50%;" type="text">
+            <button id="buttonSearchClient">Buscar</button>
+            <button id="buttonNewClient">Novo Cliente</button>
+            
+        </div>
+
+        <hr>
+
+        <div id="clients">
+
+            <table id="clientsTable">
+                <tr>
+                    <th>N°</th>
+                    <th>Data Cadastro</th>
+                    <th>Nome</th>
+                    <th>Telefone 1</th>
+                    <th>Telefone 2</th>
+                    <th>Telefone 3</th>
+                    <th>Endereço</th>
+                    <th>CPF/CNPJ</th>
+                    <th>Editar</th>
+                    <th>Buscar Ordens</th>
+                </tr>
+    
+            </table>
+
+        </div>
+
+        <hr>
+       
+
+    <dialog class="modal" id="modalSearchClient">
+        <div id="searchClient">
+        </div>
+    </dialog>
+
+    <dialog class="modal" id="modalEditClient">
+        <div id="editClient">
+            <h1 id="editClientTitle">Editar Cliente:</h1>
+            <span>Nome:</span>
+            <input class="modalInput" id="clientName" type="text">
+            <span>Telefone 1:</span>
+            <input class="modalInput" id="clientPhone1" type="text">
+            <span>Telefone 2:</span>
+            <input class="modalInput" id="clientPhone2" type="text">
+            <span>Telefone 3:</span>
+            <input class="modalInput" id="clientPhone3" type="text">
+            <span>Endereço:</span>
+            <input class="modalInput" id="clientAddress" type="text">
+            <span>CPF/CNPJ:</span>
+            <input class="modalInput" id="clientDocumentNumber" type="text"> <br>
+            <button id="buttonSaveClient">Salvar</button>
+        </div>
+    </dialog>
+
+    <div id="toastyMessage"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+h1#companyName {
+    margin-top: 0;
+}
+
+img#companyLogo {
+      
+    position: absolute;
+    top: 10px;
+    right: 2%;
+
+}
+
+#partsTable {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: max-content;
+    font-size: 10pt;
+    width: 90%;
+}
+
+input#cellQuantity, input#cellPriceQuantity {
+    width: 30px;
+}
+
+input#cellPriceQuantity , input#cellTotalPrice{
+    width: 70px;
+}
+
+#partsTable td, #partsTable th {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: center;
+
+}
+
+div#clientInfo, div#partsInfo, h3#noteInfo, div#footInfo {
+
+    text-align: center;
+   
+}
+
+table {
+    
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+div#finalValues {
+
+    font-size: 12pt;
+    margin-top: 30px;
+        
+}
+
+.finalValues {
+    margin-right: 10px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 10px;
+}
+
+div#paymentInfo {
+    display: flex;
+    
+}
+
+
+div#creditCard {
+    margin-left: 0;
+    margin-right: auto;
+    text-align: center;
+    width: 49%;
+    height: 280px;
+    border-style: dashed;
+    border-width: 0.5px;
+}
+
+div#pixCash {
+    margin-right: 0;
+    margin-left: auto;
+    width: 49%;
+    border-style: dashed;
+    border-width: 1px;
+    height: 280px;
+    text-align: center;
+    
+  
+}
+
+img#companyQrCode {
+    height: 100px;
+}
+

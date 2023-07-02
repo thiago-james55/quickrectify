@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="./js/neworder.js" defer></script>
+    <title>QuickRectify - Nova O.S</title>
+</head>
+
+<body>
+
+    <div class="topnav">
+        <a href="index.html">QuickRectify</a>
+        <a class="active" href="newOrder.html">Nova O.S</a>
+        <a href="listOrders.html">Ordens de Serviço</a>
+        <a href="clients.html">Clientes</a>
+
+        <a target="_blank" href="https://nfe.prefeitura.sp.gov.br/login.aspx">Nota Fiscal Eletronica</a>
+        <a target="_blank" href="https://www.simploonline.com/#/">Simplo</a>
+
+        <a href="about.html">Sobre</a>
+    </div>
+
+    <div id="container">
+        <h1>Nova Ordem de Serviço</h1>
+
+
+        <div id="clientRow">
+            <span>Cliente:</span>
+            <input id="inputSearchClient" style="width: 50%;" type="text" id="inputSearchClient">
+            <button id="buttonSearchClient">Procurar</button>
+            <button id="buttonNewClient">Novo Cliente</button>
+        </div>
+
+        <hr>
+
+        <div id="geralDescription">
+            <span>Descrição Geral:</span>
+            <input id="inputGeralDescription" type="text">
+        </div>
+
+        <div id="addParts">
+            <span>Adicionar Peças:</span>
+            <button id="buttonPartBielas">Bielas</button>
+            <button id="buttonPartBloco">Bloco</button>
+            <button id="buttonPartCabeçote">Cabeçote</button>
+            <button id="buttonPartSolda">Solda</button>
+            <button id="buttonPartVirabrequim">Virabrequim</button>
+            <button id="buttonPartVolante">Volante</button>
+            <button id="buttonPartOutros">Outros</button>
+        </div>
+
+        <div id="parts">
+
+            <table id="tableParts">
+                <tr>
+                    <th>Peça</th>
+                    <th>Serviço</th>
+                    <th>Descrição</th>
+                    <th>Qtd.</th>
+                    <th>Valor Unitario</th>
+                    <th>Valor Total</th>
+                    <th>Excluir</th>
+                </tr>
+
+            </table>
+
+        </div>
+
+        <hr>
+
+        <div id="totalParts">
+
+            <span>Sub Total:</span>
+            <input id="orderSubTotal" disabled type="number">
+            <span>Desconto %:</span>
+            <input id="orderDiscountPercent" onchange="sumTotalNote()" type="number" id="">
+
+            <span>Desconto Valor:</span>
+            <input id="orderDiscountValue" onchange="sumTotalNote()" type="number" n id="">
+            <span>Total Geral:</span>
+            <input id="orderTotal" disabled type="number">
+
+        </div>
+
+        <hr>
+
+        <div id="saveOrder">
+            <button id="buttonSaveAndPrint">Salvar e Imprimir</button>
+            <button id="buttonOnlySave">Somente Salvar</button>
+        </div>
+
+
+
+        <dialog class="modal" id="modalSearchClient">
+            <div id="searchClient">
+            </div>
+        </dialog>
+
+        <dialog class="modal" id="modalEditClient">
+            <div id="editClient">
+                <h1>Editar Cliente:</h1>
+                <span>Nome:</span>
+                <input class="modalInput" id="clientName" type="text">
+                <span>Telefone 1:</span>
+                <input class="modalInput" id="clientPhone1" type="text">
+                <span>Telefone 2:</span>
+                <input class="modalInput" id="clientPhone2" type="text">
+                <span>Telefone 3:</span>
+                <input class="modalInput" id="clientPhone3" type="text">
+                <span>Endereço:</span>
+                <input class="modalInput" id="clientAddress" type="text">
+                <span>CPF/CNPJ:</span>
+                <input class="modalInput" id="clientDocumentNumber" type="text"> <br>
+                <button id="buttonSaveClient">Salvar</button>
+            </div>
+        </dialog>
+
+    </div>
+
+    <div id="toastyMessage"></div>
+
+</body>
+
+</html>
