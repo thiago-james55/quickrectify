@@ -1,0 +1,56 @@
+.container {
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    background-color: #293646;
+    color: white;
+    height: 100vh;
+    padding: 1rem;
+}
+
+hr {
+    border: 1px solid red;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.title {
+    color: red;
+    text-align: center;
+}
+
+.mainPages, .auxiliarPages , .about{
+    width: 100%;
+}
+
+.about {
+    margin-top: auto;
+}
+
+ul {
+    list-style: none;
+    height: 100%;
+}
+
+li {
+    margin-bottom: 10%;
+    padding: 2%;
+}
+
+li:hover {
+    background-color: red;
+    width: 150%;
+    display: flex;
+    text-align: center;
+    cursor: pointer;
+}
+
+li:hover a{
+    flex: 1;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    width: 100%;
+}
