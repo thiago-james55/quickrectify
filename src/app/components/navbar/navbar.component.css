@@ -10,8 +10,8 @@
 
 hr {
     border: 1px solid red;
-    margin-top: 5%;
-    margin-bottom: 5%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .title {
@@ -23,9 +23,6 @@ hr {
     width: 100%;
 }
 
-.about {
-    margin-top: auto;
-}
 
 ul {
     list-style: none;
