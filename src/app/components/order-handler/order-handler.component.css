@@ -1,0 +1,53 @@
+.self-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.self-container button , .self-container input{
+    height: 35px;
+    padding: .5rem;
+}
+
+.self-container button {
+    margin-left: 1rem;
+}
+
+.consumer {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    padding: .5rem;
+    border: 1px solid #293646;
+}
+
+.consumer input {
+    width: 100%;
+}
+
+.consumer span {
+    padding: .5rem;
+    font-size: large;
+}
+
+.addParts {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #293646;
+    padding: .5rem 0 .5rem 0;
+}
+
+button {
+    border: 1px solid #293646;
+}
+
+button:hover {
+    background-color: white;
+    color: #293646;
+    border: 1px solid #293646;
+}

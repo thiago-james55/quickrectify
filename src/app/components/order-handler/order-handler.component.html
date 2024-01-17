@@ -1,0 +1,13 @@
+<div class="self-container defaultPadding">
+    <div class="consumer">
+        <span>Cliente:</span>
+        <input class="defaultInput" type="text" name="" id="">
+        <button class="defaultButton">Pesquisar Cliente</button>
+        <button class="defaultButton">Novo Cliente</button>
+    </div>
+
+    <div class="addParts">
+        <p>Adicionar a Ordem: </p>
+        <button class="defaultButton" *ngFor="let part of parts" >{{part}}</button>
+    </div>
+</div>
