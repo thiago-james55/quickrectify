@@ -10,7 +10,8 @@
 }
 
 .self-container button {
-    margin-left: 1rem;
+    margin-left: .5rem;
+    margin-right: .5rem;
 }
 
 .consumer {
@@ -20,13 +21,7 @@
     justify-content: space-evenly;
     align-items: center;
     margin-bottom: 1rem;
-
     padding: .5rem;
-    border: 1px solid #293646;
-}
-
-.consumer input {
-    width: 100%;
 }
 
 .consumer span {
@@ -38,16 +33,100 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #293646;
     padding: .5rem 0 .5rem 0;
+    margin-bottom: 1rem;
+
 }
 
-button {
+.tableParts {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: .5rem;
+    margin-bottom: 1rem;
+
+}
+
+table {
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+th {
+    background-color: #293646;
+    color: white;
+    padding: .5rem;
+}
+
+td {
+    padding: .5rem;
+}
+
+input {
+    width: 100%;
     border: 1px solid #293646;
 }
 
-button:hover {
+select {
+    text-align: center;
+    padding: .5rem;
+    width: 100%;
+}
+
+.buttonExclude {
+    text-align: center;
+    font-size: small;
+    white-space: nowrap;
+    border-radius: .3rem;
+    border: 1px solid red;
+    background-color: red;
+    color: white;
+}
+
+.buttonExclude:hover {
+    border-color: red;
     background-color: white;
-    color: #293646;
-    border: 1px solid #293646;
+    color: red;
+
 }
+
+.totalValue {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.totalSpans, .totalInputs{
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.save{
+    display: flex;
+    justify-content: space-evenly;
+    padding: 1rem;
+    width: 100%;
+}
+
+.save button{
+    width: 40%;
+
+}
+
+.totalSpans span, .totalInputs input {
+    width: 25%;
+}
+
+.totalInputs input {
+    margin-left: 3%;
+    margin-right: 3%;
+}
+
+
+

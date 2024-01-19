@@ -1,13 +1,74 @@
 <div class="self-container defaultPadding">
-    <div class="consumer">
+    <div class="consumer defaultBorder">
         <span>Cliente:</span>
         <input class="defaultInput" type="text" name="" id="">
-        <button class="defaultButton">Pesquisar Cliente</button>
-        <button class="defaultButton">Novo Cliente</button>
+        <button class="defaultButton defaultBorder">Pesquisar Cliente</button>
+        <button class="defaultButton defaultBorder">Novo Cliente</button>
     </div>
 
-    <div class="addParts">
+    <div class="addParts defaultBorder">
         <p>Adicionar a Ordem: </p>
-        <button class="defaultButton" *ngFor="let part of parts" >{{part}}</button>
+        <button class="defaultButton defaultBorder" *ngFor="let part of parts" >{{part.name}}</button>
     </div>
+
+    <div class="tableParts defaultBorder">
+        <table>
+            <tr>
+                <th >Grupo</th>
+                <th>Serviço</th>
+                <th>Descrição</th>
+                <th>Quantidade</th>
+                <th>Preço Unit.</th>
+                <th>Preço Total</th>
+                <th>Excluir</th>
+            </tr>
+            <tr *ngFor="let part of parts">
+                <td>
+                    <span>{{part.name}}</span>
+                </td>
+                <td>
+                    <select  name="" id="">
+                        <option *ngFor="let service of part.services" value="">{{service}}</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" placeholder="Descrição" name="" id="">
+                </td>
+                <td>
+                    <input type="number" min="1" name="" id="">
+                </td>
+                <td>
+                    <input type="number" min="1" step="10.0" name="" id="">
+                </td>
+                <td>
+                    <input type="number" disabled>
+                </td>
+                <td>
+                    <button class="buttonExclude">
+                        Excluir
+                    </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="totalValue defaultBorder">
+        <div class="totalSpans">
+
+            <span>Total</span>
+            <span>Desconto %</span>
+            <span>Desconto Valor</span>
+            <span>Total Geral</span>
+        </div>
+        <div class="totalInputs">
+            <input  type="number" min="0" value="0">
+            <input  type="number" min="0">
+            <input  type="number" min="0">
+            <input  type="number" min="0">
+        </div>
+    </div>
+    <div class="save defaultBorder">
+        <button class="defaultButton defaultBorder">Salvar e Imprimir</button>
+        <button class="defaultButton defaultBorder">Somente Salvar</button>
+    </div>
+
 </div>

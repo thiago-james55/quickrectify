@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Part, getParts } from '../../service/model/Part.entity';
 
 @Component({
   selector: 'app-order-handler',
@@ -10,6 +11,9 @@ import { Component } from '@angular/core';
 })
 export class OrderHandlerComponent {
   
-  parts: string[] = ['Biela', 'Bloco', 'Cabeçote','Virabrequim','Volante']; 
+
+  //Service.getGroups
+  parts: Part[] = getParts();
 
 }
+
