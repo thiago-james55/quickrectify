@@ -14,6 +14,11 @@
     border-radius: .3rem;
 }
 
+.defaultButton:hover {
+    background-color: white;
+    color: #293646;
+}
+
 .defaultInput{
     border: 1px solid #293646;
 }
@@ -37,6 +42,10 @@
     height: 100vh;
 }
 
+
+.defaultBorder, th , td, select {
+    border: 1px solid #293646;
+}
 
 app-footer {
     width: 100%;
