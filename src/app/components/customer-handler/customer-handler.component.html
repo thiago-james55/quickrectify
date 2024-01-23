@@ -1,0 +1,28 @@
+<div class=".selfContainer">
+    <div class="customer defaultBorder">
+        <span>Cliente:</span>
+        <input class="defaultInput" type="text" disabled
+            placeholder="Clique no botão para pesquisar um cliente ou crie um cliente novo." value="{{customer.name}}">
+        <button class="defaultButton defaultBorder" (click)="openSearchDialog()">Pesquisar Cliente</button>
+        <button class="defaultButton defaultBorder" (click)="openCreateDialog()">Novo Cliente</button>
+    </div>
+
+    <div *ngIf="!table" class="tableCustomer">
+        <table>
+            <tbody>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CPF/RG</th>
+                    <th>Endereço</th>
+                    <th>Telefone 1</th>
+                    <th>Telefone 2</th>
+                    <th>Telefone 3</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<app-dialog-customer-search (objectSentToParent)="getCustomerFromChildAndSendToParent($event)"></app-dialog-customer-search>
+<app-dialog-customer-create (objectSentToParent)="getCustomerFromChildAndSendToParent($event)"></app-dialog-customer-create>
