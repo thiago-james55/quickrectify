@@ -1,0 +1,64 @@
+.selfContainer {
+    padding: 1rem;
+    text-align: center;
+}
+
+.selfContainer input {
+    border: 1px solid #293646;
+}
+
+dialog {
+    width: 70%;
+    margin-right: 10%;
+    margin-left: auto;
+    margin-top: 10%;
+    margin-bottom: auto;
+}
+
+dialog::backdrop {
+    background-color: rgba(41, 54, 70, .7);
+}
+
+h1, button {
+    margin-bottom: .5rem;
+}
+
+.search {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem;
+}
+
+.search button {
+    width: 20%;
+    margin-bottom: 0;
+}
+
+.search input {
+    width: 60%;
+}
+
+.costumerResults {
+    display: grid;
+    justify-items: center;
+    grid-template-columns: 25% 25% 25% 25%;
+    width: 100%;
+
+}
+
+.costumerResults button {
+    width: 90%;
+}
+
+button , input {
+    height: 35px;
+}
+
+input {
+    margin-left: .5rem;
+    margin-right: .5rem;
+}
+
