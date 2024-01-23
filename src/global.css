@@ -5,6 +5,12 @@
     height: 100vh;
 }
 
+.selfContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
 .defaultButton{
     background-color: #293646;
     color: white;
@@ -12,6 +18,9 @@
     font-size: small;
     white-space: nowrap;
     border-radius: .3rem;
+    margin-left: .5rem;
+    margin-right: .5rem;
+    padding: .5rem;
 }
 
 .defaultButton:hover {
@@ -47,9 +56,26 @@
     border: 1px solid #293646;
 }
 
+table {
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+th {
+    background-color: #293646;
+    color: white;
+    padding: .5rem;
+}
+
+td {
+    padding: .5rem;
+}
+
 app-footer {
     width: 100%;
     height: max-content;
     margin-top: auto;
     height: 50px;
 }
+
