@@ -1,0 +1,67 @@
+.selfContainer {
+    padding: 1rem;
+    text-align: center;
+}
+
+.selfContainer input {
+    border: 1px solid #293646;
+}
+
+dialog {
+    width: 70%;
+    margin-right: 10%;
+    margin-left: auto;
+    margin-top: 10%;
+    margin-bottom: auto;
+}
+
+dialog::backdrop {
+    background-color: rgba(41, 54, 70, .7);
+}
+
+input::placeholder {
+    color: white;
+    background-color: red;
+}
+
+h1, button {
+    margin-bottom: .5rem;
+}
+
+.fields {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.field {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.field span {
+    width: 20%;
+}
+
+.field input {
+    width: 80%;
+}
+
+.fields button {
+    margin-top: 1rem;
+}
+
+
+button , input {
+    height: 35px;
+}
+
+input {
+    margin: .3rem;
+    text-align: center;
+}
+
