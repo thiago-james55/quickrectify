@@ -1,20 +1,20 @@
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { Customer } from '../../service/model/Customer.entity';
+import { Consumer } from '../../service/model/Consumer.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-dialog-customer-create',
+  selector: 'app-dialog-consumer-create',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './dialog-customer-create.component.html',
-  styleUrls: ['./dialog-customer-create.component.css', '../../../global.css']
+  templateUrl: './dialog-consumer-create.component.html',
+  styleUrls: ['./dialog-consumer-create.component.css', '../../../global.css']
 })
-export class DialogCustomerCreateComponent {
+export class DialogConsumerCreateComponent {
 
   @Output() objectSentToParent: EventEmitter<any> = new EventEmitter();
 
-  customer: Customer = {};
+  consumer: Consumer = {};
 
   @ViewChild('modal', { static: false }) // Add { static: false } to avoid "ExpressionChangedAfterItHasBeenCheckedError"
   modal!: ElementRef<HTMLDialogElement>;
@@ -27,28 +27,28 @@ export class DialogCustomerCreateComponent {
 
   }
 
-  sendObjectToParent(customer: Customer) {
-    this.objectSentToParent.emit(customer);
+  sendObjectToParent(consumer: Consumer) {
+    this.objectSentToParent.emit(consumer);
   }
 
-  onCustomerCreate() {
+  onConsumerCreate() {
     if (this.validation()) {
-      if (this.postCustomer())
-        this.sendObjectToParent(this.customer);
+      if (this.postConsumer())
+        this.sendObjectToParent(this.consumer);
       this.modal.nativeElement.close();
     }
   }
 
   validation(): boolean {
-    if (this.customer) {
-        if (!!this.customer.name && !!this.customer.document && !!this.customer.phone1) {
+    if (this.consumer) {
+        if (!!this.consumer.name && !!this.consumer.document && !!this.consumer.phone1) {
             return true;
         } else {
             let fields: string[] = [];
 
-            if (!!!this.customer['name']) fields.push("nome");
-            if (!!!this.customer['document']) fields.push("RG/CPF");
-            if (!!!this.customer['phone1']) fields.push("Telefone 1");
+            if (!!!this.consumer['name']) fields.push("nome");
+            if (!!!this.consumer['document']) fields.push("RG/CPF");
+            if (!!!this.consumer['phone1']) fields.push("Telefone 1");
 
             let message = "Os campos " + fields.join(', ') + " não podem estar vazios!";
             console.log(message);
@@ -58,8 +58,8 @@ export class DialogCustomerCreateComponent {
     return false;
 }
 
-  postCustomer(): boolean {
-    //service.PostCustomer;
+  postConsumer(): boolean {
+    //service.PostConsumer;
     return true;
   }
 

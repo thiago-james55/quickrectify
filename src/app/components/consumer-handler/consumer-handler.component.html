@@ -1,13 +1,13 @@
 <div class=".selfContainer">
-    <div class="customer defaultBorder">
+    <div class="consumer defaultBorder">
         <span>Cliente:</span>
         <input class="defaultInput" type="text" disabled
-            placeholder="Clique no botão para pesquisar um cliente ou crie um cliente novo." value="{{customer.name}}">
+            placeholder="Clique no botão para pesquisar um cliente ou crie um cliente novo." value="{{consumer.name}}">
         <button class="defaultButton defaultBorder" (click)="openSearchDialog()">Pesquisar Cliente</button>
         <button class="defaultButton defaultBorder" (click)="openCreateDialog()">Novo Cliente</button>
     </div>
 
-    <div *ngIf="!table" class="tableCustomer">
+    <div *ngIf="!table" class="tableConsumer">
         <table>
             <tbody>
                 <tr>
@@ -24,5 +24,5 @@
     </div>
 </div>
 
-<app-dialog-customer-search (objectSentToParent)="getCustomerFromChildAndSendToParent($event)"></app-dialog-customer-search>
-<app-dialog-customer-create (objectSentToParent)="getCustomerFromChildAndSendToParent($event)"></app-dialog-customer-create>
+<app-dialog-consumer-search (objectSentToParent)="getConsumerFromChildAndSendToParent($event)"></app-dialog-consumer-search>
+<app-dialog-consumer-create (objectSentToParent)="getConsumerFromChildAndSendToParent($event)"></app-dialog-consumer-create>

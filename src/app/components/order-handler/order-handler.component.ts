@@ -2,15 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { OrderPart, Part, getParts } from '../../service/model/Part.entity';
 import { FormsModule } from '@angular/forms';
-import { CustomerHandlerComponent } from "../customer-handler/customer-handler.component";
-import { Customer } from '../../service/model/Customer.entity';
+import { Consumer } from '../../service/model/Consumer.entity';
+import { ConsumerHandlerComponent } from '../consumer-handler/consumer-handler.component';
 
 @Component({
     selector: 'app-order-handler',
     standalone: true,
     templateUrl: './order-handler.component.html',
     styleUrls: ['./order-handler.component.css', '../../../global.css'],
-    imports: [CommonModule, FormsModule, CustomerHandlerComponent]
+    imports: [CommonModule, FormsModule, ConsumerHandlerComponent]
 })
 
 export class OrderHandlerComponent {
@@ -19,11 +19,11 @@ export class OrderHandlerComponent {
   defaultParts: Part[] = getParts();
 
   //FinalOrderObject
-  customer: Customer = {};
+  consumer: Consumer = {};
   orderParts: OrderPart[] = [];
 
-  getCustomerFromChild(customer: Customer) {
-    this.customer = customer;
+  getConsumerFromChild(consumer: Consumer) {
+    this.consumer = consumer;
   }
 
   getServicesOfPart(part: OrderPart): string[] | undefined {

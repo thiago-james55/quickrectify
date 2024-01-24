@@ -41,7 +41,7 @@ h1, button {
     width: 60%;
 }
 
-.costumerResults {
+.consumerResults {
     display: grid;
     justify-items: center;
     grid-template-columns: 25% 25% 25% 25%;
@@ -49,7 +49,7 @@ h1, button {
 
 }
 
-.costumerResults button {
+.consumerResults button {
     width: 90%;
 }
 

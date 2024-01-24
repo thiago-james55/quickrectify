@@ -1,19 +1,19 @@
-import { getCustomers } from '../../service/model/Customer.entity';
+import { getConsumers } from '../../service/model/Consumer.entity';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { Customer } from '../../service/model/Customer.entity';
+import { Consumer } from '../../service/model/Consumer.entity';
 import { CommonModule } from '@angular/common';
 
 
 @Component({
-  selector: 'app-dialog-customer-search',
+  selector: 'app-dialog-consumer-search',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './dialog-customer-search.component.html',
-  styleUrls: ['./dialog-customer-search.component.css', '../../../global.css']
+  templateUrl: './dialog-consumer-search.component.html',
+  styleUrls: ['./dialog-consumer-search.component.css', '../../../global.css']
 })
-export class DialogCustomerSearchComponent {
+export class DialogConsumerSearchComponent {
 
-  customers: Customer[] = getCustomers();
+  consumers: Consumer[] = getConsumers();
 
   @Output() objectSentToParent: EventEmitter<any> = new EventEmitter();
 
@@ -28,12 +28,12 @@ export class DialogCustomerSearchComponent {
 
   }
  
-  sendObjectToParent(customer: Customer) {
-    this.objectSentToParent.emit(customer);
+  sendObjectToParent(consumer: Consumer) {
+    this.objectSentToParent.emit(consumer);
   }
 
-  onCustomerChoose(customer: Customer) {
-    this.sendObjectToParent(customer);
+  onConsumerChoose(consumer: Consumer) {
+    this.sendObjectToParent(consumer);
     this.modal.nativeElement.close();
   }
 

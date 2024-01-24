@@ -1,4 +1,4 @@
-export interface Customer {
+export interface Consumer {
     
     id?: number;
     name?: string;
@@ -10,14 +10,14 @@ export interface Customer {
 }
 
 
-export function getCustomers() : Customer[] {
+export function getConsumers() : Consumer[] {
 
-    const customers: Customer[] = [];
+    const consumers: Consumer[] = [];
 
     for (let i = 0; i < 51; i++) {
-        customers.push(
+        consumers.push(
             { 
-                name :`Customer${i}` , 
+                name :`Consumer${i}` , 
                 document: "1234567",
                 address: "Rua Random",
                 phone1: "9-9875-4321" 
@@ -25,5 +25,5 @@ export function getCustomers() : Customer[] {
         )        
     }
 
-    return customers;
+    return consumers;
 }

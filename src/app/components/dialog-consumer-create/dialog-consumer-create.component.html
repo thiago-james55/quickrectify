@@ -1,0 +1,15 @@
+<dialog #modal>
+    <div class="selfContainer">
+        <h1>Criar Cliente</h1>
+        <hr class="defaultHR">
+        <div class="fields">
+            <div class="field"><span>Nome:</span>       <input [(ngModel)]="consumer.name" type="text" placeholder="Obrigatório"></div>
+            <div class="field"><span>CPF/RG:</span>     <input [(ngModel)]="consumer.document" type="text" placeholder="Obrigatório"> </div>        
+            <div class="field"><span>Endereço:</span>   <input [(ngModel)]="consumer.address" type="text"></div>
+            <div class="field"><span>Telefone 1:</span> <input [(ngModel)]="consumer.phone1" type="text" placeholder="Obrigatório"></div>
+            <div class="field"><span>Telefone 2:</span> <input [(ngModel)]="consumer.phone2" type="text"></div>
+            <div class="field"><span>Telefone 3:</span> <input [(ngModel)]="consumer.phone3" type="text"></div>
+            <button class="defaultButton defaultBorder" (click)="onConsumerCreate()">Salvar</button>
+        </div>
+    </div>
+</dialog>

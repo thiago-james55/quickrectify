@@ -1,4 +1,4 @@
-.customer {
+.consumer {
     display: flex;
     width: 100%;
     flex-direction: row;
@@ -8,7 +8,7 @@
     padding: .5rem;
 }
 
-.customer span {
+.consumer span {
     padding: .5rem;
     font-size: large;
 }
@@ -22,7 +22,7 @@ input {
     border: 1px solid #293646;
 }
 
-.tableCustomer {
+.tableConsumer {
     display: flex;
     align-items: center;
     justify-content: center;

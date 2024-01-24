@@ -1,0 +1,46 @@
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Consumer } from '../../service/model/Consumer.entity';
+import { DialogConsumerCreateComponent } from '../dialog-consumer-create/dialog-consumer-create.component';
+import { DialogConsumerSearchComponent } from '../dialog-consumer-search/dialog-consumer-search.component';
+
+
+
+@Component({
+    selector: 'app-consumer-handler',
+    standalone: true,
+    templateUrl: './consumer-handler.component.html',
+    styleUrls: ['./consumer-handler.component.css', '../../../global.css'],
+    imports: [CommonModule, DialogConsumerSearchComponent, DialogConsumerCreateComponent]
+})
+export class ConsumerHandlerComponent {
+
+  @ViewChild(DialogConsumerSearchComponent)
+  dialogConsumerSearchComponent!: DialogConsumerSearchComponent;
+
+  @ViewChild(DialogConsumerCreateComponent)
+  dialogConsumerCreateComponent!: DialogConsumerCreateComponent;
+
+  @Input() table: boolean = false;
+
+  consumer: Consumer = {};
+  
+  @Output() objectSentToParent: EventEmitter<any> = new EventEmitter();
+
+  constructor() {}
+
+  openSearchDialog(): void {
+    this.dialogConsumerSearchComponent.openModal();
+  }
+
+  openCreateDialog(): void {
+    this.dialogConsumerCreateComponent.openModal();
+  }
+
+  getConsumerFromChildAndSendToParent(consumer: Consumer): void {
+    this.consumer = { ...consumer };
+    this.objectSentToParent.emit(consumer);
+    console.log("Object from child:  " + JSON.stringify(consumer))
+  }
+
+}
