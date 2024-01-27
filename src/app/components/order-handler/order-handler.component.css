@@ -15,34 +15,19 @@
     margin-bottom: 1rem;
 }
 
+.description { width: 30%; }
 
 input {
     width: 100%;
     border: 1px solid #293646;
+    text-align: center;
+    padding: .5rem;
 }
 
 select {
     text-align: center;
     padding: .5rem;
     width: 100%;
-}
-
-.buttonExclude {
-    text-align: center;
-    font-size: small;
-    white-space: nowrap;
-    border-radius: .3rem;
-    border: 1px solid red;
-    background-color: red;
-    color: white;
-    padding: .5rem;
-}
-
-.buttonExclude:hover {
-    border-color: red;
-    background-color: white;
-    color: red;
-
 }
 
 .totalValue {

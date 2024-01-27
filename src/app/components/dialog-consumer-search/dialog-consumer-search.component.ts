@@ -1,6 +1,6 @@
-import { getConsumers } from '../../service/model/Consumer.entity';
+import { getConsumers } from '../../services/consumer.entity';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { Consumer } from '../../service/model/Consumer.entity';
+import { Consumer } from '../../services/consumer.entity';
 import { CommonModule } from '@angular/common';
 
 
@@ -34,8 +34,11 @@ export class DialogConsumerSearchComponent {
 
   onConsumerChoose(consumer: Consumer) {
     this.sendObjectToParent(consumer);
-    this.modal.nativeElement.close();
+    this.closeModal();
   }
 
+  closeModal(): void {
+    this.modal.nativeElement.close();
+  }
 
 }

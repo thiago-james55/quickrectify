@@ -60,6 +60,20 @@ button , input {
     height: 35px;
 }
 
+.defaultButton {
+    width: 50%;
+    align-self: center;
+}
+
+.buttonExclude {
+    width: max-content;
+    position: absolute;
+    margin: .5rem;
+    top: 0;
+    right: 0;
+}
+
+
 input {
     margin: .3rem;
     text-align: center;

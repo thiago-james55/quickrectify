@@ -1,5 +1,6 @@
+import { ToastService } from './../../services/toast.service';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { Consumer } from '../../service/model/Consumer.entity';
+import { Consumer } from '../../services/consumer.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,6 +12,8 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./dialog-consumer-create.component.css', '../../../global.css']
 })
 export class DialogConsumerCreateComponent {
+
+  constructor(private _toastService: ToastService) {}
 
   @Output() objectSentToParent: EventEmitter<any> = new EventEmitter();
 
@@ -35,7 +38,7 @@ export class DialogConsumerCreateComponent {
     if (this.validation()) {
       if (this.postConsumer())
         this.sendObjectToParent(this.consumer);
-      this.modal.nativeElement.close();
+      this.closeModal();
     }
   }
 
@@ -51,8 +54,7 @@ export class DialogConsumerCreateComponent {
             if (!!!this.consumer['phone1']) fields.push("Telefone 1");
 
             let message = "Os campos " + fields.join(', ') + " não podem estar vazios!";
-            console.log(message);
-            //Toasty
+            this._toastService.showToastCaution(message);
         }
     }
     return false;
@@ -61,6 +63,10 @@ export class DialogConsumerCreateComponent {
   postConsumer(): boolean {
     //service.PostConsumer;
     return true;
+  }
+
+  closeModal(): void {
+    this.modal.nativeElement.close();
   }
 
 }

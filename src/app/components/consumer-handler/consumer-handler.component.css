@@ -20,6 +20,15 @@ button , input {
 input {
     width: 100%;
     border: 1px solid #293646;
+    text-align: center;
+}
+
+input:disabled {
+    color: #293646;
+}
+
+input::placeholder {
+    text-align: center;
 }
 
 .tableConsumer {
@@ -30,3 +39,5 @@ input {
     margin-bottom: 1rem;
 }
 
+
+  

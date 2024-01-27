@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { OrderPart, Part, getParts } from '../../service/model/Part.entity';
+import { Component, Input } from '@angular/core';
+import { OrderPart, Part, getParts } from '../../services/part.entity';
 import { FormsModule } from '@angular/forms';
-import { Consumer } from '../../service/model/Consumer.entity';
+import { Consumer } from '../../services/consumer.entity';
 import { ConsumerHandlerComponent } from '../consumer-handler/consumer-handler.component';
+import { Order } from '../../services/order.entity';
+
 
 @Component({
     selector: 'app-order-handler',
@@ -18,12 +20,11 @@ export class OrderHandlerComponent {
   //Service.getGroups
   defaultParts: Part[] = getParts();
 
-  //FinalOrderObject
-  consumer: Consumer = {};
-  orderParts: OrderPart[] = [];
+  @Input() order: Order = { orderParts: [] };
 
+ 
   getConsumerFromChild(consumer: Consumer) {
-    this.consumer = consumer;
+    this.order.consumer = consumer;
   }
 
   getServicesOfPart(part: OrderPart): string[] | undefined {
@@ -39,19 +40,37 @@ export class OrderHandlerComponent {
   sumRow(part: OrderPart): void {
     if (part.quantity && part.pricePerQuantity) {
       part.priceTotal = part.quantity * part.pricePerQuantity;
+      this.sumTotal();
     }    
+  }
+
+  sumTotal() {
+
+    if (this.order.orderParts.length <= 0) {
+      this.order.priceSubTotal = 0;
+      this.order.priceTotal = 0;
+      return;
+    }
+
+    this.order.priceSubTotal = this.order.orderParts.reduce((accumulator, orderPart) => accumulator + (orderPart.priceTotal || 0), 0);
+    this.order.priceTotal = this.order.priceSubTotal;
+    if (!!this.order.discountCash) this.order.priceTotal -= this.order.discountCash;
+    if (!!this.order.discountPercent) this.order.priceTotal -= ( (this.order.priceTotal /100) *  this.order.discountPercent);
+  
+
   }
 
 
   insertRow(part: Part): void {
+    //Adjust for constructor(edit Order)
     let orderPart: OrderPart = { name:part.name , service: part.services[0]};
-    this.orderParts.push(orderPart);
-    console.log(this.orderParts);
+    this.order.orderParts.push(orderPart);
   }
 
   deleteRow(part: OrderPart): void {
-    const index = this.orderParts.indexOf(part);
-    this.orderParts.splice(index, 1);
+    const index = this.order.orderParts.indexOf(part);
+    this.order.orderParts.splice(index, 1);
+    this.sumTotal();
   }
 
 

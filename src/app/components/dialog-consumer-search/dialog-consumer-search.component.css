@@ -57,6 +57,14 @@ button , input {
     height: 35px;
 }
 
+.buttonExclude {
+    width: max-content;
+    position: absolute;
+    margin: .5rem;
+    top: 0;
+    right: 0;
+}
+
 input {
     margin-left: .5rem;
     margin-right: .5rem;

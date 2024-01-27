@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { Consumer } from '../../service/model/Consumer.entity';
+import { Consumer } from '../../services/consumer.entity';
 import { DialogConsumerCreateComponent } from '../dialog-consumer-create/dialog-consumer-create.component';
 import { DialogConsumerSearchComponent } from '../dialog-consumer-search/dialog-consumer-search.component';
-
-
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-consumer-handler',
@@ -14,6 +13,7 @@ import { DialogConsumerSearchComponent } from '../dialog-consumer-search/dialog-
     imports: [CommonModule, DialogConsumerSearchComponent, DialogConsumerCreateComponent]
 })
 export class ConsumerHandlerComponent {
+
 
   @ViewChild(DialogConsumerSearchComponent)
   dialogConsumerSearchComponent!: DialogConsumerSearchComponent;
@@ -27,14 +27,15 @@ export class ConsumerHandlerComponent {
   
   @Output() objectSentToParent: EventEmitter<any> = new EventEmitter();
 
-  constructor() {}
+  constructor(private toastService: ToastService) {}
 
   openSearchDialog(): void {
-    this.dialogConsumerSearchComponent.openModal();
+    this.dialogConsumerSearchComponent.openModal();  
+       
   }
 
   openCreateDialog(): void {
-    this.dialogConsumerCreateComponent.openModal();
+    this.dialogConsumerCreateComponent.openModal(); 
   }
 
   getConsumerFromChildAndSendToParent(consumer: Consumer): void {

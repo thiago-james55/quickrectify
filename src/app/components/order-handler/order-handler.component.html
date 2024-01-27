@@ -1,52 +1,56 @@
 <div class="selfContainer defaultPadding">
 
-    <app-consumer-handler (objectSentToParent)="getConsumerFromChild($event)" ></app-consumer-handler>
+    <app-consumer-handler (objectSentToParent)="getConsumerFromChild($event)"></app-consumer-handler>
 
     <div class="addParts defaultBorder">
         <p>Adicionar a Ordem: </p>
-        <button class="defaultButton defaultBorder" *ngFor="let part of defaultParts" (click)="insertRow(part)" >{{part.name}}</button>
+        <button class="defaultButton defaultBorder" *ngFor="let part of defaultParts"
+            (click)="insertRow(part)">{{part.name}}</button>
     </div>
 
     <div class="tableParts defaultBorder">
         <table #tableParts>
             <tbody>
-            <tr>
-                <th >Grupo</th>
-                <th>Serviço</th>
-                <th>Descrição</th>
-                <th>Quantidade</th>
-                <th>Preço Unit.</th>
-                <th>Preço Total</th>
-                <th>Excluir</th>
-            </tr>
-            <tr *ngFor="let part of orderParts">
-                <td>
-                    <span>{{part.name}}</span>
-                </td>
-                <td>
-                    <select [(ngModel)]="part.service" >
-                        <option *ngFor="let service of getServicesOfPart(part)" [value]="service">{{ service }}</option>
-                      </select>
-                </td>
-                <td>
-                    <input [(ngModel)]="part.description" type="text" placeholder="Descrição">
-                </td>
-                <td>
-                    <input [(ngModel)]="part.quantity" (ngModelChange)="sumRow(part)" type="number" min="1">
-                </td>
-                <td>
-                    <input [(ngModel)]="part.pricePerQuantity" (ngModelChange)="sumRow(part)"  type="number" min="1" step="10" [value]="part.pricePerQuantity">
-                </td>
-                <td>
-                    <input (ngModel)="part.priceTotal" type="number" [value]="part.priceTotal | number:'1.2-2'" disabled>
-                </td>
-                <td>
-                    <button class="buttonExclude" (click)="deleteRow(part)">
-                        Excluir
-                    </button>
-                </td>
-            </tr>
-        </tbody>
+                <tr>
+                    <th class="group">Grupo</th>
+                    <th class="service">Serviço</th>
+                    <th class="description">Descrição</th>
+                    <th class="quantity">Qtd.</th>
+                    <th class="unitPrice">Preço Unit.</th>
+                    <th class="totalPrice">Total</th>
+                    <th class="exclude">Excluir</th>
+                </tr>
+                <tr *ngFor="let part of order.orderParts">
+                    <td>
+                        <span>{{part.name}}</span>
+                    </td>
+                    <td>
+                        <select [(ngModel)]="part.service">
+                            <option *ngFor="let service of getServicesOfPart(part)" [value]="service">{{ service }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <input [(ngModel)]="part.description" type="text" placeholder="Descrição">
+                    </td>
+                    <td>
+                        <input [(ngModel)]="part.quantity" (ngModelChange)="sumRow(part)" type="number" min="1">
+                    </td>
+                    <td>
+                        <input [(ngModel)]="part.pricePerQuantity" (ngModelChange)="sumRow(part)" type="number" min="1"
+                            step="10" [value]="part.pricePerQuantity">
+                    </td>
+                    <td>
+                        <input (ngModel)="part.priceTotal" type="number" [value]="part.priceTotal | number:'1.2-2'"
+                            disabled>
+                    </td>
+                    <td>
+                        <button class="buttonExclude" (click)="deleteRow(part)">
+                            X
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </div>
 
@@ -59,10 +63,11 @@
             <span>Total Geral</span>
         </div>
         <div class="totalInputs">
-            <input  type="number" min="0" value="0">
-            <input  type="number" min="0">
-            <input  type="number" min="0">
-            <input  type="number" min="0">
+            <input (ngModel)="order.priceSubTotal" [value]="order.priceSubTotal | number:'1.2-2'" disabled
+                type="number">
+            <input [(ngModel)]="order.discountPercent" (ngModelChange)="sumTotal()" type="number">
+            <input [(ngModel)]="order.discountCash" (ngModelChange)="sumTotal()" type="number">
+            <input (ngModel)="order.priceTotal" [value]="order.priceTotal | number:'1.2-2'" disable type="number">
         </div>
     </div>
     <div class="save defaultBorder">
