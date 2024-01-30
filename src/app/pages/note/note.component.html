@@ -1,0 +1,18 @@
+<div class="noteContainer">
+    <div class="centerInfo defaultBorder">
+        <img src="{{this._companyInfo.logo}}" alt="Company Logo" >
+        <p>Data: {{this.order.date || "14/12/1994"}}</p>
+        <p>OS N°: {{ this.order.id | number:'4.0' | noComma }}</p>
+    </div>
+    <div class="companyInfo">
+        <h1 *ngIf="this._companyInfo.name">{{this._companyInfo.name}}</h1>
+        <p *ngIf="this._companyInfo.info1">{{this._companyInfo.info1}}</p>
+        <p *ngIf="this._companyInfo.info2">{{this._companyInfo.info2}}</p>
+        <p *ngIf="this._companyInfo.info2">{{this._companyInfo.info3}}</p>
+        <p *ngIf="this._companyInfo.phone1">{{this._companyInfo.phone1}}</p>
+        <p *ngIf="this._companyInfo.phone2">{{this._companyInfo.phone2}}</p>
+        <p *ngIf="this._companyInfo.phone3">{{this._companyInfo.phone3}}</p>
+        <p *ngIf="this._companyInfo.address">{{this._companyInfo.address}}</p>
+    </div>
+    <hr>
+</div>
