@@ -23,7 +23,7 @@ export class ConsumerHandlerComponent {
 
   @Input() table: boolean = false;
 
-  consumer: Consumer = {};
+  @Input() consumer: Consumer = {};
   
   @Output() objectSentToParent: EventEmitter<any> = new EventEmitter();
 
@@ -43,5 +43,6 @@ export class ConsumerHandlerComponent {
     this.objectSentToParent.emit(consumer);
     console.log("Object from child:  " + JSON.stringify(consumer))
   }
+ 
 
 }

@@ -48,7 +48,6 @@ export class DialogConsumerCreateComponent {
             return true;
         } else {
             let fields: string[] = [];
-
             if (!!!this.consumer['name']) fields.push("nome");
             if (!!!this.consumer['document']) fields.push("RG/CPF");
             if (!!!this.consumer['phone1']) fields.push("Telefone 1");

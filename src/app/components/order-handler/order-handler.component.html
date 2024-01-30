@@ -1,6 +1,6 @@
 <div class="selfContainer defaultPadding">
 
-    <app-consumer-handler (objectSentToParent)="getConsumerFromChild($event)"></app-consumer-handler>
+    <app-consumer-handler [consumer]="this.order.consumer ? this.order.consumer : {}" (objectSentToParent)="getConsumerFromChild($event)"></app-consumer-handler>
 
     <div class="addParts defaultBorder">
         <p>Adicionar a Ordem: </p>
@@ -71,8 +71,8 @@
         </div>
     </div>
     <div class="save defaultBorder">
-        <button class="defaultButton defaultBorder">Salvar e Imprimir</button>
-        <button class="defaultButton defaultBorder">Somente Salvar</button>
+        <button class="defaultButton defaultBorder" (click)="saveOrder(true)">Salvar e Imprimir</button>
+        <button class="defaultButton defaultBorder" (click)="saveOrder(false)">Somente Salvar</button>
     </div>
 
 </div>
