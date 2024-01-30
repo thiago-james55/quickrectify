@@ -14,7 +14,7 @@ export enum ToastTypes {
 
 export class ToastService {
 
-  private readonly duration: number = 3000;
+  private readonly duration: number = 5000;
 
   constructor(private _snackBar: MatSnackBar) { }
 
