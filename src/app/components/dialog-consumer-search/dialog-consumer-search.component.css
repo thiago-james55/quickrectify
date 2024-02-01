@@ -46,7 +46,6 @@ h1, button {
     justify-items: center;
     grid-template-columns: 25% 25% 25% 25%;
     width: 100%;
-
 }
 
 .consumerResults button {

@@ -1,18 +1,100 @@
 <div class="noteContainer">
-    <div class="centerInfo defaultBorder">
-        <img src="{{this._companyInfo.logo}}" alt="Company Logo" >
-        <p>Data: {{this.order.date || "14/12/1994"}}</p>
-        <p>OS N°: {{ this.order.id | number:'4.0' | noComma }}</p>
+    <div class="upperInfo">
+        <p class="defaultBorder upperData">Data: {{this.order.date || "14/12/1994"}}</p>
+        <p class="defaultBorder upperData">OS N°: {{ this.order.id | number:'4.0' | noComma }}</p>
     </div>
-    <div class="companyInfo">
-        <h1 *ngIf="this._companyInfo.name">{{this._companyInfo.name}}</h1>
-        <p *ngIf="this._companyInfo.info1">{{this._companyInfo.info1}}</p>
-        <p *ngIf="this._companyInfo.info2">{{this._companyInfo.info2}}</p>
-        <p *ngIf="this._companyInfo.info2">{{this._companyInfo.info3}}</p>
-        <p *ngIf="this._companyInfo.phone1">{{this._companyInfo.phone1}}</p>
-        <p *ngIf="this._companyInfo.phone2">{{this._companyInfo.phone2}}</p>
-        <p *ngIf="this._companyInfo.phone3">{{this._companyInfo.phone3}}</p>
-        <p *ngIf="this._companyInfo.address">{{this._companyInfo.address}}</p>
+    <div class="upperTitle ">
+        <div class="companyInfo">
+            <h2 *ngIf="this._companyInfo.name">{{this._companyInfo.name}}</h2>
+            <p *ngIf="this._companyInfo.detail2">{{this._companyInfo.detail2}}</p>
+            <p *ngIf="this._companyInfo.detail3">{{this._companyInfo.detail3}}</p>
+            <p *ngIf="this._companyInfo.phone1">{{this._companyInfo.phone1}}</p>
+            <p *ngIf="this._companyInfo.phone2">{{this._companyInfo.phone2}}</p>
+            <p *ngIf="this._companyInfo.phone3">{{this._companyInfo.phone3}}</p>
+            <p *ngIf="this._companyInfo.address">{{this._companyInfo.address}}</p>
+        </div>
+        <div class="consumerInfo">
+            <h2 *ngIf="this.order.consumer?.name">{{this.order.consumer?.name}}</h2>
+            <p *ngIf="this.order.consumer?.address">{{this.order.consumer?.address}}</p>
+            <p *ngIf="this.order.consumer?.phone1">{{this.order.consumer?.phone1}}</p>
+            <p *ngIf="this.order.consumer?.phone2">{{this.order.consumer?.phone2}}</p>
+            <p *ngIf="this.order.consumer?.phone3">{{this.order.consumer?.phone3}}</p>
+        </div>
     </div>
-    <hr>
+    <div class="partsTable">
+        <table #tableParts>
+            <tbody>
+                <tr>
+                    <th class="group">Grupo</th>
+                    <th class="service">Serviço</th>
+                    <th class="description">Descrição</th>
+                    <th class="quantity">Qtd.</th>
+                    <th class="unitPrice">Preço Unit.</th>
+                    <th class="totalPrice">Total</th>
+                </tr>
+                <tr *ngFor="let part of this.order.orderParts">
+                    <td>
+                        <span>{{part.name}}</span>
+                    </td>
+                    <td>
+                        <span>{{part.service}}</span>
+                    </td>
+                    <td>
+                        <span>{{part.description}}</span>
+                    </td>
+                    <td>
+                        <span>{{part.quantity}}</span>
+                    </td>
+                    <td>
+                        <span>{{part.pricePerQuantity?.toFixed(2)}}</span>
+                    </td>
+                    <td>
+                        <span>{{part.priceTotal?.toFixed(2)}}</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+    <div class="totalTable defaultBorder">
+        <table>
+            <tbody>
+                <tr>
+                    <th><h3>Subtotal</h3></th>
+                    <th><h3>Desconto %</h3></th>
+                    <th><h3>Desconto Valor</h3></th>
+                    <th><h3>Total Geral</h3></th>
+                </tr>
+                <tr>
+                    <td><h3>{{this.order.priceSubTotal?.toFixed(2)}}</h3></td>
+                    <td><h3>{{this.order.discountPercent}}</h3></td>
+                    <td><h3>{{this.order.discountCash?.toFixed(2)}}</h3></td>
+                    <td><h3>{{this.order.priceTotal?.toFixed(2) }}</h3></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="lowerInfo">
+        <div class="paymentInfo">
+            <p>BANCO ITAU: RETIFICA REAÇÃO LTDA ME</p>
+            <p>PIX/CNPJ: 05.387.112/0001-60</p>
+            <img class="qrCode" [src]="this._companyInfo.qrcode" alt="QR CODE PIX ITAU">
+            <p>Parcelamento Cartão de Crédito</p>
+            <p>Juros da Operadora</p>
+            <div class="installments">
+                <p *ngFor="let installment of this.installments; index as i"> {{(i+1)}}x R${{installment.toFixed(2)}}
+                </p>
+            </div>
+        </div>
+        <div class="companyInfoForConsumer">
+            <h3>Informação ao Cliente:</h3>
+            <p *ngIf="this._companyInfo.info1">{{this._companyInfo.info1}}</p>
+            <p *ngIf="this._companyInfo.info2">{{this._companyInfo.info2}}</p>
+            <p *ngIf="this._companyInfo.info3">{{this._companyInfo.info3}}</p>
+            <p *ngIf="this._companyInfo.info4">{{this._companyInfo.info4}}</p>
+
+        </div>
+    </div>
 </div>

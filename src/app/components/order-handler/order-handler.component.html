@@ -41,7 +41,7 @@
                             step="10" [value]="part.pricePerQuantity">
                     </td>
                     <td>
-                        <input (ngModel)="part.priceTotal" type="number" [value]="part.priceTotal | number:'1.2-2'"
+                        <input (ngModel)="part.priceTotal" type="number" [value]="part.priceTotal?.toFixed(2)"
                             disabled>
                     </td>
                     <td>
@@ -57,17 +57,17 @@
     <div class="totalValue defaultBorder">
         <div class="totalSpans">
 
-            <span>Total</span>
+            <span>Subtotal</span>
             <span>Desconto %</span>
             <span>Desconto Valor</span>
             <span>Total Geral</span>
         </div>
         <div class="totalInputs">
-            <input (ngModel)="order.priceSubTotal" [value]="order.priceSubTotal | number:'1.2-2'" disabled
+            <input (ngModel)="order.priceSubTotal" [value]="order.priceSubTotal?.toFixed(2)" disabled
                 type="number">
             <input [(ngModel)]="order.discountPercent" (ngModelChange)="sumTotal()" type="number">
             <input [(ngModel)]="order.discountCash" (ngModelChange)="sumTotal()" type="number">
-            <input (ngModel)="order.priceTotal" [value]="order.priceTotal | number:'1.2-2'" disable type="number">
+            <input (ngModel)="order.priceTotal" [value]="order.priceTotal?.toFixed(2)" disable type="number">
         </div>
     </div>
     <div class="save defaultBorder">

@@ -7,25 +7,28 @@ import { CommonModule } from '@angular/common';
 import { NoCommaPipe } from "../../pipes/no-comma.pipe";
 
 @Component({
-    selector: 'app-note',
-    standalone: true,
-    templateUrl: './note.component.html',
-    styleUrls: ['./note.component.css', '../../../global.css'],
-    imports: [CommonModule, NoCommaPipe]
+  selector: 'app-note',
+  standalone: true,
+  templateUrl: './note.component.html',
+  styleUrls: ['./note.component.css', '../../../global.css'],
+  imports: [CommonModule, NoCommaPipe]
 })
 export class NoteComponent {
 
   constructor(
     private _route: ActivatedRoute,
     private _toastService: ToastService,
-    public _companyInfo:CompanyInfoService
-    ){}
+    public _companyInfo: CompanyInfoService
+  ) { }
 
   order: Order = { orderParts: [] };
+  installments: number[] = [];
 
 
   ngOnInit() { this.getOrder(); }
+  ngAfterViewInit() {     window.print(); }
 
+  
   getOrder(): void {
     const orderId = this._route.snapshot.queryParamMap.get('orderId');
 
@@ -35,6 +38,7 @@ export class NoteComponent {
 
       if (storedOrderData) {
         this.order = JSON.parse(storedOrderData) as Order;
+        this.sumInstallments();
       } else {
         this.getOrderByService(orderId);
       }
@@ -45,6 +49,21 @@ export class NoteComponent {
 
   getOrderByService(orderId: string): void {
     //service.getOrder();
+  }
+
+  async sumInstallments(): Promise<void> {
+
+    if (!this.order || !this.order.priceTotal) return;
+
+    let feesTotal: number = this.order.priceTotal;
+
+    this.installments[0] = feesTotal;
+
+    for (let index = 1; index < 12; index++) {
+      feesTotal += ((feesTotal / 100) * 3.49);
+      const installment: number = feesTotal;
+      this.installments[index] = installment / (index + 1);
+    }
   }
 
 }
