@@ -85,10 +85,19 @@ export class OrderHandlerComponent {
       //service.postOrder if success toasty
       console.log(this.order);
 
+      if (this.order.id) {
+        //service.putOrder
+        this._toastService.showToastSuccess(`Ordem (${this.order.id}) salva com sucesso! `);
+        if (print) { this.print() }
+        else { this.clearOrder(); }
+        return;
+      }
+
+      //Logic Check if Post Succesful
       this.order.id = 1;
-      if (print) { this.print() } 
-      else  { this.clearOrder(); }
-      
+      if (print) { this.print() }
+      else { this.clearOrder(); }
+
     }
 
   }

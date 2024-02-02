@@ -26,7 +26,7 @@ export class NoteComponent {
 
 
   ngOnInit() { this.getOrder(); }
-  ngAfterViewInit() {     window.print(); }
+  ngAfterViewInit() { window.print(); }
 
   
   getOrder(): void {

@@ -1,6 +1,6 @@
 <div class="selfContainer defaultPadding">
 
-    <app-consumer-handler [consumer]="this.order.consumer ? this.order.consumer : {}" (objectSentToParent)="getConsumerFromChild($event)"></app-consumer-handler>
+    <app-consumer-handler [consumer]="this.order.consumer || {}" (objectSentToParent)="getConsumerFromChild($event)"></app-consumer-handler>
 
     <div class="addParts defaultBorder">
         <p>Adicionar a Ordem: </p>
