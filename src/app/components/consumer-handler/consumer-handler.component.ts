@@ -30,8 +30,7 @@ export class ConsumerHandlerComponent {
   constructor(private toastService: ToastService) {}
 
   openSearchDialog(): void {
-    this.dialogConsumerSearchComponent.openModal();  
-       
+    this.dialogConsumerSearchComponent.openModal();    
   }
 
   openCreateDialog(): void {
@@ -41,7 +40,6 @@ export class ConsumerHandlerComponent {
   getConsumerFromChildAndSendToParent(consumer: Consumer): void {
     this.consumer = { ...consumer };
     this.objectSentToParent.emit(consumer);
-    console.log("Object from child:  " + JSON.stringify(consumer))
   }
  
 

@@ -1,5 +1,112 @@
-<div class="selfContainer">
+<div class="selfContainer defaultPadding">
     <div class="searchOptions defaultBorder">
+        <div class="filterSpan">
+            <div class="consumerFilter">
+                <span>Cliente:</span>
+            </div>
 
+
+            <div class="dateInitialFilter">
+                <span>Data Inicial:</span>
+            </div>
+
+
+            <div class="dateFinalFilter">
+                <span>Data Final:</span>
+            </div>
+
+
+            <div class="serviceFilter">
+                <span>Serviço:</span>
+            </div>
+        </div>
+
+
+        <div class="filterInput">
+            <div class="consumerFilter">
+                <button (click)="openSearchDialog()" class="searchConsumerButton">
+                    🔍
+                </button>
+                <input class="searchConsumerInput" [(ngModel)]="filterByConsumerName" type="text"
+                    placeholder="Digite o nome do cliente">
+            </div>
+
+
+            <div class="dateInitialFilter">
+                <input [(ngModel)]="filterByInitialDate" (ngModelChange)="filter()" type="date">
+            </div>
+
+
+            <div class="dateFinalFilter">
+                <input [(ngModel)]="filterByFinalDate" (ngModelChange)="filter()" type="date">
+            </div>
+
+
+            <div class="serviceFilter">
+                <select [(ngModel)]="filterByPart" (ngModelChange)="filter()">
+                    <option *ngFor="let part of defaultParts" [value]="part.name">
+                        {{ part.name }}
+                    </option>
+                </select>
+            </div>
+        </div>
     </div>
+    <div class="tableOrders">
+        <table>
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Data</th>
+                    <th>Cliente</th>
+                    <th>Grupo</th>
+                    <th>Serviço</th>
+                    <th>Descrição</th>
+                    <th>Qtd</th>
+                    <th>Valor Qtd</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let order of defaultOrders">
+                <tr *ngFor="let part of order.orderParts">
+                    <td class="tdWithDropdown" (click)="showDropdown($event, order)"> {{order.id}} </td>
+                    <td> {{order.date?.toLocaleString()}} </td>
+                    <td class="tdWithDropdown" (click)="showDropdown($event, order.consumer)" > {{order.consumer?.name}} </td>
+                    <td> {{part.name}} </td>
+                    <td> {{part.service}} </td>
+                    <td> {{part.description}} </td>
+                    <td> {{part.quantity}} </td>
+                    <td> {{part.pricePerQuantity?.toFixed(2)}} </td>
+                </tr>
+                <tr class="rowOrderTotal">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Total</td>
+                    <td></td>
+                    <td>{{order.priceTotal?.toFixed(2)}}</td>
+                </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</div>
+<app-dialog-consumer-search (objectSentToParent)="getConsumerFromChildAndSendToParent($event)"></app-dialog-consumer-search>
+
+<div class="dropdownContent defaultBorder" *ngIf="isDropdownVisible" [style.left.px]="dropdownPosition.left" [style.top.px]="dropdownPosition.top" (mouseleave)="hideDropdown()">
+    <div class="dropdownOptions">
+        <ng-container *ngFor="let option of dropdownOptions" >
+            <ul>
+
+                <li>
+                    <a [routerLink]="option.url" 
+                    [queryParams]="option.queryParam" 
+                    [target]="option.target" 
+                    (click)="option.consumerName? setConsumerName(option.consumerName): null"> {{option.description}} </a>
+                </li>
+            </ul>
+            </ng-container>
+    </div>
+   
 </div>

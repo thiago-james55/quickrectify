@@ -10,16 +10,18 @@
 
     <div class="tableParts defaultBorder">
         <table #tableParts>
+           <thead>
+             <tr>
+                 <th class="group">Grupo</th>
+                 <th class="service">Serviço</th>
+                 <th class="description">Descrição</th>
+                 <th class="quantity">Qtd.</th>
+                 <th class="unitPrice">Preço Unit.</th>
+                 <th class="totalPrice">Total</th>
+                 <th class="exclude">Excluir</th>
+             </tr>
+           </thead>
             <tbody>
-                <tr>
-                    <th class="group">Grupo</th>
-                    <th class="service">Serviço</th>
-                    <th class="description">Descrição</th>
-                    <th class="quantity">Qtd.</th>
-                    <th class="unitPrice">Preço Unit.</th>
-                    <th class="totalPrice">Total</th>
-                    <th class="exclude">Excluir</th>
-                </tr>
                 <tr *ngFor="let part of order.orderParts">
                     <td>
                         <span>{{part.name}}</span>

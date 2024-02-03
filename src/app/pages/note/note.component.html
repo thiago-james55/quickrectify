@@ -23,7 +23,7 @@
     </div>
     <div class="partsTable">
         <table #tableParts>
-            <tbody>
+            <thead>
                 <tr>
                     <th class="group">Grupo</th>
                     <th class="service">Serviço</th>
@@ -32,6 +32,8 @@
                     <th class="unitPrice">Preço Unit.</th>
                     <th class="totalPrice">Total</th>
                 </tr>
+            </thead>
+            <tbody>
                 <tr *ngFor="let part of this.order.orderParts">
                     <td>
                         <span>{{part.name}}</span>

@@ -4,7 +4,7 @@
         <h1>Procurar Cliente</h1>
         <hr class="defaultHR">
         <div class="search">
-            <input class="defaultInput" placeholder="Digite o nome do cliente" type="text">
+            <input [(ngModel)]="this.consumerName" class="defaultInput" placeholder="Digite o nome do cliente" type="text">
             <button class="defaultBorder defaultButton">Procurar</button>
         </div>
         <div class="consumerResults">

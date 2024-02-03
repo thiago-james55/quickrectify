@@ -2,16 +2,20 @@ import { getConsumers } from '../../services/consumer.entity';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Consumer } from '../../services/consumer.entity';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
   selector: 'app-dialog-consumer-search',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dialog-consumer-search.component.html',
   styleUrls: ['./dialog-consumer-search.component.css', '../../../global.css']
 })
 export class DialogConsumerSearchComponent {
+
+  
+  consumerName!: string;
 
   consumers: Consumer[] = getConsumers();
 
@@ -39,6 +43,10 @@ export class DialogConsumerSearchComponent {
 
   closeModal(): void {
     this.modal.nativeElement.close();
+  }
+
+  searchConsumer() {
+
   }
 
 }

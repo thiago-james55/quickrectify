@@ -1,0 +1,11 @@
+
+@media print {
+    * {
+        font-size: small;
+        padding: 0;
+    }
+
+    app-navbar {
+        display: none;
+    }
+}

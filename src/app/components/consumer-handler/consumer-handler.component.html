@@ -6,10 +6,10 @@
         <button class="defaultButton defaultBorder" (click)="openSearchDialog()">Pesquisar Cliente</button>
         <button class="defaultButton defaultBorder" (click)="openCreateDialog()">Novo Cliente</button>
     </div>
-
+    
     <div *ngIf="table" class="tableConsumer">
         <table>
-            <tbody>
+            <thead>
                 <tr>
                     <th>ID</th>
                     <th>Nome</th>
@@ -19,7 +19,7 @@
                     <th>Telefone 2</th>
                     <th>Telefone 3</th>
                 </tr>
-            </tbody>
+            </thead>
         </table>
     </div>
 </div>

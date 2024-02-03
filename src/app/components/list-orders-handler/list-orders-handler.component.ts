@@ -1,12 +1,118 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { Part, getParts } from '../../services/part.entity';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Consumer } from '../../services/consumer.entity';
+import { DialogConsumerSearchComponent } from "../dialog-consumer-search/dialog-consumer-search.component";
+import { generateMockOrders } from '../../services/mock.service';
+import { Order } from '../../services/order.entity';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-list-orders-handler',
   standalone: true,
-  imports: [],
   templateUrl: './list-orders-handler.component.html',
-  styleUrls: ['./list-orders-handler.component.css', '../../../global.css']
+  styleUrls: ['./list-orders-handler.component.css', '../../../global.css'],
+  imports: [CommonModule, FormsModule, DialogConsumerSearchComponent, RouterLink]
 })
 export class ListOrdersHandlerComponent {
 
+  isDropdownVisible: boolean = false;
+  dropdownPosition: { left: number, top: number } = { left: 0, top: 0 };
+  dropdownOptions: DropdownOption[] = [];
+
+  @ViewChild(DialogConsumerSearchComponent)
+  dialogConsumerSearchComponent!: DialogConsumerSearchComponent;
+
+  defaultParts: Part[] = getParts();
+
+  defaultOrders: Order[] = generateMockOrders();
+
+  filterByConsumerName!: string;
+  filterByPart!: string;
+  filterByInitialDate!: Date;
+  filterByFinalDate!: Date;
+
+  constructor(
+    private _route: ActivatedRoute,
+  ) { }
+
+  ngOnInit() {
+    const consumerName = this._route.snapshot.queryParamMap.get('consumerName');
+
+    if (consumerName) this.setConsumerName(consumerName);
+  }
+  
+
+  filter(): void {
+
+  }
+
+  setConsumerName(consumerName: string | undefined) {
+    if (consumerName) this.filterByConsumerName = consumerName;
+  }
+
+  openSearchDialog(): void {
+    this.dialogConsumerSearchComponent.openModal();
+  }
+
+  getConsumerFromChildAndSendToParent(consumer: Consumer): void {
+    this.filterByConsumerName = consumer.name!;
+  }
+
+
+  showDropdown(event: MouseEvent, data: Order | Consumer | undefined): void {
+
+    this.isDropdownVisible = true;
+    this.calculateDropdownPosition(event);
+
+    if (data) {
+      this.dropdownOptions = [];
+      if ('orderParts' in data) {
+        this.orderDropdownOptions(data);
+      } else {
+        this.consumerDropDownOptions(data);
+      }
+    }
+
+  }
+
+  orderDropdownOptions(order: Order) {
+    const queryParam =  { orderId: order.id }; 
+    this.dropdownOptions = [
+      { description: "2° Via", url:"/note", queryParam, target: "_blank" },
+      { description: "Editar", url: "/new-order", queryParam, target:"_self" },
+    ]
+  }
+
+  consumerDropDownOptions(consumer: Consumer) {
+    const queryParam =  { orderId: consumer.id }; 
+
+    this.dropdownOptions = [
+      { description: "Listar Ordens", consumerName: consumer.name},
+      { description: "Editar Cliente", url: "/consumers", queryParam, target:"_self" },
+    ]
+
+  }
+
+  hideDropdown() {
+    this.isDropdownVisible = false;
+  }
+
+  calculateDropdownPosition(event: MouseEvent) {
+    this.dropdownPosition = {
+      left: event.clientX - 10,
+      top: event.clientY - 10
+    };
+  }
+
+
+}
+
+export interface DropdownOption {
+  description?: string;
+  url?: string;
+  queryParam?: {};
+  target?: string;
+  consumerName?: string;
 }

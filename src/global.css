@@ -10,6 +10,7 @@
     flex-direction: column;
     width: 100%;
     height: 100vh;
+    overflow: scroll;
 }
 
 .selfContainer {
@@ -98,3 +99,9 @@ app-footer {
     height: 50px;
 }
 
+
+@media print {
+    .pageContent {
+        overflow: visible;
+    }
+}
