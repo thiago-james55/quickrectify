@@ -6,14 +6,17 @@
             </div>
 
 
+
             <div class="dateInitialFilter">
                 <span>Data Inicial:</span>
             </div>
 
 
+
             <div class="dateFinalFilter">
                 <span>Data Final:</span>
             </div>
+
 
 
             <div class="serviceFilter">
@@ -22,14 +25,16 @@
         </div>
 
 
+
         <div class="filterInput">
             <div class="consumerFilter">
                 <button (click)="openSearchDialog()" class="searchConsumerButton">
                     🔍
                 </button>
-                <input class="searchConsumerInput" [(ngModel)]="filterByConsumerName" type="text"
-                    placeholder="Digite o nome do cliente">
+                <input class="searchConsumerInput" [(ngModel)]="filterByConsumerName" (ngModelChange)="filter()"
+                    type="text" placeholder="Digite o nome do cliente">
             </div>
+
 
 
             <div class="dateInitialFilter">
@@ -37,13 +42,16 @@
             </div>
 
 
+
             <div class="dateFinalFilter">
                 <input [(ngModel)]="filterByFinalDate" (ngModelChange)="filter()" type="date">
             </div>
 
 
+
             <div class="serviceFilter">
                 <select [(ngModel)]="filterByPart" (ngModelChange)="filter()">
+                    <option value="all">Todos</option>
                     <option *ngFor="let part of defaultParts" [value]="part.name">
                         {{ part.name }}
                     </option>
@@ -66,47 +74,55 @@
                 </tr>
             </thead>
             <tbody>
-                <ng-container *ngFor="let order of defaultOrders">
-                <tr *ngFor="let part of order.orderParts">
-                    <td class="tdWithDropdown" (click)="showDropdown($event, order)"> {{order.id}} </td>
-                    <td> {{order.date?.toLocaleString()}} </td>
-                    <td class="tdWithDropdown" (click)="showDropdown($event, order.consumer)" > {{order.consumer?.name}} </td>
-                    <td> {{part.name}} </td>
-                    <td> {{part.service}} </td>
-                    <td> {{part.description}} </td>
-                    <td> {{part.quantity}} </td>
-                    <td> {{part.pricePerQuantity?.toFixed(2)}} </td>
-                </tr>
-                <tr class="rowOrderTotal">
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>Total</td>
-                    <td></td>
-                    <td>{{order.priceTotal?.toFixed(2)}}</td>
-                </tr>
+                <ng-container *ngFor="let order of filteredOrders">
+                    <tr *ngFor="let part of order.orderParts">
+                        <td class="tdWithDropdown" (click)="showDropdown($event, order)">
+                            {{order.id}}
+                        </td>
+                        <td>{{order.date?.toLocaleString()}}</td>
+                        <td class="tdWithDropdown" (click)="showDropdown($event, order.consumer)">
+                            {{order.consumer?.name}}
+                        </td>
+                        <td>{{part.name}}</td>
+                        <td>{{part.service}}</td>
+                        <td>{{part.description}}</td>
+                        <td>{{part.quantity}}</td>
+                        <td>{{part.pricePerQuantity?.toFixed(2)}}</td>
+                    </tr>
+                    <tr class="rowOrderTotal">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Total</td>
+                        <td></td>
+                        <td>{{order.priceTotal?.toFixed(2)}}</td>
+                    </tr>
                 </ng-container>
             </tbody>
         </table>
     </div>
 </div>
-<app-dialog-consumer-search (objectSentToParent)="getConsumerFromChildAndSendToParent($event)"></app-dialog-consumer-search>
+<app-dialog-consumer-search
+    (objectSentToParent)="getConsumerFromChildAndSendToParent($event)"></app-dialog-consumer-search>
 
-<div class="dropdownContent defaultBorder" *ngIf="isDropdownVisible" [style.left.px]="dropdownPosition.left" [style.top.px]="dropdownPosition.top" (mouseleave)="hideDropdown()">
+
+<div class="dropdownContent defaultBorder" *ngIf="isDropdownVisible" [style.left.px]="dropdownPosition.left"
+    [style.top.px]="dropdownPosition.top" (mouseleave)="hideDropdown()">
     <div class="dropdownOptions">
-        <ng-container *ngFor="let option of dropdownOptions" >
+        <ng-container *ngFor="let option of dropdownOptions">
             <ul>
 
                 <li>
-                    <a [routerLink]="option.url" 
-                    [queryParams]="option.queryParam" 
-                    [target]="option.target" 
-                    (click)="option.consumerName? setConsumerName(option.consumerName): null"> {{option.description}} </a>
+                    <a [routerLink]="option.url" [queryParams]="option.queryParam" [target]="option.target"
+                        (click)="option.consumerName?setConsumerName(option.consumerName):null">
+                        {{option.description}}
+                    </a>
                 </li>
             </ul>
-            </ng-container>
+        </ng-container>
     </div>
-   
+
+
 </div>

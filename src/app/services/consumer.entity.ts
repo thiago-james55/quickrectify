@@ -16,6 +16,7 @@ export function getConsumers() : Consumer[] {
     for (let i = 0; i < 51; i++) {
         consumers.push(
             { 
+                id: i,
                 name :`Consumer${i}` , 
                 document: "1234567",
                 address: "Rua Random",

@@ -27,6 +27,8 @@ export class ListOrdersHandlerComponent {
   defaultParts: Part[] = getParts();
 
   defaultOrders: Order[] = generateMockOrders();
+  filteredOrders: Order[];
+
 
   filterByConsumerName!: string;
   filterByPart!: string;
@@ -35,21 +37,56 @@ export class ListOrdersHandlerComponent {
 
   constructor(
     private _route: ActivatedRoute,
-  ) { }
+  ) {
+    this.filteredOrders = this.defaultOrders;
+   }
 
   ngOnInit() {
     const consumerName = this._route.snapshot.queryParamMap.get('consumerName');
-
     if (consumerName) this.setConsumerName(consumerName);
+
+
   }
   
 
   filter(): void {
 
+    const dateCondition = (order: Order) => (
+      (!this.filterByInitialDate || order.date! >= new Date(this.filterByInitialDate)) &&
+      (!this.filterByFinalDate || order.date! <= new Date(this.filterByFinalDate))
+    );
+    
+    const consumerCondition = (order: Order) => (
+      !this.filterByConsumerName || (
+        order.consumer && order.consumer.name!.toLowerCase().includes(this.filterByConsumerName.toLowerCase())
+      )
+    );
+    
+    let orderPartCondition = (order: Order) => (
+      !this.filterByPart || (
+        order.orderParts && order.orderParts.some(part => part.name.toLowerCase().includes(this.filterByPart.toLowerCase()))
+      )
+    );
+    
+
+    if (this.filterByPart.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
+    
+    const predicates = [dateCondition, consumerCondition, orderPartCondition];
+    
+    // Filter the orders based on the predicates
+    this.filteredOrders = this.defaultOrders.filter(order =>
+      predicates.every(predicate => predicate(order))
+    );
+
+    console.log(new Date(this.filterByInitialDate));
+    console.log(this.defaultOrders);
+   
+
   }
 
   setConsumerName(consumerName: string | undefined) {
     if (consumerName) this.filterByConsumerName = consumerName;
+    this.filter();
   }
 
   openSearchDialog(): void {
@@ -86,8 +123,7 @@ export class ListOrdersHandlerComponent {
   }
 
   consumerDropDownOptions(consumer: Consumer) {
-    const queryParam =  { orderId: consumer.id }; 
-
+    const queryParam =  { consumerId: consumer.id }; 
     this.dropdownOptions = [
       { description: "Listar Ordens", consumerName: consumer.name},
       { description: "Editar Cliente", url: "/consumers", queryParam, target:"_self" },
