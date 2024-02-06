@@ -5,7 +5,8 @@
     font-size: small;
 }
 
-.filterSpan, .filterInput {
+.filterSpan,
+.filterInput {
     width: 100%;
     display: flex;
     flex-direction: row;
@@ -14,7 +15,10 @@
     justify-content: space-between;
 }
 
-.consumerFilter, .dateInitialFilter, .dateFinalFilter, .serviceFilter {
+.consumerFilter,
+.dateInitialFilter,
+.dateFinalFilter,
+.serviceFilter {
     display: flex;
     flex-direction: row;
     width: 25%;
@@ -44,7 +48,8 @@ span {
     background-color: #293646;
 }
 
-input, select {
+input,
+select {
     width: 100%;
     margin-left: .5rem;
     margin-right: .5rem;
@@ -90,7 +95,7 @@ tr:hover {
     padding: 1rem;
     z-index: 100;
     text-align: center;
-  }
+}
 
 li {
     list-style: none;
@@ -101,14 +106,14 @@ li:hover {
     background-color: rgba(41, 54, 70, .2);
 }
 
-  .dropdownContent a {
-    cursor: pointer; 
-    color: black; 
-    text-decoration: none; 
-  }
-  
-  .dropdownContent a:hover,
-  .dropdownContent a:focus {
+.dropdownContent a {
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+}
+
+.dropdownContent a:hover,
+.dropdownContent a:focus {
     color: darkblue;
-    text-decoration: none; 
-  }
+    text-decoration: none;
+}

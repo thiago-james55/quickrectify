@@ -113,13 +113,20 @@
     <div class="dropdownOptions">
         <ng-container *ngFor="let option of dropdownOptions">
             <ul>
-
-                <li>
-                    <a [routerLink]="option.url" [queryParams]="option.queryParam" [target]="option.target"
+                <li *ngIf="!option.url?.includes('whatsapp')">
+                    <a  [routerLink]="option.url" [queryParams]="option.queryParam" [target]="option.target"
                         (click)="option.consumerName?setConsumerName(option.consumerName):null">
                         {{option.description}}
                     </a>
                 </li>
+
+                <li *ngIf="option.url?.includes('whatsapp')">
+                    <a  [href]="option.url" [target]="option.target"
+                        (click)="option.consumerName?setConsumerName(option.consumerName):null">
+                        {{option.description}}
+                    </a>
+                </li>
+
             </ul>
         </ng-container>
     </div>

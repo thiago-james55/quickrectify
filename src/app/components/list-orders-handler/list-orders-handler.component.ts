@@ -15,6 +15,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
   styleUrls: ['./list-orders-handler.component.css', '../../../global.css'],
   imports: [CommonModule, FormsModule, DialogConsumerSearchComponent, RouterLink]
 })
+
 export class ListOrdersHandlerComponent {
 
   isDropdownVisible: boolean = false;
@@ -27,27 +28,22 @@ export class ListOrdersHandlerComponent {
   defaultParts: Part[] = getParts();
 
   defaultOrders: Order[] = generateMockOrders();
-  filteredOrders: Order[];
-
+  filteredOrders: Order[] = [];
 
   filterByConsumerName!: string;
-  filterByPart!: string;
+  filterByPart: string = "all";
   filterByInitialDate!: Date;
   filterByFinalDate!: Date;
 
-  constructor(
-    private _route: ActivatedRoute,
-  ) {
+  constructor(private _route: ActivatedRoute) {
     this.filteredOrders = this.defaultOrders;
-   }
+  }
 
   ngOnInit() {
     const consumerName = this._route.snapshot.queryParamMap.get('consumerName');
     if (consumerName) this.setConsumerName(consumerName);
-
-
   }
-  
+
 
   filter(): void {
 
@@ -55,33 +51,27 @@ export class ListOrdersHandlerComponent {
       (!this.filterByInitialDate || order.date! >= new Date(this.filterByInitialDate)) &&
       (!this.filterByFinalDate || order.date! <= new Date(this.filterByFinalDate))
     );
-    
+
     const consumerCondition = (order: Order) => (
       !this.filterByConsumerName || (
         order.consumer && order.consumer.name!.toLowerCase().includes(this.filterByConsumerName.toLowerCase())
       )
     );
-    
+
     let orderPartCondition = (order: Order) => (
       !this.filterByPart || (
         order.orderParts && order.orderParts.some(part => part.name.toLowerCase().includes(this.filterByPart.toLowerCase()))
       )
     );
-    
+
 
     if (this.filterByPart.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
-    
+
     const predicates = [dateCondition, consumerCondition, orderPartCondition];
-    
-    // Filter the orders based on the predicates
+
     this.filteredOrders = this.defaultOrders.filter(order =>
       predicates.every(predicate => predicate(order))
     );
-
-    console.log(new Date(this.filterByInitialDate));
-    console.log(this.defaultOrders);
-   
-
   }
 
   setConsumerName(consumerName: string | undefined) {
@@ -95,6 +85,7 @@ export class ListOrdersHandlerComponent {
 
   getConsumerFromChildAndSendToParent(consumer: Consumer): void {
     this.filterByConsumerName = consumer.name!;
+    this.filter();
   }
 
 
@@ -115,20 +106,34 @@ export class ListOrdersHandlerComponent {
   }
 
   orderDropdownOptions(order: Order) {
-    const queryParam =  { orderId: order.id }; 
+    const queryParam = { orderId: order.id };
     this.dropdownOptions = [
-      { description: "2° Via", url:"/note", queryParam, target: "_blank" },
-      { description: "Editar", url: "/new-order", queryParam, target:"_self" },
+      { description: "2° Via", url: "/note", queryParam, target: "_blank" },
+      { description: "Editar", url: "/new-order", queryParam, target: "_self" },
     ]
   }
 
   consumerDropDownOptions(consumer: Consumer) {
-    const queryParam =  { consumerId: consumer.id }; 
+
+    const queryParam = { consumerId: consumer.id };
     this.dropdownOptions = [
-      { description: "Listar Ordens", consumerName: consumer.name},
-      { description: "Editar Cliente", url: "/consumers", queryParam, target:"_self" },
+      { description: "Listar Ordens", consumerName: consumer.name },
+      { description: "Editar Cliente", url: "/consumers", queryParam, target: "_self" },
     ]
 
+    const whatsappURL: string = "https://api.whatsapp.com/send?phone=+55";
+
+    const phoneProperties: (keyof Consumer)[] = ['phone1', 'phone2', 'phone3'];
+
+    phoneProperties.forEach(property => {
+      if (consumer[property]) {
+        this.dropdownOptions.push({
+          description: `Tel (${phoneProperties.indexOf(property) + 1}): ${consumer[property]}`,
+          url: whatsappURL + consumer[property],
+          target: "_blank"
+        });
+      }
+    });
   }
 
   hideDropdown() {
@@ -141,8 +146,6 @@ export class ListOrdersHandlerComponent {
       top: event.clientY - 10
     };
   }
-
-
 }
 
 export interface DropdownOption {
