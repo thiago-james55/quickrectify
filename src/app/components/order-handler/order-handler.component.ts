@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { OrderPart, Part, getParts } from '../../services/part.entity';
+import { OrderPart, Part } from '../../services/part.entity';
 import { FormsModule } from '@angular/forms';
 import { Consumer } from '../../services/consumer.entity';
 import { ConsumerHandlerComponent } from '../consumer-handler/consumer-handler.component';
 import { Order } from '../../services/order.entity';
 import { ToastService } from '../../services/toast.service';
-import { NavigationExtras, Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { RequestHandlerService } from '../../services/request-handler.service';
 
 
 
@@ -21,13 +21,16 @@ import { ActivatedRoute } from '@angular/router';
 
 export class OrderHandlerComponent {
 
-  constructor(private _toastService: ToastService, private _router: Router, private _route: ActivatedRoute) { }
 
-  //Service.getGroups
-  defaultParts: Part[] = getParts();
+  defaultParts: Part[] = this._requestHandlerService.getDefaultParts();
 
   @Input() order: Order = { orderParts: [] };
 
+  constructor(
+    private _toastService: ToastService,
+    private _router: Router,
+    private _requestHandlerService: RequestHandlerService
+  ) { }
 
   getConsumerFromChild(consumer: Consumer) {
     this.order.consumer = consumer;
@@ -79,27 +82,52 @@ export class OrderHandlerComponent {
     this.sumTotal();
   }
 
-  saveOrder(print: boolean): void {
-    if (this.validateOrder()) {
+  handleSave(print: boolean): void {
 
-      //service.postOrder if success toasty
-      console.log(this.order);
+    if (!this.validateOrder()) return;
 
-      if (this.order.id) {
-        //service.putOrder
-        this._toastService.showToastSuccess(`Ordem (${this.order.id}) salva com sucesso! `);
-        if (print) { this.print() }
-        else { this.clearOrder(); }
-        return;
-      }
+    if (this.order.id) this.editOrder(print);
+    else this.saveOrder(print);
 
-      //Logic Check if Post Succesful
-      this.order.id = 1;
-      if (print) { this.print() }
-      else { this.clearOrder(); }
+  }
 
+  
+  saveOrder(print: boolean) {
+
+    const savedOrder = this._requestHandlerService.postOrder(this.order);
+
+    if (!savedOrder) {
+      this._toastService.showToastError("Erro ao salvar ordem de serviço!");
+      return;
     }
 
+    this.order = savedOrder;
+    if (print) { this.print() }
+    else { 
+      this._toastService.showToastSuccess(`Ordem (${this.order.id}) salva com sucesso!`);
+    }
+
+    this.clearOrder(); 
+
+  }
+
+  editOrder(print: boolean) {
+
+    const editedOrder = this._requestHandlerService.putOrder(this.order);
+
+    if (!editedOrder) {
+      this._toastService.showToastError("Erro ao editar ordem de serviço!");
+      return;
+    }
+
+    this.order = editedOrder;
+
+    if (print) { this.print() }
+    else { 
+      this._toastService.showToastSuccess(`Ordem (${this.order.id}) editada com sucesso!`);
+    }
+
+    this.clearOrder(); 
   }
 
   validateOrder(): boolean {
@@ -125,14 +153,15 @@ export class OrderHandlerComponent {
     if (!!!this.order) return;
     if (!!!this.order.id) return;
 
+    //
     localStorage.setItem(this.order.id.toString(), JSON.stringify(this.order));
 
+    //
     const url = this._router.createUrlTree(['note'], {
       queryParams: { orderId: this.order.id }
     }).toString();
 
     window.open(url, '_blank');
-    this.clearOrder();
   }
 
   clearOrder() {

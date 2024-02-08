@@ -4,28 +4,16 @@
             <div class="consumerFilter">
                 <span>Cliente:</span>
             </div>
-
-
-
             <div class="dateInitialFilter">
                 <span>Data Inicial:</span>
             </div>
-
-
-
             <div class="dateFinalFilter">
                 <span>Data Final:</span>
             </div>
-
-
-
             <div class="serviceFilter">
                 <span>Serviço:</span>
             </div>
         </div>
-
-
-
         <div class="filterInput">
             <div class="consumerFilter">
                 <button (click)="openSearchDialog()" class="searchConsumerButton">
@@ -34,21 +22,12 @@
                 <input class="searchConsumerInput" [(ngModel)]="filterByConsumerName" (ngModelChange)="filter()"
                     type="text" placeholder="Digite o nome do cliente">
             </div>
-
-
-
             <div class="dateInitialFilter">
                 <input [(ngModel)]="filterByInitialDate" (ngModelChange)="filter()" type="date">
             </div>
-
-
-
             <div class="dateFinalFilter">
                 <input [(ngModel)]="filterByFinalDate" (ngModelChange)="filter()" type="date">
             </div>
-
-
-
             <div class="serviceFilter">
                 <select [(ngModel)]="filterByPart" (ngModelChange)="filter()">
                     <option value="all">Todos</option>

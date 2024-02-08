@@ -15,6 +15,7 @@ import { Order } from '../../services/order.entity';
   imports: [NavbarComponent, FooterComponent, PageTitleComponent, OrderHandlerComponent]
 })
 export class NewOrderComponent {
+
   constructor(
     private _route: ActivatedRoute,
     private _toastService: ToastService,
@@ -23,27 +24,25 @@ export class NewOrderComponent {
   order: Order = { orderParts: [] };
 
   ngOnInit() {
-    if (this._route.snapshot.queryParamMap.get('orderId')) this.getOrder()
+    const orderId = this._route.snapshot.queryParamMap.get('orderId');
+    if (orderId) this.getOrder(orderId);
   }
 
-  getOrder(): void {
-    const orderId = this._route.snapshot.queryParamMap.get('orderId');
+  getOrder(orderId: string): void {
 
     if (orderId) {
 
+      //
       const storedOrderData = localStorage.getItem(orderId);
 
       if (storedOrderData) {
         this.order = JSON.parse(storedOrderData) as Order;
       } else {
-        this.getOrderByService(orderId);
+        //Service of services of HTTP methods =  GET
       }
     } else {
       this._toastService.showToastError('No orderId in query params');
     }
   }
 
-  getOrderByService(orderId: string) {
-
-  }
 }

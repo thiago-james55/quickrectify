@@ -1,8 +1,8 @@
-import { getConsumers } from '../../services/consumer.entity';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Consumer } from '../../services/consumer.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RequestHandlerService } from '../../services/request-handler.service';
 
 
 @Component({
@@ -17,14 +17,20 @@ export class DialogConsumerSearchComponent {
   
   consumerName!: string;
 
-  consumers: Consumer[] = getConsumers();
+  defaultConsumers: Consumer[] = [];
+  filteredConsumers: Consumer[] = [];
 
   @Output() objectSentToParent: EventEmitter<any> = new EventEmitter();
 
-  @ViewChild('modal', { static: false }) // Add { static: false } to avoid "ExpressionChangedAfterItHasBeenCheckedError"
+  @ViewChild('modal', { static: false })
   modal!: ElementRef<HTMLDialogElement>;
 
+  constructor (private _requestHandlerService: RequestHandlerService) { }
+
   openModal(): void {
+
+    this.defaultConsumers = this._requestHandlerService.getConsumers();
+    this.filteredConsumers = this.defaultConsumers;
 
     if (this.modal && this.modal.nativeElement) {
       this.modal.nativeElement.showModal();
@@ -46,7 +52,9 @@ export class DialogConsumerSearchComponent {
   }
 
   searchConsumer() {
-
+    if (!this.consumerName) return;
+    this.filteredConsumers = this.defaultConsumers.filter(c => c.name?.toLowerCase().includes(this.consumerName.toLocaleLowerCase()))
   }
+
 
 }

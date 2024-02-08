@@ -4,29 +4,6 @@ export interface Part {
     services: string[];
 }
 
-//MockOfParts
-export const parts: Part[] = [
-    { name: "Biela", services: ["Banho", "Completa", "Só Ferro", "Só Bucha", "Montar Pistão"] },
-    { name: "Bloco", services: ["Banho", "Abrir", "Encamisar", "Plainar", "Soldar", "Mandrilhar", "Trocar Bucha"] },
-    { name: "Cabeçote", services: ["Banho", "Plainar", "Soldar", "Mandrilhar", "Completo", "Regular"] },
-    { name: "Virabrequim", services: ["Banho", "Retificar", "Encher Lateral", "Polir"] },
-    { name: "Volante", services: ["Banho", "Retificar", "Virar Gremalheira"] },
-    { name: "Solda", services: ["Solda Ferro", "Solda Aluminio", "Solda Cart"] },
-    { name: "Outros", services: ["Outros"] },
-];
-
-//MockOfParts
-export function getParts(): Part[] {
-
-    parts.sort((a, b) => a.name.localeCompare(b.name));
-
-    parts.forEach(e => {
-        e.services.sort();
-    });
-    return parts;
-}
-
-//OrderPart part to assign to a order
 export interface OrderPart {
     name: string;
     service?: string;

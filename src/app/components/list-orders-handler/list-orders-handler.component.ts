@@ -1,12 +1,12 @@
 import { Component, ViewChild } from '@angular/core';
-import { Part, getParts } from '../../services/part.entity';
+import { Part} from '../../services/part.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Consumer } from '../../services/consumer.entity';
 import { DialogConsumerSearchComponent } from "../dialog-consumer-search/dialog-consumer-search.component";
-import { generateMockOrders } from '../../services/mock.service';
 import { Order } from '../../services/order.entity';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { RequestHandlerService } from '../../services/request-handler.service';
 
 @Component({
   selector: 'app-list-orders-handler',
@@ -17,25 +17,25 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 })
 
 export class ListOrdersHandlerComponent {
-
+  
   isDropdownVisible: boolean = false;
   dropdownPosition: { left: number, top: number } = { left: 0, top: 0 };
   dropdownOptions: DropdownOption[] = [];
-
+  
   @ViewChild(DialogConsumerSearchComponent)
   dialogConsumerSearchComponent!: DialogConsumerSearchComponent;
-
-  defaultParts: Part[] = getParts();
-
-  defaultOrders: Order[] = generateMockOrders();
+  
+  defaultParts: Part[] = this._requestHandlerService.getDefaultParts();
+  
+  defaultOrders: Order[] = this._requestHandlerService.generateMockOrders();
   filteredOrders: Order[] = [];
-
+  
   filterByConsumerName!: string;
   filterByPart: string = "all";
   filterByInitialDate!: Date;
   filterByFinalDate!: Date;
-
-  constructor(private _route: ActivatedRoute) {
+  
+  constructor(private _route: ActivatedRoute, private _requestHandlerService: RequestHandlerService) {
     this.filteredOrders = this.defaultOrders;
   }
 
@@ -118,7 +118,7 @@ export class ListOrdersHandlerComponent {
     const queryParam = { consumerId: consumer.id };
     this.dropdownOptions = [
       { description: "Listar Ordens", consumerName: consumer.name },
-      { description: "Editar Cliente", url: "/consumers", queryParam, target: "_self" },
+      { description: "Ver/Editar Cliente", url: "/consumers", queryParam, target: "_self" },
     ]
 
     const whatsappURL: string = "https://api.whatsapp.com/send?phone=+55";

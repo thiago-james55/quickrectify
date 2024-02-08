@@ -1,7 +1,7 @@
 <dialog #modal>
     <div class="selfContainer">
         <button (click)="closeModal()" class="buttonExclude close">X</button>
-        <h1>Criar Cliente</h1>
+        <h1> {{ this.consumer.id ? "Editar Cliente N°" + this.consumer.id : "Criar Cliente"}}</h1>
         <hr class="defaultHR">
         <div class="fields">
             <div class="field"><span>Nome:</span>       <input [(ngModel)]="consumer.name" type="text" placeholder="Obrigatório"></div>
@@ -10,7 +10,7 @@
             <div class="field"><span>Telefone 1:</span> <input [(ngModel)]="consumer.phone1" type="text" placeholder="Obrigatório"></div>
             <div class="field"><span>Telefone 2:</span> <input [(ngModel)]="consumer.phone2" type="text"></div>
             <div class="field"><span>Telefone 3:</span> <input [(ngModel)]="consumer.phone3" type="text"></div>
-            <button class="defaultButton defaultBorder" (click)="onConsumerCreate()">Salvar</button>
+            <button class="defaultButton defaultBorder" (click)="handleSave()">Salvar</button>
         </div>
     </div>
 </dialog>

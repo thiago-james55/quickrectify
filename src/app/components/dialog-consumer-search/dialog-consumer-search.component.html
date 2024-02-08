@@ -4,11 +4,10 @@
         <h1>Procurar Cliente</h1>
         <hr class="defaultHR">
         <div class="search">
-            <input [(ngModel)]="this.consumerName" class="defaultInput" placeholder="Digite o nome do cliente" type="text">
-            <button class="defaultBorder defaultButton">Procurar</button>
+            <input [(ngModel)]="this.consumerName" (ngModelChange)="searchConsumer()" class="defaultInput" placeholder="Digite o nome do cliente" type="text">
         </div>
         <div class="consumerResults">
-            <button class="defaultButton defaultBorder" *ngFor="let consumer of consumers"
+            <button class="defaultButton defaultBorder" *ngFor="let consumer of filteredConsumers"
                 (click)="onConsumerChoose(consumer)">{{consumer.name}}</button>
         </div>
     </div>

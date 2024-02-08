@@ -33,8 +33,8 @@ export class ConsumerHandlerComponent {
     this.dialogConsumerSearchComponent.openModal();    
   }
 
-  openCreateDialog(): void {
-    this.dialogConsumerCreateComponent.openModal(); 
+  openCreateDialog(consumer?: Consumer): void {
+    this.dialogConsumerCreateComponent.openModal(consumer); 
   }
 
   getConsumerFromChildAndSendToParent(consumer: Consumer): void {

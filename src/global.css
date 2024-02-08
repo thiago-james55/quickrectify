@@ -59,6 +59,10 @@
     border: 1px solid #293646;
 }
 
+.defaultInput::placeholder{
+    text-align: center;
+}
+
 .defaultHR {
     width: 70%;
     margin-left: auto;
