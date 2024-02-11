@@ -26,7 +26,6 @@ export class ConsumersComponent {
     getConsumer(consumerId: number): void {
         //services.getConsumerById
         this.consumer = this._requestHandlerService.getConsumerById(consumerId);
-        console.log(this.consumer);
     }
 
     checkQueryParam() {

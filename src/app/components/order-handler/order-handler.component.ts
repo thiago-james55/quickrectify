@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 import { RequestHandlerService } from '../../services/request-handler.service';
 
 
-
 @Component({
   selector: 'app-order-handler',
   standalone: true,
@@ -47,6 +46,10 @@ export class OrderHandlerComponent {
   }
 
   sumRow(part: OrderPart): void {
+    
+    if (!!!part.quantity) part.quantity = 1;
+    if (!!!part.pricePerQuantity) part.pricePerQuantity = 100;
+
     if (part.quantity && part.pricePerQuantity) {
       part.priceTotal = part.quantity * part.pricePerQuantity;
       this.sumTotal();
@@ -74,6 +77,7 @@ export class OrderHandlerComponent {
     //Adjust for constructor(edit Order)
     let orderPart: OrderPart = { name: part.name, service: part.services[0] };
     this.order.orderParts.push(orderPart);
+    this.sumRow(orderPart);
   }
 
   deleteRow(part: OrderPart): void {
@@ -131,6 +135,7 @@ export class OrderHandlerComponent {
   }
 
   validateOrder(): boolean {
+
     let fields: string[] = [];
 
     if (!this.order['consumer']) fields.push("Cliente");
@@ -138,6 +143,17 @@ export class OrderHandlerComponent {
     if (this.order && (this.order.priceTotal === undefined || this.order.priceTotal <= 0)) {
       fields.push("Valor Total");
     }
+
+    let parts: boolean = true;
+
+    this.order.orderParts.forEach(p => {
+        if (!!!p.description) {
+            parts = false;
+            return;
+        }
+    });
+
+    if (!parts) fields.push("Descrição de Serviços");
 
     if (fields.length > 0) {
       let message = "Os campos " + fields.join(' e ') + " não podem estar vazios!";
@@ -150,8 +166,12 @@ export class OrderHandlerComponent {
 
   print(): void {
 
+    this.order.id = 1;
+
+    /*
     if (!!!this.order) return;
     if (!!!this.order.id) return;
+    */
 
     //
     localStorage.setItem(this.order.id.toString(), JSON.stringify(this.order));
