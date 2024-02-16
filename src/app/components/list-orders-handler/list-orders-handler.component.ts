@@ -60,7 +60,7 @@ export class ListOrdersHandlerComponent {
 
     let orderPartCondition = (order: Order) => (
       !this.filterByPart || (
-        order.orderParts && order.orderParts.some(part => part.name.toLowerCase().includes(this.filterByPart.toLowerCase()))
+        order.parts && order.parts.some(part => part.name.toLowerCase().includes(this.filterByPart.toLowerCase()))
       )
     );
 
@@ -96,7 +96,7 @@ export class ListOrdersHandlerComponent {
 
     if (data) {
       this.dropdownOptions = [];
-      if ('orderParts' in data) {
+      if ('parts' in data) {
         this.orderDropdownOptions(data);
       } else {
         this.consumerDropDownOptions(data);

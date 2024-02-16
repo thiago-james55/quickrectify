@@ -21,7 +21,7 @@ export class NoteComponent {
     public _companyInfo: CompanyInfoService
   ) { }
 
-  order: Order = { orderParts: [] };
+  order: Order = { parts: [] };
   installments: number[] = [];
 
 

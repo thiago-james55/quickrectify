@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Consumer } from './consumer.entity';
-import { OrderPart, Part } from './part.entity';
+import { Part, DefaultPart } from './part.entity';
 import { Order } from './order.entity';
 
 @Injectable({
@@ -9,7 +9,7 @@ import { Order } from './order.entity';
 export class RequestHandlerService {
 
   //Mock
-  parts: Part[] = [
+  defaultParts: DefaultPart[] = [
     { name: "Biela", services: ["Banho", "Completa", "Só Ferro", "Só Bucha", "Montar Pistão"] },
     { name: "Bloco", services: ["Banho", "Abrir", "Encamisar", "Plainar", "Soldar", "Mandrilhar", "Trocar Bucha"] },
     { name: "Cabeçote", services: ["Banho", "Plainar", "Soldar", "Mandrilhar", "Completo", "Regular"] },
@@ -51,15 +51,15 @@ export class RequestHandlerService {
   }
 
   //GET - ENUM OF BACKEND
-  getDefaultParts(): Part[] {
+  getDefaultParts(): DefaultPart[] {
 
-    this.parts.sort((a, b) => a.name.localeCompare(b.name));
+    this.defaultParts.sort((a, b) => a.name.localeCompare(b.name));
 
-    this.parts.forEach(e => {
+    this.defaultParts.forEach(e => {
       e.services.sort();
     });
 
-    return this.parts;
+    return this.defaultParts;
   }
 
   //POST ORDER
@@ -108,14 +108,14 @@ export class RequestHandlerService {
 
       const numberOfOrderParts = Math.floor(Math.random() * 5) + 1; // Random number of order parts (1 to 5)
 
-      const orderParts: OrderPart[] = [];
+      const parts: Part[] = [];
       for (let j = 0; j < numberOfOrderParts; j++) {
         const partIndex = Math.floor(Math.random() * defaultParts.length);
         const selectedPart = defaultParts[partIndex];
         const serviceIndex = Math.floor(Math.random() * selectedPart.services.length);
         const selectedService = selectedPart.services[serviceIndex];
 
-        const orderPart: OrderPart = {
+        const orderPart: Part = {
           name: selectedPart.name,
           service: selectedService,
           description: `Description for ${selectedPart.name} - ${selectedService}`,
@@ -127,21 +127,21 @@ export class RequestHandlerService {
         if (orderPart.quantity && orderPart.pricePerQuantity) {
           orderPart.priceTotal = orderPart.quantity * orderPart.pricePerQuantity;
         }
-        orderParts.push(orderPart);
+        parts.push(orderPart);
       }
 
       const order: Order = {
         id: i,
         date: new Date(),
         consumer: consumer,
-        orderParts: orderParts,
+        parts: parts,
         discountPercent: 0,
         discountCash: 0,
         priceSubTotal: 0,
         priceTotal: 0,
       };
 
-      order.priceSubTotal = orderParts.reduce((total, part) => total + part.priceTotal!, 0);
+      order.priceSubTotal = parts.reduce((total, part) => total + part.priceTotal!, 0);
       order.priceTotal = order.priceSubTotal - order.discountCash! - (order.priceSubTotal * order.discountPercent!) / 100;
 
       orders.push(order);

@@ -1,11 +1,11 @@
 import { Consumer } from "./consumer.entity";
-import { OrderPart } from "./part.entity";
+import { Part } from "./part.entity";
 
 export interface Order {
     id?: number;
     date?: Date;
     consumer?: Consumer;
-    orderParts: OrderPart[];
+    parts: Part[];
     discountPercent?: number;
     discountCash?: number;
     priceSubTotal?: number;

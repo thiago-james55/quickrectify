@@ -1,10 +1,10 @@
 //DefaultParts
-export interface Part {
+export interface DefaultPart {
     name: string;
     services: string[];
 }
 
-export interface OrderPart {
+export interface Part {
     name: string;
     service?: string;
     description?: string;

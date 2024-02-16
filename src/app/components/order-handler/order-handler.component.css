@@ -16,6 +16,8 @@
 }
 
 .description { width: 30%; }
+.totalPrice { width: 10%; }
+
 
 input {
     width: 100%;
@@ -57,14 +59,18 @@ select {
     width: 40%;
 }
 
-.totalSpans span, .totalInputs input {
+.totalSpans span, .totalInputs div, .totalInputs span {
     width: 25%;
+    align-self: center;
 }
 
 .totalInputs input {
     margin-left: 3%;
     margin-right: 3%;
+    width: 80%;
 }
+
+
 
 
 

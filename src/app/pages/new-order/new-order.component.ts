@@ -21,7 +21,7 @@ export class NewOrderComponent {
     private _toastService: ToastService,
   ) { }
 
-  order: Order = { orderParts: [] };
+  order: Order = { parts: [] };
 
   ngOnInit() {
     const orderId = this._route.snapshot.queryParamMap.get('orderId');

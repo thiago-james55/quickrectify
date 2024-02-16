@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { OrderPart, Part } from '../../services/part.entity';
+import { Part, DefaultPart } from '../../services/part.entity';
 import { FormsModule } from '@angular/forms';
 import { Consumer } from '../../services/consumer.entity';
 import { ConsumerHandlerComponent } from '../consumer-handler/consumer-handler.component';
@@ -21,9 +21,9 @@ import { RequestHandlerService } from '../../services/request-handler.service';
 export class OrderHandlerComponent {
 
 
-  defaultParts: Part[] = this._requestHandlerService.getDefaultParts();
+  defaultParts: DefaultPart[] = this._requestHandlerService.getDefaultParts();
 
-  @Input() order: Order = { orderParts: [] };
+  @Input() order: Order = { parts: [] };
 
   constructor(
     private _toastService: ToastService,
@@ -35,7 +35,7 @@ export class OrderHandlerComponent {
     this.order.consumer = consumer;
   }
 
-  getServicesOfPart(part: OrderPart): string[] | undefined {
+  getServicesOfPart(part: Part): string[] | undefined {
 
     const foundPart = this.defaultParts.find((p) => p.name == part.name);
 
@@ -45,44 +45,42 @@ export class OrderHandlerComponent {
 
   }
 
-  sumRow(part: OrderPart): void {
-    
-    if (!!!part.quantity) part.quantity = 1;
-    if (!!!part.pricePerQuantity) part.pricePerQuantity = 100;
-
+  sumRow(part: Part): void {
     if (part.quantity && part.pricePerQuantity) {
       part.priceTotal = part.quantity * part.pricePerQuantity;
-      this.sumTotal();
+      this.sumTotal();     
     }
   }
 
   sumTotal() {
 
-    if (this.order.orderParts.length <= 0) {
+    if (this.order.parts.length <= 0) {
       this.order.priceSubTotal = 0;
       this.order.priceTotal = 0;
       return;
     }
 
-    this.order.priceSubTotal = this.order.orderParts.reduce((accumulator, orderPart) => accumulator + (orderPart.priceTotal || 0), 0);
+    this.order.priceSubTotal = this.order.parts.reduce((accumulator, part) => accumulator + (part.priceTotal || 0), 0);
     this.order.priceTotal = this.order.priceSubTotal;
     if (!!this.order.discountCash) this.order.priceTotal -= this.order.discountCash;
     if (!!this.order.discountPercent) this.order.priceTotal -= ((this.order.priceTotal / 100) * this.order.discountPercent);
-
-
   }
 
 
-  insertRow(part: Part): void {
-    //Adjust for constructor(edit Order)
-    let orderPart: OrderPart = { name: part.name, service: part.services[0] };
-    this.order.orderParts.push(orderPart);
-    this.sumRow(orderPart);
+  insertRow(defaultPart: DefaultPart): void {
+    let part: Part = { name: defaultPart.name, service: defaultPart.services[0] };
+    this.order.parts.push(part);
+
+    part.quantity = 1;
+    part.pricePerQuantity = 100;
+    part.priceTotal = 100;
+    
+    this.sumRow(part);
   }
 
-  deleteRow(part: OrderPart): void {
-    const index = this.order.orderParts.indexOf(part);
-    this.order.orderParts.splice(index, 1);
+  deleteRow(part: Part): void {
+    const index = this.order.parts.indexOf(part);
+    this.order.parts.splice(index, 1);
     this.sumTotal();
   }
 
@@ -139,14 +137,14 @@ export class OrderHandlerComponent {
     let fields: string[] = [];
 
     if (!this.order['consumer']) fields.push("Cliente");
-    if (!(this.order['orderParts'].length > 0)) fields.push("Tabela de Serviços");
+    if (!(this.order['parts'].length > 0)) fields.push("Tabela de Serviços");
     if (this.order && (this.order.priceTotal === undefined || this.order.priceTotal <= 0)) {
       fields.push("Valor Total");
     }
 
     let parts: boolean = true;
 
-    this.order.orderParts.forEach(p => {
+    this.order.parts.forEach(p => {
         if (!!!p.description) {
             parts = false;
             return;
@@ -185,7 +183,7 @@ export class OrderHandlerComponent {
   }
 
   clearOrder() {
-    this.order = { orderParts: [] };
+    this.order = { parts: [] };
     this.order.id = undefined;
     this.order.date = undefined;
     this.order.consumer = undefined;
@@ -193,6 +191,11 @@ export class OrderHandlerComponent {
     this.order.discountCash = undefined;
     this.order.priceSubTotal = undefined;
     this.order.priceTotal = undefined;
+  }
+
+  formatValue(value: number | undefined): string {
+    if (value) return value.toFixed(2);
+    else return "0.00";
   }
 
 }

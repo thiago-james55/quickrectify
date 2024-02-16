@@ -54,7 +54,7 @@
             </thead>
             <tbody>
                 <ng-container *ngFor="let order of filteredOrders">
-                    <tr *ngFor="let part of order.orderParts">
+                    <tr *ngFor="let part of order.parts">
                         <td class="tdWithDropdown" (click)="showDropdown($event, order)">
                             {{order.id}}
                         </td>

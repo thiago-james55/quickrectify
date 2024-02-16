@@ -22,7 +22,7 @@
              </tr>
            </thead>
             <tbody>
-                <tr *ngFor="let part of order.orderParts">
+                <tr *ngFor="let part of order.parts">
                     <td>
                         <span>{{part.name}}</span>
                     </td>
@@ -43,8 +43,7 @@
                             step="10" [value]="part.pricePerQuantity">
                     </td>
                     <td>
-                        <input (ngModel)="part.priceTotal" type="number" [value]="part.priceTotal?.toFixed(2)"
-                            disabled>
+                        <span> R${{formatValue(part.priceTotal)}}</span>
                     </td>
                     <td>
                         <button class="buttonExclude" (click)="deleteRow(part)">
@@ -58,18 +57,21 @@
 
     <div class="totalValue defaultBorder">
         <div class="totalSpans">
-
             <span>Subtotal</span>
             <span>Desconto %</span>
             <span>Desconto Valor</span>
             <span>Total Geral</span>
         </div>
         <div class="totalInputs">
-            <input (ngModel)="order.priceSubTotal" [value]="order.priceSubTotal?.toFixed(2)" disabled
-                type="number">
-            <input [(ngModel)]="order.discountPercent" (ngModelChange)="sumTotal()" type="number">
-            <input [(ngModel)]="order.discountCash" (ngModelChange)="sumTotal()" type="number">
-            <input (ngModel)="order.priceTotal" [value]="order.priceTotal?.toFixed(2)" disable type="number">
+            <span> R${{formatValue(order.priceSubTotal)}}</span>
+            <div>
+                <input [(ngModel)]="order.discountPercent" (ngModelChange)="sumTotal()" type="number">
+            </div>
+            <div>
+                <input [(ngModel)]="order.discountCash" (ngModelChange)="sumTotal()" type="number">
+            </div>
+            <span> R${{formatValue(order.priceTotal)}}</span>
+
         </div>
     </div>
     <div class="save defaultBorder">
