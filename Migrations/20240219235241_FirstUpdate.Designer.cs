@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuickRectify.Config;
 
@@ -10,9 +11,11 @@ using QuickRectify.Config;
 namespace QuickRectify.Migrations
 {
     [DbContext(typeof(DbContextConfig))]
-    partial class DbContextConfigModelSnapshot : ModelSnapshot
+    [Migration("20240219235241_FirstUpdate")]
+    partial class FirstUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -103,3 +103,4 @@ D:\Programação\Projetos\C#\QuickRectify\obj\Debug\net8.0\QuickRectify.pdb
 D:\Programação\Projetos\C#\QuickRectify\obj\Debug\net8.0\QuickRectify.genruntimeconfig.cache
 D:\Programação\Projetos\C#\QuickRectify\obj\Debug\net8.0\ref\QuickRectify.dll
 D:\Programação\Projetos\C#\QuickRectify\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\Programação\Projetos\C#\QuickRectify\obj\Debug\net8.0\QuickRectify.sourcelink.json

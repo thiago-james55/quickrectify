@@ -5,9 +5,10 @@ namespace QuickRectify.Models
 {
     public class Order
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.UtcNow;
         public float DiscountPercent { get; set; }
         public float DiscountCash { get; set; }
         [Required]
@@ -21,7 +22,8 @@ namespace QuickRectify.Models
         [ForeignKey(nameof(ConsumerId))]
         public Consumer Consumer { get; set; }
 
-        public IEnumerable<Part> Parts { get; set; } = new List<Part>();
+        [Required]
+        public ICollection<Part> Parts { get; set; } = new List<Part>();
 
         public Order () { }
 

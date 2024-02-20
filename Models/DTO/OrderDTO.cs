@@ -11,8 +11,8 @@ namespace QuickRectify.Models.DTO
         public float DiscountCash { get; set; }
         public float PriceSubTotal { get; set; }
         public float PriceTotal { get; set; }
-        public ConsumerOrderDTO ConsumerOrderDTO { get; set; }
-        public IEnumerable<PartDTO> PartsDTO { get; set; } = new List<PartDTO>();
+        public ConsumerOrderDTO Consumer { get; set; }
+        public IEnumerable<PartDTO> Parts { get; set; } = new List<PartDTO>();
 
         public OrderDTO(int id, DateTime date, float discountPercent, float discountCash, float priceSubTotal, float priceTotal, ConsumerOrderDTO consumerOrderDTO, IEnumerable<Part> parts)
         {
@@ -22,9 +22,9 @@ namespace QuickRectify.Models.DTO
             DiscountCash = discountCash;
             PriceSubTotal = priceSubTotal;
             PriceTotal = priceTotal;
-            ConsumerOrderDTO = consumerOrderDTO;
+            Consumer = consumerOrderDTO;
 
-            PartsDTO = parts.Select(part => new PartDTO(part)).ToList();
+            Parts = parts.Select(part => new PartDTO(part)).ToList();
 
         }
 
@@ -36,8 +36,8 @@ namespace QuickRectify.Models.DTO
             DiscountCash = order.DiscountCash;
             PriceSubTotal = order.PriceSubTotal;
             PriceTotal = order.PriceTotal;
-            ConsumerOrderDTO = new ConsumerOrderDTO(order.Consumer);
-            PartsDTO = order.Parts.Select(part => new PartDTO(part)).ToList();
+            Consumer = new ConsumerOrderDTO(order.Consumer);
+            Parts = order.Parts.Select(part => new PartDTO(part)).ToList();
         }
 
 

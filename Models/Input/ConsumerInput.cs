@@ -4,12 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuickRectify.Models
 {
-    [Index(nameof(Name), IsUnique = true)]
-    [Index(nameof(Document), IsUnique = true)]
-    public class Consumer
+
+    public class ConsumerInput
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public int Id { get; set; }
 
         [Required]
@@ -22,9 +20,7 @@ namespace QuickRectify.Models
         public string Phone2 { get; set; }
         public string Phone3 { get; set; }
 
-        public IEnumerable<Order> Orders { get; set; } = new List<Order>();
-
-        public Consumer() { }
+        public ConsumerInput() { }
 
     }
 }

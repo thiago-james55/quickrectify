@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuickRectify.Models
 {
-    public class Part
+    public class PartInput
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
@@ -20,12 +18,22 @@ namespace QuickRectify.Models
         [Required]
         public float PriceTotal { get; set; }
 
-        public int OrderId {  get; set; }
+        public PartInput() { }
 
-        [ForeignKey(nameof(OrderId))]
-        public Order Order { get; set; }
+        public Part ToPart()
+        {
+            Part part = new Part();
 
-        public Part() { }
+            if (Id > 0) part.Id = Id;
+            part.Name = Name;
+            part.Service = Service;
+            part.Description = Description;
+            part.Quantity = Quantity;
+            part.PricePerQuantity = PricePerQuantity;
+            part.PriceTotal = PriceTotal;
+
+            return part;
+        }
 
     }
 }

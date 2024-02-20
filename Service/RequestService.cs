@@ -33,13 +33,39 @@ namespace QuickRectify.Service
 
         }
 
-        public async Task<OrderDTO> SaveOrderAsync(Order order)
-        {                       
+        public async Task<OrderDTO> GetOrderByIdAsync(int id)
+        {
+            try
+            {
+            Order order = await _dbContextConfig.Orders
+                        .Include(o => o.Consumer)
+                        .Include(o => o.Parts)
+                        .FirstOrDefaultAsync(o => o.Id == id);
+            return new OrderDTO(order);
+
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.ToString());
+                return null;
+            }
+        }
+
+
+        public async Task<OrderDTO> SaveOrderAsync(OrderInput orderInput)
+        {
+            Order order = await orderInput.ToOrder();
+
             try
             {
                 _dbContextConfig.Orders.Add(order);
 
                 await _dbContextConfig.SaveChangesAsync();
+
+                order = await _dbContextConfig.Orders
+                        .Include(o => o.Consumer)
+                        .Include(o => o.Parts)
+                        .SingleOrDefaultAsync(o => o.Id == order.Id);
 
                 return new OrderDTO(order);
             }
@@ -49,6 +75,7 @@ namespace QuickRectify.Service
                 return null;
             }
         }
+               
 
         public async Task<OrderDTO> EditOrderAsync(Order order)
         {
@@ -65,6 +92,8 @@ namespace QuickRectify.Service
                 return null;
             }
         }
+              
+
         #endregion
 
         #region Consumer
@@ -82,6 +111,19 @@ namespace QuickRectify.Service
                 return null;
             }
 
+        }
+
+        public async Task<Consumer> GetConsumerByIdAsync(int id)
+        {
+            try
+            {
+                return await _dbContextConfig.Consumers.FirstOrDefaultAsync(c => c.Id == id);
+            }
+            catch (Exception ex)
+            {
+                await Console.Out.WriteLineAsync(ex.ToString());
+                return null;
+            }
         }
 
         public async Task<Consumer> SaveConsumerAsync(Consumer consumer)
