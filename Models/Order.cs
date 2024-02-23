@@ -27,6 +27,6 @@ namespace QuickRectify.Models
 
         public Order () { }
 
-        
+
     }
 }

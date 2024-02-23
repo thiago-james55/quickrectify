@@ -22,7 +22,7 @@ namespace QuickRectify.Models
         public string Phone2 { get; set; }
         public string Phone3 { get; set; }
 
-        public IEnumerable<Order> Orders { get; set; } = new List<Order>();
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
 
         public Consumer() { }
 

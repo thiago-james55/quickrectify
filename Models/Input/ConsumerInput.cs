@@ -22,5 +22,20 @@ namespace QuickRectify.Models
 
         public ConsumerInput() { }
 
+        public async Task<Consumer> ToConsumer()
+        {
+            Consumer consumer = new Consumer();
+            if (Id > 0) consumer.Id = Id;
+            consumer.Name = Name;
+            consumer.Document = Document;
+            consumer.Address = Address;
+            consumer.Phone1 = Phone1;
+            consumer.Phone2 = Phone2;
+            consumer.Phone3 = Phone3;
+
+            return consumer;
+
+        }
+
     }
 }

@@ -18,12 +18,12 @@ namespace QuickRectify.Config
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
             modelBuilder.Entity<Part>()
                 .HasOne(p => p.Order)
                 .WithMany(o => o.Parts)
                 .HasForeignKey(p => p.OrderId)
-                .IsRequired();
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Consumer)
@@ -34,8 +34,10 @@ namespace QuickRectify.Config
             modelBuilder.Entity<Consumer>()
                 .HasMany(c => c.Orders)
                 .WithOne(o => o.Consumer)
-                .HasForeignKey(o => o.ConsumerId);
+                .HasForeignKey(o => o.ConsumerId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
+
 
 
     }
