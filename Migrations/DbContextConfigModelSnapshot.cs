@@ -26,7 +26,6 @@ namespace QuickRectify.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Document")
@@ -42,11 +41,9 @@ namespace QuickRectify.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Phone2")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Phone3")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -72,10 +69,10 @@ namespace QuickRectify.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<float>("DiscountCash")
+                    b.Property<float?>("DiscountCash")
                         .HasColumnType("float");
 
-                    b.Property<float>("DiscountPercent")
+                    b.Property<float?>("DiscountPercent")
                         .HasColumnType("float");
 
                     b.Property<float>("PriceSubTotal")
@@ -98,7 +95,6 @@ namespace QuickRectify.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -133,7 +129,7 @@ namespace QuickRectify.Migrations
                     b.HasOne("QuickRectify.Models.Consumer", "Consumer")
                         .WithMany("Orders")
                         .HasForeignKey("ConsumerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Consumer");

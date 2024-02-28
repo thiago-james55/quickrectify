@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "i1dw6THyWf+9jYpRMu0WHhUvpTidMfDP5fk3a6UKhmIMrB9XqbjHJNzU3WJfg8/fMO7q5qlyRvmcaZ1Ts2zbCg==",
+  "dgSpecHash": "DH5/1H6ZVZIfR4mI+JquKEl63SK4okefcnRkXdwWpUgzV4jWP+5ki9zhqry6yj5KAYhvsYNqXlhdoqUouwyN+w==",
   "success": true,
   "projectFilePath": "D:\\Programação\\Projetos\\C#\\QuickRectify\\QuickRectify.csproj",
   "expectedPackageFiles": [
@@ -29,6 +29,7 @@
     "C:\\Users\\tsyhw\\.nuget\\packages\\microsoft.extensions.options\\8.0.0\\microsoft.extensions.options.8.0.0.nupkg.sha512",
     "C:\\Users\\tsyhw\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
     "C:\\Users\\tsyhw\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\tsyhw\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.19.6\\microsoft.visualstudio.azure.containers.tools.targets.1.19.6.nupkg.sha512",
     "C:\\Users\\tsyhw\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\tsyhw\\.nuget\\packages\\mysqlconnector\\2.3.5\\mysqlconnector.2.3.5.nupkg.sha512",
     "C:\\Users\\tsyhw\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",

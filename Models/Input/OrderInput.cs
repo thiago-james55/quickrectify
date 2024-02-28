@@ -5,8 +5,8 @@ namespace QuickRectify.Models
     public class OrderInput
     {
         public int Id { get; set; }
-        public float DiscountPercent { get; set; }
-        public float DiscountCash { get; set; }
+        public float? DiscountPercent { get; set; }
+        public float? DiscountCash { get; set; }
         [Required]
         public float PriceSubTotal { get; set; }
         [Required]
@@ -25,8 +25,8 @@ namespace QuickRectify.Models
             Order order = new Order ();
 
             if (Id  > 0) order.Id = Id;
-            order.DiscountPercent = DiscountPercent;
-            order.DiscountCash = DiscountCash;
+            order.DiscountPercent = DiscountPercent.HasValue ? DiscountPercent : 0;
+            order.DiscountCash = DiscountCash.HasValue ? DiscountCash : 0;
             order.PriceSubTotal = PriceSubTotal;
             order.PriceTotal = PriceTotal;
             order.ConsumerId = ConsumerId;

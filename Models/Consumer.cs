@@ -16,11 +16,11 @@ namespace QuickRectify.Models
         public string Name { get; set; }
         [Required]
         public string Document { get; set; }
-        public string Address { get; set; }
+        public string? Address { get; set; }
         [Required]
         public string Phone1 { get; set; }
-        public string Phone2 { get; set; }
-        public string Phone3 { get; set; }
+        public string? Phone2 { get; set; }
+        public string? Phone3 { get; set; }
 
         public ICollection<Order> Orders { get; set; } = new List<Order>();
 

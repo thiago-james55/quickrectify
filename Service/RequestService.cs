@@ -136,8 +136,8 @@ namespace QuickRectify.Service
 
         private async Task UpdateOrderInformation(Order existingOrder, OrderInput orderInput)
         {
-            existingOrder.DiscountPercent = orderInput.DiscountPercent;
-            existingOrder.DiscountCash = orderInput.DiscountCash;
+            existingOrder.DiscountPercent = orderInput.DiscountPercent.HasValue ? orderInput.DiscountPercent : 0;
+            existingOrder.DiscountCash = orderInput.DiscountCash.HasValue ? orderInput.DiscountCash : 0 ;
             existingOrder.PriceSubTotal = orderInput.PriceSubTotal;
             existingOrder.PriceTotal = orderInput.PriceTotal;
             existingOrder.ConsumerId = orderInput.ConsumerId;
@@ -297,8 +297,6 @@ namespace QuickRectify.Service
             return await _dbContextConfig.Orders
                 .AnyAsync(o => o.ConsumerId == consumerId);
         }
-
-
 
         #endregion
 

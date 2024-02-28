@@ -33,15 +33,17 @@ namespace QuickRectify.Controllers
         }
 
         [HttpPost("fromDate")]
-        public async Task<ActionResult> GetAllOrdersOfThisYearAsync([FromBody] DateFilterInput dateFilter)
+        public async Task<ActionResult> GetAllOrdersOfThisYearAsync([FromBody] DateFilterInputString dateFilterString)
         {
 
-            if (dateFilter.Initial == null && dateFilter.Final == null)
+            DateFilterInput dateFilterInput = dateFilterString.ToDateFilterInput();
+
+            if (dateFilterInput.Initial == null && dateFilterInput.Final == null)
             {
                 return NotFound("Invalid date filter parameters.");
             }
 
-            List<OrderDTO> ordersDTO = await _requestService.GetAllOrdersOfDateAsync(dateFilter);
+            List<OrderDTO> ordersDTO = await _requestService.GetAllOrdersOfDateAsync(dateFilterInput);
             if (ordersDTO != null)
             {
                 if (ordersDTO.Count > 0) return Ok(ordersDTO);

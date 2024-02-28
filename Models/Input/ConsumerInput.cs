@@ -8,24 +8,24 @@ namespace QuickRectify.Models
     public class ConsumerInput
     {
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Required]
         public string Name { get; set; }
         [Required]
         public string Document { get; set; }
-        public string Address { get; set; }
+        public string? Address { get; set; }
         [Required]
         public string Phone1 { get; set; }
-        public string Phone2 { get; set; }
-        public string Phone3 { get; set; }
+        public string? Phone2 { get; set; }
+        public string? Phone3 { get; set; }
 
         public ConsumerInput() { }
 
         public async Task<Consumer> ToConsumer()
         {
             Consumer consumer = new Consumer();
-            if (Id > 0) consumer.Id = Id;
+            if (Id > 0) consumer.Id = (int)Id;
             consumer.Name = Name;
             consumer.Document = Document;
             consumer.Address = Address;

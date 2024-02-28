@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  # MySQL Service
+  mysql:
+    image: mysql:8.0.33
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: quickrectify
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # .NET Core Application
+  quickrectify:
+    build:
+      context: .
+      dockerfile: ../dot-net.Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:

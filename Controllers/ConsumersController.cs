@@ -49,6 +49,7 @@ namespace QuickRectify.Controllers
         [HttpPost]
         public async Task<ActionResult> SaveConsumerAsync([FromBody] ConsumerInput consumer)
         {
+            await Console.Out.WriteLineAsync(consumer.Name);
             if (!await _requestService.ConsumerIsUnique(consumer))
             {
                 return BadRequest($"Consumer with Name:{consumer.Name} or Document:{consumer.Document} already exits!");

@@ -12,7 +12,7 @@ namespace QuickRectify.Models
         public string Name { get; set; }
         [Required]
         public string Service { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         [Required]
         public int Quantity { get; set; }
         [Required]

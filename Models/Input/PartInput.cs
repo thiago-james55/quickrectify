@@ -5,12 +5,12 @@ namespace QuickRectify.Models
 {
     public class PartInput
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
         public string Service { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         [Required]
         public int Quantity { get; set; }
         [Required]
@@ -24,7 +24,7 @@ namespace QuickRectify.Models
         {
             Part part = new Part();
 
-            if (Id > 0) part.Id = Id;
+            if (Id > 0) part.Id = (int)Id;
             part.Name = Name;
             part.Service = Service;
             part.Description = Description;
