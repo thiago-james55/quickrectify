@@ -6,6 +6,7 @@ import { OrderHandlerComponent } from "../../components/order-handler/order-hand
 import { ActivatedRoute } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { Order } from '../../services/order.entity';
+import { RequestHandlerService } from '../../services/request-handler.service';
 
 @Component({
   selector: 'app-new-order',
@@ -19,6 +20,7 @@ export class NewOrderComponent {
   constructor(
     private _route: ActivatedRoute,
     private _toastService: ToastService,
+    private _requestHandlerService: RequestHandlerService
   ) { }
 
   order: Order = { parts: [] };
@@ -28,18 +30,10 @@ export class NewOrderComponent {
     if (orderId) this.getOrder(orderId);
   }
 
-  getOrder(orderId: string): void {
+  async getOrder(orderId: string): Promise<void> {
 
     if (orderId) {
-
-      //
-      const storedOrderData = localStorage.getItem(orderId);
-
-      if (storedOrderData) {
-        this.order = JSON.parse(storedOrderData) as Order;
-      } else {
-        //Service of services of HTTP methods =  GET
-      }
+        this.order = await this._requestHandlerService.getOrderById(Number.parseInt(orderId));
     } else {
       this._toastService.showToastError('No orderId in query params');
     }

@@ -48,16 +48,17 @@ export class DialogConsumerCreateComponent {
   }
 
 
-  saveConsumer(): void {
+  async saveConsumer(): Promise<void> {
 
-    const savedConsumer = this._requestHandlerService.postConsumer(this.consumer);
+    const savedConsumerId = await this._requestHandlerService.postConsumer(this.consumer);
 
-    if (!savedConsumer) {
+    if (!savedConsumerId) {
       this._toastService.showToastError("Erro ao salvar cliente!");
       return;
+    }else { 
+      this.consumer.id = savedConsumerId;
+      this._toastService.showToastSuccess(`Cliente N°(${this.consumer.id}) salvo com sucesso!`);
     }
-
-    this.consumer = savedConsumer;
 
     this.sendObjectToParent(this.consumer);
     this.closeModal();
@@ -65,16 +66,16 @@ export class DialogConsumerCreateComponent {
 
   }
 
-  editConsumer(): void {
+  async editConsumer(): Promise<void> {
 
     const editedConsumer = this._requestHandlerService.putConsumer(this.consumer);
 
     if (!editedConsumer) {
-      this._toastService.showToastError("Erro ao salvar cliente!");
+      this._toastService.showToastError("Erro ao editar cliente!");
       return;
+    } else { 
+      this._toastService.showToastSuccess(`Cliente N°(${this.consumer.id}) editado com sucesso!`);
     }
-
-    this.consumer = editedConsumer;
 
     this.sendObjectToParent(this.consumer);
     this.closeModal();

@@ -1,4 +1,4 @@
-//DefaultParts
+
 export interface DefaultPart {
     name: string;
     services: string[];

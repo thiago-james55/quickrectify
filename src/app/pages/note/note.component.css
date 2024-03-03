@@ -72,6 +72,31 @@
     width: 50%;
 }
 
+.partsTable th.group,
+.partsTable td.group {
+  width: 10%;
+}
+
+.partsTable th.service,
+.partsTable td.service {
+  width: 10%;
+}
+
+.partsTable th.description,
+.partsTable td.description {
+  width: 25%;
+}
+
+.partsTable th.quantity,
+.partsTable td.quantity,
+.partsTable th.unitPrice,
+.partsTable td.unitPrice,
+.partsTable th.totalPrice,
+.partsTable td.totalPrice {
+  width: 15%;
+}
+
+
 .companyInfoForConsumer {
     display: flex;
     flex-direction: column;

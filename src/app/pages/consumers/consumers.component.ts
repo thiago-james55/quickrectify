@@ -23,9 +23,8 @@ export class ConsumersComponent {
 
     ngOnInit() { this.checkQueryParam() }
 
-    getConsumer(consumerId: number): void {
-        //services.getConsumerById
-        this.consumer = this._requestHandlerService.getConsumerById(consumerId);
+    async getConsumer(consumerId: number): Promise<void> {
+        this.consumer = await this._requestHandlerService.getConsumerById(consumerId);
     }
 
     checkQueryParam() {

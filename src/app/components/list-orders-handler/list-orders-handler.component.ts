@@ -7,6 +7,7 @@ import { DialogConsumerSearchComponent } from "../dialog-consumer-search/dialog-
 import { Order } from '../../services/order.entity';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RequestHandlerService } from '../../services/request-handler.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-list-orders-handler',
@@ -25,9 +26,9 @@ export class ListOrdersHandlerComponent {
   @ViewChild(DialogConsumerSearchComponent)
   dialogConsumerSearchComponent!: DialogConsumerSearchComponent;
   
-  defaultParts: Part[] = this._requestHandlerService.getDefaultParts();
+  defaultParts: Part[] = [];
   
-  defaultOrders: Order[] = this._requestHandlerService.generateMockOrders();
+  defaultOrders: Order[] = [];
   filteredOrders: Order[] = [];
   
   filterByConsumerName!: string;
@@ -35,8 +36,13 @@ export class ListOrdersHandlerComponent {
   filterByInitialDate!: Date;
   filterByFinalDate!: Date;
   
-  constructor(private _route: ActivatedRoute, private _requestHandlerService: RequestHandlerService) {
+  constructor(private _route: ActivatedRoute, private _requestHandlerService: RequestHandlerService, private _toastService: ToastService) {
     this.filteredOrders = this.defaultOrders;
+    this._requestHandlerService.getDefaultParts().then(parts => this.defaultParts = parts);
+    this._requestHandlerService.getOrdersOfThisYear().then((orders) => {
+      this.defaultOrders = orders;
+      this.filteredOrders = this.defaultOrders;
+    });
   }
 
   ngOnInit() {
@@ -69,9 +75,14 @@ export class ListOrdersHandlerComponent {
 
     const predicates = [dateCondition, consumerCondition, orderPartCondition];
 
-    this.filteredOrders = this.defaultOrders.filter(order =>
-      predicates.every(predicate => predicate(order))
-    );
+    this.checkFilterIsForCurrentYear();
+
+    if (this.defaultOrders) {
+
+      this.filteredOrders = this.defaultOrders.filter(order =>
+        predicates.every(predicate => predicate(order))
+        );
+      }
   }
 
   setConsumerName(consumerName: string | undefined) {
@@ -146,6 +157,50 @@ export class ListOrdersHandlerComponent {
       top: event.clientY - 10
     };
   }
+
+  async checkFilterIsForCurrentYear(): Promise<void> {
+    if (!this.filterByInitialDate) return;
+  
+    const currentYear = new Date().getFullYear();
+    const initialDate = new Date(this.filterByInitialDate);
+    const finalDate = this.filterByFinalDate ? new Date(this.filterByFinalDate) : new Date();
+  
+    if (initialDate instanceof Date && isNaN(initialDate.getTime())) {
+      this._toastService.showToastError("Data Inicial Inválida!");
+      return;
+    }
+  
+    if (finalDate instanceof Date && isNaN(finalDate.getTime())) {
+      this._toastService.showToastError("Data Final Inválida!");
+      return;
+    }
+  
+    if (initialDate > finalDate) {
+      this._toastService.showToastError("Data Final não pode ser menor que Data Inicial!");
+      return;
+    }
+  
+    if (initialDate instanceof Date && initialDate.getFullYear() !== currentYear) {
+      try {
+        const orders = await this._requestHandlerService.getOrdersFromDate(initialDate, finalDate);
+        this.defaultOrders = orders;
+        this.filteredOrders = this.defaultOrders;
+      } catch (error) {
+        this._toastService.showToastError("Erro ao obter pedidos para o intervalo de datas especificado.");
+      }
+    }
+  }
+  
+
+
+  formatDate(date: Date | undefined): string {
+    if (date) {
+      return this._requestHandlerService.formatDate(new Date(date));
+    }
+    return '';
+  }
+
+
 }
 
 export interface DropdownOption {
@@ -155,3 +210,5 @@ export interface DropdownOption {
   target?: string;
   consumerName?: string;
 }
+
+

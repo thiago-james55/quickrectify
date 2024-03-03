@@ -21,7 +21,7 @@ import { RequestHandlerService } from '../../services/request-handler.service';
 export class OrderHandlerComponent {
 
 
-  defaultParts: DefaultPart[] = this._requestHandlerService.getDefaultParts();
+  defaultParts: DefaultPart[] = [];
 
   @Input() order: Order = { parts: [] };
 
@@ -29,10 +29,13 @@ export class OrderHandlerComponent {
     private _toastService: ToastService,
     private _router: Router,
     private _requestHandlerService: RequestHandlerService
-  ) { }
+  ) { 
+    this._requestHandlerService.getDefaultParts().then(parts => this.defaultParts = parts);
+  }
 
   getConsumerFromChild(consumer: Consumer) {
     this.order.consumer = consumer;
+    this.order.consumerId = consumer.id;
   }
 
   getServicesOfPart(part: Part): string[] | undefined {
@@ -94,35 +97,33 @@ export class OrderHandlerComponent {
   }
 
   
-  saveOrder(print: boolean) {
+  async saveOrder(print: boolean): Promise<void> {
 
-    const savedOrder = this._requestHandlerService.postOrder(this.order);
-
-    if (!savedOrder) {
-      this._toastService.showToastError("Erro ao salvar ordem de serviço!");
-      return;
-    }
-
-    this.order = savedOrder;
-    if (print) { this.print() }
-    else { 
-      this._toastService.showToastSuccess(`Ordem (${this.order.id}) salva com sucesso!`);
-    }
-
-    this.clearOrder(); 
-
+      const savedOrder = await this._requestHandlerService.postOrder(this.order);
+  
+      if (!savedOrder) {
+        this._toastService.showToastError("Erro ao salvar ordem de serviço!");
+        return;
+      }
+  
+      this.order.id = savedOrder;
+      
+      if (print) this.print();  
+      else this._toastService.showToastSuccess(`Ordem (${this.order.id}) salva com sucesso!`);
+  
+      this.clearOrder();
+    
   }
+  
 
-  editOrder(print: boolean) {
+  async editOrder(print: boolean): Promise<void> {
 
-    const editedOrder = this._requestHandlerService.putOrder(this.order);
+    const editedOrder = await this._requestHandlerService.putOrder(this.order);
 
     if (!editedOrder) {
       this._toastService.showToastError("Erro ao editar ordem de serviço!");
       return;
     }
-
-    this.order = editedOrder;
 
     if (print) { this.print() }
     else { 
@@ -164,17 +165,6 @@ export class OrderHandlerComponent {
 
   print(): void {
 
-    this.order.id = 1;
-
-    /*
-    if (!!!this.order) return;
-    if (!!!this.order.id) return;
-    */
-
-    //
-    localStorage.setItem(this.order.id.toString(), JSON.stringify(this.order));
-
-    //
     const url = this._router.createUrlTree(['note'], {
       queryParams: { orderId: this.order.id }
     }).toString();
@@ -184,14 +174,18 @@ export class OrderHandlerComponent {
 
   clearOrder() {
     this.order = { parts: [] };
-    this.order.id = undefined;
-    this.order.date = undefined;
-    this.order.consumer = undefined;
-    this.order.discountPercent = undefined;
-    this.order.discountCash = undefined;
-    this.order.priceSubTotal = undefined;
-    this.order.priceTotal = undefined;
+    this.order = {
+      ...this.order,
+      id: undefined,
+      date: undefined,
+      consumer: undefined,
+      discountPercent: undefined,
+      discountCash: undefined,
+      priceSubTotal: undefined,
+      priceTotal: undefined,
+    };
   }
+  
 
   formatValue(value: number | undefined): string {
     if (value) return value.toFixed(2);

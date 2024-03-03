@@ -27,9 +27,9 @@ export class DialogConsumerSearchComponent {
 
   constructor (private _requestHandlerService: RequestHandlerService) { }
 
-  openModal(): void {
+  async openModal(): Promise<void> {
 
-    this.defaultConsumers = this._requestHandlerService.getConsumers();
+    this.defaultConsumers = await this._requestHandlerService.getConsumers();
     this.filteredConsumers = this.defaultConsumers;
 
     if (this.modal && this.modal.nativeElement) {

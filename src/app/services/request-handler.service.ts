@@ -1,154 +1,259 @@
+import { resolve } from 'node:path';
 import { Injectable } from '@angular/core';
 import { Consumer } from './consumer.entity';
 import { Part, DefaultPart } from './part.entity';
 import { Order } from './order.entity';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RequestHandlerService {
 
-  //Mock
-  defaultParts: DefaultPart[] = [
-    { name: "Biela", services: ["Banho", "Completa", "Só Ferro", "Só Bucha", "Montar Pistão"] },
-    { name: "Bloco", services: ["Banho", "Abrir", "Encamisar", "Plainar", "Soldar", "Mandrilhar", "Trocar Bucha"] },
-    { name: "Cabeçote", services: ["Banho", "Plainar", "Soldar", "Mandrilhar", "Completo", "Regular"] },
-    { name: "Virabrequim", services: ["Banho", "Retificar", "Encher Lateral", "Polir"] },
-    { name: "Volante", services: ["Banho", "Retificar", "Virar Gremalheira"] },
-    { name: "Solda", services: ["Solda Ferro", "Solda Aluminio", "Solda Cart"] },
-    { name: "Outros", services: ["Outros"] },
-  ];
+  private readonly SERVER = "http://localhost:5000";
+  private readonly CONSUMERS_URL = `${this.SERVER}/Consumers`;
+  private readonly ORDERS_URL = `${this.SERVER}/Orders`;
+  private readonly DEFAULTPARTS_URL = `${this.SERVER}/DefaultParts`;
 
-  constructor() { }
+  private readonly dateOptions: Intl.DateTimeFormatOptions = {
+    day: 'numeric',
+    month: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  };
+
+
+  constructor(private _toastService: ToastService) { }
 
   //GET CONSUMER
-  getConsumerById(consumerId: number): Consumer {
-    return this.getConsumers().filter(c => c.id === consumerId)[0];
+  async getConsumerById(consumerId: number): Promise<Consumer> {
+    try {
+      const response = await this.getMethod(`${this.CONSUMERS_URL}/${consumerId}`);
+      return response;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    };
   }
 
   //GET
-  getConsumers(): Consumer[] {
-    return this.generateMockConsumers();
+  async getConsumers(): Promise<Consumer[]> {
+    try {
+      let consumers: Consumer[] = await this.getMethod(this.CONSUMERS_URL);
+      return consumers;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    };
   }
 
   //POST CONSUMER
-  postConsumer(consumer: Consumer): Consumer {
-    return consumer;
+  async postConsumer(consumer: Consumer): Promise<number> {
+    try {
+      const response = await this.postMethod(this.CONSUMERS_URL, consumer);
+      return response.id;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
   }
 
   //PUT CONSUMER
-  putConsumer(consumer: Consumer): Consumer {
-    return consumer;
+  async putConsumer(consumer: Consumer): Promise<boolean> {
+    try {
+      const response = await this.putMethod(`${this.CONSUMERS_URL}/${consumer.id}`, consumer);
+      if (response.status == 200) return true;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+    return false;
   }
 
-  //GET - LIST OF ORDER
-  getOrders(): Order[] {
-    return this.generateMockOrders();
+  //GET - LIST OF ORDER OF THIS YEAR
+  async getOrdersOfThisYear(): Promise<Order[]> {
+    try {
+      let orders: Order[] = await this.getMethod(this.ORDERS_URL);
+      await this.convertSerializedDate(orders);
+      return orders;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
   }
 
-  getOrderById(orderId: number): Order {
-    return this.getOrders().filter(o => o.id === orderId)[0];
+  //GET - LIST OF ORDER FROM DATE
+  async getOrdersFromDate(filterByInitialDate: Date, filterByFinalDate: Date): Promise<Order[]> {
+
+    const dateFilter = {
+        initial: filterByInitialDate.toISOString(),
+        final: filterByFinalDate.toISOString()
+    };
+
+    try {
+        const orders: Order[] = await this.postMethod(`${this.ORDERS_URL}/fromDate`, dateFilter);
+        await this.convertSerializedDate(orders);
+        return orders;
+    } catch (error) {
+        this.handleError(error);
+        throw error;
+    }
+}
+
+  //GET ORDER BY ID
+  async getOrderById(orderId: number): Promise<Order> {
+    try {
+      let order: Order = await this.getMethod(`${this.ORDERS_URL}/${orderId}`);
+      await this.convertSerializedDate(order);
+      return order;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
   }
 
-  //GET - ENUM OF BACKEND
-  getDefaultParts(): DefaultPart[] {
 
-    this.defaultParts.sort((a, b) => a.name.localeCompare(b.name));
+  async getDefaultParts(): Promise<DefaultPart[]> {
+    try {
+      const defaultParts: DefaultPart[] = await this.getMethod(this.DEFAULTPARTS_URL);
+  
+      if (defaultParts && defaultParts.length > 0) {
 
-    this.defaultParts.forEach(e => {
-      e.services.sort();
-    });
+        defaultParts.sort((a, b) => {
+          if (a.name && b.name) {
+            return a.name.localeCompare(b.name);
+          }
+          return 0; 
+        });
+  
 
-    return this.defaultParts;
+        defaultParts.forEach(e => {
+          if (e.services && Array.isArray(e.services)) {
+            e.services.sort();
+          }
+        });
+      }
+  
+      return defaultParts;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
   }
 
-  //POST ORDER
-  postOrder(order: Order): Order {
-    return order;
+  async postOrder(order: Order): Promise<number> {
+    try {
+      const response = await this.postMethod(this.ORDERS_URL, order);
+      return response.id;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+
+  async putOrder(order: Order): Promise<boolean> {
+    try {
+      const response = await this.putMethod(`${this.ORDERS_URL}/${order.id}`, order);
+      if (response.ok) return true;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+    return false;
+  }
+
+
+
+  formatDate(date: Date): string {
+    // Assuming date is in UTC and you want to convert it to Brasília time
+    const brasiliaTime = new Date(date.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+
+    return new Intl.DateTimeFormat('pt-BR', this.dateOptions).format(brasiliaTime);
   }
 
   
-  //PUT ORDER
-  putOrder(order: Order): Order {
-    return order;
-  }
+  async convertSerializedDate(orders: Order[] | Order | undefined): Promise<void> {
+    if (!orders) return;
 
-
-  //MOCK
-
-  generateMockConsumers(): Consumer[] {
-    const consumers: Consumer[] = [];
-
-    for (let i = 0; i < 100; i++) {
-      consumers.push(
-        {
-          id: i,
-          name: `Consumer ${i}`,
-          document: "1234567",
-          address: "Rua Random",
-          phone1: "9-9875-4321"
+    if (Array.isArray(orders)) {
+      await Promise.all(orders.map(async (o) => {
+        if (o.date) {
+          o.date = new Date(o.date);
+          o.date.setHours(o.date.getHours() - 3); // GMT
         }
-      )
+      }));
+      return;
+    } else if (orders.date) {
+      orders.date = new Date(orders.date);
+      orders.date.setHours(orders.date.getHours() - 3); // GMT
     }
-
-    return consumers;
   }
 
-  generateMockOrders(): Order[] {
-
-    let orders: Order[] = [];
-
-    const consumers: Consumer[] = this.getConsumers();
-
-    const defaultParts = this.getDefaultParts();
-
-    for (let i = 1; i <= 50; i++) {
-      const consumerIndex = Math.floor(Math.random() * consumers.length);
-      const consumer = consumers[consumerIndex];
-
-      const numberOfOrderParts = Math.floor(Math.random() * 5) + 1; // Random number of order parts (1 to 5)
-
-      const parts: Part[] = [];
-      for (let j = 0; j < numberOfOrderParts; j++) {
-        const partIndex = Math.floor(Math.random() * defaultParts.length);
-        const selectedPart = defaultParts[partIndex];
-        const serviceIndex = Math.floor(Math.random() * selectedPart.services.length);
-        const selectedService = selectedPart.services[serviceIndex];
-
-        const orderPart: Part = {
-          name: selectedPart.name,
-          service: selectedService,
-          description: `Description for ${selectedPart.name} - ${selectedService}`,
-          quantity: Math.floor(Math.random() * 3) + 1, // Random quantity (1 to 3)
-          pricePerQuantity: 50, // Random price per quantity (10 to 60)
-          priceTotal: 0, // To be calculated later
-        };
-
-        if (orderPart.quantity && orderPart.pricePerQuantity) {
-          orderPart.priceTotal = orderPart.quantity * orderPart.pricePerQuantity;
-        }
-        parts.push(orderPart);
-      }
-
-      const order: Order = {
-        id: i,
-        date: new Date(),
-        consumer: consumer,
-        parts: parts,
-        discountPercent: 0,
-        discountCash: 0,
-        priceSubTotal: 0,
-        priceTotal: 0,
-      };
-
-      order.priceSubTotal = parts.reduce((total, part) => total + part.priceTotal!, 0);
-      order.priceTotal = order.priceSubTotal - order.discountCash! - (order.priceSubTotal * order.discountPercent!) / 100;
-
-      orders.push(order);
+  async getMethod(url: string): Promise<any> {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
     }
-
-    return orders;
   }
 
+  async postMethod(url: string, data: any): Promise<any> {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) { this.handleError("Ordens nessa data não encontradas!"); return []; }
+      const responseData = await response.json();
+      return responseData;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async putMethod(url: string, data: any): Promise<any> {
+    try {
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      const responseData = await response;
+      return responseData;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  async deleteMethod(url: string): Promise<any> {
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  handleError(error: any) {
+    this._toastService.showToastError(error);
+  }
 
 }
+

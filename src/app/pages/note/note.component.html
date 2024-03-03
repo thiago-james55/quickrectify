@@ -1,6 +1,6 @@
-<div class="noteContainer">
+<div *ngIf="order?.date" (load)="print()" class="noteContainer">
     <div class="upperInfo">
-        <p class="defaultBorder upperData">Data: {{this.order.date || "14/12/1994"}}</p>
+        <p class="defaultBorder upperData">Data: {{ this.order.date | date : 'dd/MM/yyyy HH:mm'}}</p>
         <p class="defaultBorder upperData">OS N°: {{ this.order.id | number:'4.0' | noComma }}</p>
     </div>
     <div class="upperTitle ">
@@ -83,8 +83,7 @@
             <p>BANCO ITAU: RETIFICA REAÇÃO LTDA ME</p>
             <p>PIX/CNPJ: 05.387.112/0001-60</p>
             <img class="qrCode" [src]="this._companyInfo.qrcode" alt="QR CODE PIX ITAU">
-            <p>Parcelamento Cartão de Crédito</p>
-            <p>Juros da Operadora</p>
+            <p>Parcelamento no Crédito (Juros da Operadora)</p>
             <div class="installments">
                 <p *ngFor="let installment of this.installments; index as i"> {{(i+1)}}x R${{installment.toFixed(2)}}
                 </p>

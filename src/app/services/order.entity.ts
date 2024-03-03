@@ -5,6 +5,7 @@ export interface Order {
     id?: number;
     date?: Date;
     consumer?: Consumer;
+    consumerId?: number;
     parts: Part[];
     discountPercent?: number;
     discountCash?: number;
