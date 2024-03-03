@@ -26,6 +26,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 var app = builder.Build();
 
 
@@ -34,10 +35,13 @@ app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseSwagger();
 app.UseSwaggerUI();
 
-//app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+app.UseHttpsRedirection();
 
 using (var scope = app.Services.CreateScope())
 {
