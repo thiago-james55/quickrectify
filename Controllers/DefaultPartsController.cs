@@ -10,10 +10,6 @@ namespace QuickRectify.Controllers
     public class DefaultPartsController : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult> GetDefaultPartsAsync()
-        {
-
-            return Ok(DefaultParts.GetDefaultParts());
-        }
+        public async Task<ActionResult> GetDefaultPartsAsync() { return Ok(DefaultParts.GetDefaultParts()); }
     }
 }

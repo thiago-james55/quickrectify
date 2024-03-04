@@ -38,12 +38,9 @@ namespace QuickRectify.Controllers
         {
             ConsumerDTO consumer = await _requestService.GetConsumerByIdAsync(id);
 
-            if (consumer != null)
-            {
-                return Ok(consumer);
-            }
+            if (consumer != null) return Ok(consumer);
+            else return StatusCode(400, $"Error consumer with {id} not found!");
 
-            return StatusCode(500, $"Error consumer with {id} not found!");
         }
 
         [HttpPost]
@@ -62,12 +59,7 @@ namespace QuickRectify.Controllers
                 var id = new { id = savedConsumerId };
                 return CreatedAtRoute("GetConsumerByIdAsync", id, id);
 
-            } else
-            {
-
-                return StatusCode(500, "Error consumer not created!");
-
-            }
+            } else return StatusCode(500, "Error consumer not created!");
 
         }
 
@@ -80,14 +72,8 @@ namespace QuickRectify.Controllers
 
             bool updateSuccessful = await _requestService.UpdateConsumerAsync(id, consumerToUpdate);
 
-            if (updateSuccessful)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return StatusCode(500, "Error updating the consumer. Please try again.");
-            }
+            if (updateSuccessful) return NoContent();
+            else return StatusCode(500, "Error updating the consumer. Please try again.");
 
         }
 
@@ -95,23 +81,15 @@ namespace QuickRectify.Controllers
         public async Task<ActionResult> DeleteConsumerAsync(int id)
         {
             bool consumerExists = await _requestService.ConsumerExistsAsync(id);
-
             if (!consumerExists) return NotFound($"Consumer with ID {id} not found.");
 
             bool consumerHaveOrders = await _requestService.ConsumerHaveOrdersAsync(id);
-
             if (consumerHaveOrders) return BadRequest($"Consumer with ID {id} have orders related to her.");
 
             bool deletedSuccessful = await _requestService.DeleteConsumerAsync(id);
 
-            if (deletedSuccessful)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return StatusCode(500, "Error deleting the consumer. Please try again.");
-            }
+            if (deletedSuccessful) return NoContent();
+            else return StatusCode(500, "Error deleting the consumer. Please try again.");
 
         }
 

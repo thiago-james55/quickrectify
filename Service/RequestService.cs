@@ -4,6 +4,7 @@ using QuickRectify.Models;
 using QuickRectify.Models.DTO;
 using QuickRectify.Models.Input;
 using System.Linq.Expressions;
+using QuickRectify.HttpException;
 
 namespace QuickRectify.Service
 {
@@ -11,7 +12,7 @@ namespace QuickRectify.Service
     {
         private readonly DbContextConfig _dbContextConfig;
 
-        public RequestService(DbContextConfig dbContextConfig) 
+        public RequestService(DbContextConfig dbContextConfig)
         {
             _dbContextConfig = dbContextConfig;
         }
@@ -35,16 +36,17 @@ namespace QuickRectify.Service
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return null;
             }
+
         }
 
         public async Task<List<OrderDTO>> GetAllOrdersOfDateAsync(DateFilterInput dateFilterInput)
         {
 
             if (dateFilterInput.Final == null) dateFilterInput.Final = DateTime.UtcNow;
-            
+
             try
             {
                 if (dateFilterInput.Initial != null && (dateFilterInput.Initial > dateFilterInput.Final))
@@ -56,7 +58,7 @@ namespace QuickRectify.Service
                 Expression<Func<Order, bool>> filterWithBothDates = o => o.Date >= dateFilterInput.Initial && o.Date <= dateFilterInput.Final;
                 Expression<Func<Order, bool>> filter = (dateFilterInput.Initial != null) ? filterWithBothDates : filterWithOnlyFinalDate;
 
-                List <Order> orders = await _dbContextConfig.Orders
+                List<Order> orders = await _dbContextConfig.Orders
                     .Where(filter)
                     .Include(o => o.Consumer)
                     .Include(o => o.Parts)
@@ -68,7 +70,7 @@ namespace QuickRectify.Service
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return null;
             }
         }
@@ -79,16 +81,16 @@ namespace QuickRectify.Service
         {
             try
             {
-            Order order = await _dbContextConfig.Orders
-                        .Include(o => o.Consumer)
-                        .Include(o => o.Parts)
-                        .FirstOrDefaultAsync(o => o.Id == id);
-            return new OrderDTO(order);
+                Order order = await _dbContextConfig.Orders
+                            .Include(o => o.Consumer)
+                            .Include(o => o.Parts)
+                            .FirstOrDefaultAsync(o => o.Id == id);
+                return new OrderDTO(order);
 
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return null;
             }
         }
@@ -108,7 +110,7 @@ namespace QuickRectify.Service
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return 0;
             }
         }
@@ -129,7 +131,7 @@ namespace QuickRectify.Service
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return false;
             }
         }
@@ -137,7 +139,7 @@ namespace QuickRectify.Service
         private async Task UpdateOrderInformation(Order existingOrder, OrderInput orderInput)
         {
             existingOrder.DiscountPercent = orderInput.DiscountPercent.HasValue ? orderInput.DiscountPercent : 0;
-            existingOrder.DiscountCash = orderInput.DiscountCash.HasValue ? orderInput.DiscountCash : 0 ;
+            existingOrder.DiscountCash = orderInput.DiscountCash.HasValue ? orderInput.DiscountCash : 0;
             existingOrder.PriceSubTotal = orderInput.PriceSubTotal;
             existingOrder.PriceTotal = orderInput.PriceTotal;
             existingOrder.ConsumerId = orderInput.ConsumerId;
@@ -165,7 +167,7 @@ namespace QuickRectify.Service
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return false;
             }
 
@@ -181,14 +183,14 @@ namespace QuickRectify.Service
         {
             try
             {
-                List<Consumer> consumers =  await _dbContextConfig.Consumers.ToListAsync();
+                List<Consumer> consumers = await _dbContextConfig.Consumers.ToListAsync();
                 List<ConsumerDTO> consumerDTOs = consumers.Select(c => new ConsumerDTO(c)).ToList();
                 return consumerDTOs;
 
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return null;
             }
 
@@ -199,14 +201,22 @@ namespace QuickRectify.Service
             try
             {
                 Consumer consumer = await _dbContextConfig.Consumers.FirstOrDefaultAsync(c => c.Id == id);
-                return new ConsumerDTO(consumer);
+
+                if (consumer != null)
+                {
+                    return new ConsumerDTO(consumer);
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
-                return null;
+                throw new HttpRequestException("Internal Server Error", ex, System.Net.HttpStatusCode.InternalServerError);
             }
         }
+
 
         public async Task<int> SaveConsumerAsync(ConsumerInput consumerInput)
         {
@@ -221,7 +231,7 @@ namespace QuickRectify.Service
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return 0;
             }
         }
@@ -241,7 +251,7 @@ namespace QuickRectify.Service
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return false;
             }
         }
@@ -282,9 +292,9 @@ namespace QuickRectify.Service
                     return true;
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
+                HttpExceptionHandler.HandleCommonExceptions(ex);
                 return false;
             }
 

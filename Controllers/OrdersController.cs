@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using QuickRectify.Models;
 using QuickRectify.Models.DTO;
 using QuickRectify.Models.Input;
@@ -28,19 +27,19 @@ namespace QuickRectify.Controllers
                 else return NotFound("No orders of current year found!");
             }
 
-            return StatusCode(500, "Error fetching orders from the database. Please try again.");
+            return null;
             
         }
 
         [HttpPost("fromDate")]
-        public async Task<ActionResult> GetAllOrdersOfThisYearAsync([FromBody] DateFilterInputString dateFilterString)
+        public async Task<ActionResult> GetAllOrdersOfThatYearAsync([FromBody] DateFilterInputString dateFilterString)
         {
 
             DateFilterInput dateFilterInput = dateFilterString.ToDateFilterInput();
 
             if (dateFilterInput.Initial == null && dateFilterInput.Final == null)
             {
-                return NotFound("Invalid date filter parameters.");
+                return BadRequest("Invalid date filter parameters.");
             }
 
             List<OrderDTO> ordersDTO = await _requestService.GetAllOrdersOfDateAsync(dateFilterInput);
@@ -51,8 +50,7 @@ namespace QuickRectify.Controllers
             } 
             
 
-            return StatusCode(500, "Error fetching orders from the database. Please try again.");
-
+           return null;
         }
 
         [HttpGet("{id}", Name = "GetOrderByIdAsync")]
@@ -60,12 +58,8 @@ namespace QuickRectify.Controllers
         {
             OrderDTO orderDTO = await _requestService.GetOrderByIdAsync(id);
 
-            if (orderDTO != null)
-            {
-                return Ok(orderDTO);
-            }
-
-            return StatusCode(500, $"Error order with {id} not found!");
+            if (orderDTO != null) return Ok(orderDTO);
+            else return NotFound($"Error order with {id} not found!");
         }
 
         [HttpPost]
@@ -73,19 +67,13 @@ namespace QuickRectify.Controllers
         { 
 
             int savedOrderId = await _requestService.SaveOrderAsyncAndReturnId(order);
-
-        
+                    
             if (savedOrderId > 0)
             {
                 var id = new { id = savedOrderId };
                 return CreatedAtRoute("GetOrderByIdAsync", id, id);
 
-            } else
-            {
-
-                return StatusCode(500, "Error order not created!");
-
-            }
+            } else return StatusCode(500, "Error order not created!");
 
         }
 
@@ -98,14 +86,8 @@ namespace QuickRectify.Controllers
 
             bool updateSuccessful = await _requestService.UpdateOrderAsync(id, orderToUpdate);
 
-            if (updateSuccessful)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return StatusCode(500, "Error updating the order. Please try again.");
-            }
+            if (updateSuccessful) return NoContent();
+            else return StatusCode(500, "Error updating the order. Please try again.");
 
         }
 
@@ -119,14 +101,8 @@ namespace QuickRectify.Controllers
 
             bool deletedSuccessful = await _requestService.DeleteOrderAsync(id);
 
-            if (deletedSuccessful)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return StatusCode(500, "Error deleting the consumer. Please try again.");
-            }
+            if (deletedSuccessful) return NoContent();
+            else return StatusCode(500, "Error deleting the consumer. Please try again.");
 
         }
 
