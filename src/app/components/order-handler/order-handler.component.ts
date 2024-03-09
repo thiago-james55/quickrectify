@@ -131,6 +131,10 @@ export class OrderHandlerComponent {
     }
 
     this.clearOrder(); 
+
+    setTimeout(() => {
+      this._router.navigate(['./list-orders']);
+    }, 1000);
   }
 
   validateOrder(): boolean {
@@ -165,7 +169,7 @@ export class OrderHandlerComponent {
 
   print(): void {
 
-    const url = this._router.createUrlTree(['note'], {
+    const url = this._router.createUrlTree(['./browser/note'], {
       queryParams: { orderId: this.order.id }
     }).toString();
 

@@ -38,17 +38,24 @@ export class ListOrdersHandlerComponent {
   
   constructor(private _route: ActivatedRoute, private _requestHandlerService: RequestHandlerService, private _toastService: ToastService) {
     this.filteredOrders = this.defaultOrders;
-    this._requestHandlerService.getDefaultParts().then(parts => this.defaultParts = parts);
-    this._requestHandlerService.getOrdersOfThisYear().then((orders) => {
-      this.defaultOrders = orders;
-      this.filteredOrders = this.defaultOrders;
-    });
   }
 
-  ngOnInit() {
-    const consumerName = this._route.snapshot.queryParamMap.get('consumerName');
-    if (consumerName) this.setConsumerName(consumerName);
+  
+
+  async ngOnInit() {
+    try {
+      const consumerName = await this._route.snapshot.queryParamMap.get('consumerName');
+      if (consumerName) this.setConsumerName(consumerName);
+  
+      this.defaultParts = await this._requestHandlerService.getDefaultParts();
+      this.defaultOrders = await this._requestHandlerService.getOrdersOfThisYear();
+      this.filteredOrders = this.defaultOrders;
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
+  
 
 
   filter(): void {
@@ -186,7 +193,7 @@ export class ListOrdersHandlerComponent {
         this.defaultOrders = orders;
         this.filteredOrders = this.defaultOrders;
       } catch (error) {
-        this._toastService.showToastError("Erro ao obter pedidos para o intervalo de datas especificado.");
+        this._requestHandlerService.handleError(error);
       }
     }
   }

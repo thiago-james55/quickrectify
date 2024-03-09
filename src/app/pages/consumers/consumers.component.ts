@@ -31,7 +31,6 @@ export class ConsumersComponent {
         const param = this._route.snapshot.queryParamMap.get('consumerId');
         if (param) {
             const consumerId = parseInt(param);
-
             if (!isNaN(consumerId)) this.getConsumer(consumerId);
             else this._toastService.showToastError('Consumer Id Invalido');
         }

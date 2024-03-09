@@ -74,17 +74,17 @@
 
 .partsTable th.group,
 .partsTable td.group {
-  width: 10%;
+  width: 15%;
 }
 
 .partsTable th.service,
 .partsTable td.service {
-  width: 10%;
+  width: 15%;
 }
 
 .partsTable th.description,
 .partsTable td.description {
-  width: 25%;
+  width: 50%;
 }
 
 .partsTable th.quantity,

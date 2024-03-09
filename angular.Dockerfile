@@ -6,6 +6,6 @@ RUN npm run build --prod
 
 FROM nginx:alpine
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=node /app/dist/quick-rect /usr/share/nginx/html
+COPY --from=node /app/dist/quick-rect /etc/nginx/html
 
 EXPOSE 80

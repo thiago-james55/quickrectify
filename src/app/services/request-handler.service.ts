@@ -1,7 +1,6 @@
-import { resolve } from 'node:path';
 import { Injectable } from '@angular/core';
 import { Consumer } from './consumer.entity';
-import { Part, DefaultPart } from './part.entity';
+import { DefaultPart } from './part.entity';
 import { Order } from './order.entity';
 import { ToastService } from './toast.service';
 
@@ -31,7 +30,8 @@ export class RequestHandlerService {
   async getConsumerById(consumerId: number): Promise<Consumer> {
     try {
       const response = await this.getMethod(`${this.CONSUMERS_URL}/${consumerId}`);
-      return response;
+      if (response) return response;
+      else throw new Error(`Cliente com o ID ${consumerId} não encontrado!`);
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -42,7 +42,9 @@ export class RequestHandlerService {
   async getConsumers(): Promise<Consumer[]> {
     try {
       let consumers: Consumer[] = await this.getMethod(this.CONSUMERS_URL);
-      return consumers;
+      if (consumers && consumers.length > 0) return consumers;
+      else if (consumers.length <= 0) throw new Error("Clientes não encontrados!");
+      return [];
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -53,18 +55,21 @@ export class RequestHandlerService {
   async postConsumer(consumer: Consumer): Promise<number> {
     try {
       const response = await this.postMethod(this.CONSUMERS_URL, consumer);
-      return response.id;
+      if (response && response.id) return response.id;
+      if (response.status == 400) throw new Error("Cliente com esse nome ou documento ja cadastrado!");
     } catch (error) {
       this.handleError(error);
       throw error;
     }
+    return 0;
   }
 
   //PUT CONSUMER
   async putConsumer(consumer: Consumer): Promise<boolean> {
     try {
       const response = await this.putMethod(`${this.CONSUMERS_URL}/${consumer.id}`, consumer);
-      if (response.status == 200) return true;
+      if (response.ok) return true;
+      if (response.status == 400) this.handleError("Cliente com esse nome ou documento ja cadastrado!");
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -75,39 +80,59 @@ export class RequestHandlerService {
   //GET - LIST OF ORDER OF THIS YEAR
   async getOrdersOfThisYear(): Promise<Order[]> {
     try {
-      let orders: Order[] = await this.getMethod(this.ORDERS_URL);
-      await this.convertSerializedDate(orders);
-      return orders;
+      const response = await this.getMethod(this.ORDERS_URL);
+
+      if (response) {
+        const orders: Order[] = response;
+        await this.convertSerializedDate(orders);
+        return orders;
+      } else {
+        throw new Error("Ordens desse ano não encontradas!");
+      }
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+  
+
+  //GET - LIST OF ORDER FROM DATE
+  async getOrdersFromDate(filterByInitialDate: Date, filterByFinalDate: Date): Promise<Order[]> {
+
+    const dateFilter = {
+      initial: filterByInitialDate.toISOString(),
+      final: filterByFinalDate.toISOString()
+    };
+
+    try {
+
+      const response = await this.postMethod(`${this.ORDERS_URL}/fromDate`, dateFilter);
+
+      if (response) {
+        let orders: Order[] = response;
+        await this.convertSerializedDate(orders);
+        return orders;
+      } else throw new Error("Ordens nessa data não encontradas!");
+
     } catch (error) {
       this.handleError(error);
       throw error;
     }
   }
 
-  //GET - LIST OF ORDER FROM DATE
-  async getOrdersFromDate(filterByInitialDate: Date, filterByFinalDate: Date): Promise<Order[]> {
-
-    const dateFilter = {
-        initial: filterByInitialDate.toISOString(),
-        final: filterByFinalDate.toISOString()
-    };
-
-    try {
-        const orders: Order[] = await this.postMethod(`${this.ORDERS_URL}/fromDate`, dateFilter);
-        await this.convertSerializedDate(orders);
-        return orders;
-    } catch (error) {
-        this.handleError(error);
-        throw error;
-    }
-}
-
   //GET ORDER BY ID
   async getOrderById(orderId: number): Promise<Order> {
     try {
-      let order: Order = await this.getMethod(`${this.ORDERS_URL}/${orderId}`);
-      await this.convertSerializedDate(order);
-      return order;
+      const response = await this.getMethod(`${this.ORDERS_URL}/${orderId}`);
+
+      if (response) {
+        let order: Order = response;
+        await this.convertSerializedDate(order);
+        return order;
+      }
+
+      throw new Error("Ordem com essa id não encontradas");
+
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -118,24 +143,6 @@ export class RequestHandlerService {
   async getDefaultParts(): Promise<DefaultPart[]> {
     try {
       const defaultParts: DefaultPart[] = await this.getMethod(this.DEFAULTPARTS_URL);
-  
-      if (defaultParts && defaultParts.length > 0) {
-
-        defaultParts.sort((a, b) => {
-          if (a.name && b.name) {
-            return a.name.localeCompare(b.name);
-          }
-          return 0; 
-        });
-  
-
-        defaultParts.forEach(e => {
-          if (e.services && Array.isArray(e.services)) {
-            e.services.sort();
-          }
-        });
-      }
-  
       return defaultParts;
     } catch (error) {
       this.handleError(error);
@@ -174,7 +181,7 @@ export class RequestHandlerService {
     return new Intl.DateTimeFormat('pt-BR', this.dateOptions).format(brasiliaTime);
   }
 
-  
+
   async convertSerializedDate(orders: Order[] | Order | undefined): Promise<void> {
     if (!orders) return;
 
@@ -195,8 +202,10 @@ export class RequestHandlerService {
   async getMethod(url: string): Promise<any> {
     try {
       const response = await fetch(url);
-      const data = await response.json();
-      return data;
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else this.handleError(response);
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -212,9 +221,12 @@ export class RequestHandlerService {
         },
         body: JSON.stringify(data),
       });
-      if (!response.ok) { this.handleError("Ordens nessa data não encontradas!"); return []; }
-      const responseData = await response.json();
-      return responseData;
+
+      if (response.ok){
+        const responseData = await response.json();
+        return responseData;
+      }
+      return response;
     } catch (error) {
       this.handleError(error);
       throw error;
@@ -251,8 +263,19 @@ export class RequestHandlerService {
     }
   }
 
-  handleError(error: any) {
-    this._toastService.showToastError(error);
+  async handleError(error: any) {
+
+
+    if (error.message && error.message == "NetworkError when attempting to fetch resource.") {
+      this._toastService.showToastError("Erro ao Contatar Servidor!");
+      return;
+    }
+
+    if (error) {
+      this._toastService.showToastError(error);
+      return;
+    }
+
   }
 
 }
