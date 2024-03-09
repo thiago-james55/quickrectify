@@ -46,8 +46,7 @@ namespace QuickRectify.Controllers
         [HttpPost]
         public async Task<ActionResult> SaveConsumerAsync([FromBody] ConsumerInput consumer)
         {
-            await Console.Out.WriteLineAsync(consumer.Name);
-            if (!await _requestService.ConsumerIsUnique(consumer))
+            if (!await _requestService.ConsumerIsUnique(null, consumer))
             {
                 return BadRequest($"Consumer with Name:{consumer.Name} or Document:{consumer.Document} already exits!");
             }
@@ -67,8 +66,12 @@ namespace QuickRectify.Controllers
         public async Task<ActionResult> UpdateConsumerAsync(int id, [FromBody] ConsumerInput consumerToUpdate)
         {
             bool consumerExists = await _requestService.ConsumerExistsAsync(id);
-
             if (!consumerExists) return NotFound($"Consumer with ID {id} not found.");
+
+            if (await _requestService.ConsumerIsUnique(id, consumerToUpdate))
+            {
+                return BadRequest($"Consumer with Name:{consumerToUpdate.Name} or Document:{consumerToUpdate.Document} already exits!");
+            }
 
             bool updateSuccessful = await _requestService.UpdateConsumerAsync(id, consumerToUpdate);
 

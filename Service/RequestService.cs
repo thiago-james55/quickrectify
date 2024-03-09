@@ -185,6 +185,8 @@ namespace QuickRectify.Service
             {
                 List<Consumer> consumers = await _dbContextConfig.Consumers.ToListAsync();
                 List<ConsumerDTO> consumerDTOs = consumers.Select(c => new ConsumerDTO(c)).ToList();
+
+                consumerDTOs.Sort((consumer1, consumer2) => consumer1.Name.CompareTo(consumer2.Name));
                 return consumerDTOs;
 
             }
@@ -271,8 +273,14 @@ namespace QuickRectify.Service
             return await GetConsumerByIdAsync(id) != null;
         }
 
-        public async Task<bool> ConsumerIsUnique(ConsumerInput consumerInput)
+        public async Task<bool> ConsumerIsUnique(int? consumerId, ConsumerInput consumerInput)
         {
+            if (consumerId != null)
+            {
+                return await _dbContextConfig.Consumers.AnyAsync(c => c.Name == consumerInput.Name && c.Id != consumerId) ||
+                    await _dbContextConfig.Consumers.AnyAsync(c => c.Document == consumerInput.Document && c.Id != consumerId);
+            }
+
             return !await _dbContextConfig.Consumers
                 .AnyAsync(c => c.Name == consumerInput.Name || c.Document == consumerInput.Document);
 
@@ -307,7 +315,7 @@ namespace QuickRectify.Service
             return await _dbContextConfig.Orders
                 .AnyAsync(o => o.ConsumerId == consumerId);
         }
-
+          
         #endregion
 
     }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Programação\\Projetos\\C# + Angular\\QuickRectify\\back\\QuickRectify.csproj": {}
+    "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj": {}
   },
   "projects": {
-    "D:\\Programação\\Projetos\\C# + Angular\\QuickRectify\\back\\QuickRectify.csproj": {
+    "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Programação\\Projetos\\C# + Angular\\QuickRectify\\back\\QuickRectify.csproj",
+        "projectUniqueName": "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj",
         "projectName": "QuickRectify",
-        "projectPath": "D:\\Programação\\Projetos\\C# + Angular\\QuickRectify\\back\\QuickRectify.csproj",
+        "projectPath": "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj",
         "packagesPath": "C:\\Users\\tsyhw\\.nuget\\packages\\",
-        "outputPath": "D:\\Programação\\Projetos\\C# + Angular\\QuickRectify\\back\\obj\\",
+        "outputPath": "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
