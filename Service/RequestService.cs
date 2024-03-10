@@ -5,6 +5,7 @@ using QuickRectify.Models.DTO;
 using QuickRectify.Models.Input;
 using System.Linq.Expressions;
 using QuickRectify.HttpException;
+using System.Globalization;
 
 namespace QuickRectify.Service
 {
@@ -183,6 +184,7 @@ namespace QuickRectify.Service
         {
             try
             {
+
                 List<Consumer> consumers = await _dbContextConfig.Consumers.ToListAsync();
                 List<ConsumerDTO> consumerDTOs = consumers.Select(c => new ConsumerDTO(c)).ToList();
 

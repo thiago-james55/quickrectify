@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace QuickRectify.Models
 {
@@ -26,7 +27,7 @@ namespace QuickRectify.Models
         {
             Consumer consumer = new Consumer();
             if (Id > 0) consumer.Id = (int)Id;
-            consumer.Name = Name;
+            consumer.Name = await CapitalizeName(Name);
             consumer.Document = Document;
             consumer.Address = Address;
             consumer.Phone1 = Phone1;
@@ -35,6 +36,15 @@ namespace QuickRectify.Models
 
             return consumer;
 
+        }
+
+        private async Task<string> CapitalizeName(string name)
+        {
+            TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+
+            string capitalized = textInfo.ToTitleCase(name);
+
+            return capitalized;
         }
 
     }
