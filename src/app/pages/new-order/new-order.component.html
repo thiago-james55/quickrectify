@@ -1,7 +1,7 @@
 <div class="container">
     <app-navbar></app-navbar>
     <div class="pageContent">
-        <app-page-title [title]="this.order.id ? 'Editar Ordem de Serviço N°' + this.order.id : 'Nova Ordem de Serviço'"></app-page-title>
+        <app-page-title [title]="this.edit ? 'Editar Ordem de Serviço N°' + this.order.id : 'Nova Ordem de Serviço'"></app-page-title>
         <app-order-handler [order]="this.order"></app-order-handler>
         <app-footer></app-footer>
     </div>

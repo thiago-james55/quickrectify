@@ -49,7 +49,8 @@
                     <th>Serviço</th>
                     <th>Descrição</th>
                     <th>Qtd</th>
-                    <th>Valor Qtd</th>
+					<th>Total Qtd</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -66,7 +67,7 @@
                         <td>{{part.service}}</td>
                         <td>{{part.description}}</td>
                         <td>{{part.quantity}}</td>
-                        <td>{{part.pricePerQuantity?.toFixed(2)}}</td>
+                        <td>{{part.priceTotal?.toFixed(2)}}</td>
                     </tr>
                     <tr class="rowOrderTotal">
                         <td></td>
@@ -76,7 +77,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>{{order.priceTotal?.toFixed(2)}}</td>
+						<td>{{order.priceTotal?.toFixed(2)}}</td>
                     </tr>
                 </ng-container>
             </tbody>

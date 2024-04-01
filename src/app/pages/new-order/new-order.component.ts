@@ -24,6 +24,7 @@ export class NewOrderComponent {
   ) { }
 
   order: Order = { parts: [] };
+  edit: boolean = false;
 
   ngOnInit() {
     const orderId = this._route.snapshot.queryParamMap.get('orderId');
@@ -34,6 +35,7 @@ export class NewOrderComponent {
 
     if (orderId) {
         this.order = await this._requestHandlerService.getOrderById(Number.parseInt(orderId));
+		this.edit = true;
     } else {
       this._toastService.showToastError('No orderId in query params');
     }
