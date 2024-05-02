@@ -34,7 +34,7 @@ namespace QuickRectify.Models
                 PriceSubTotal = PriceSubTotal,
                 PriceTotal = PriceTotal,
                 ConsumerId = ConsumerId,
-                Parts = Parts.Select(p => p.ToPart()).ToList()
+                Parts = (await Task.WhenAll(Parts.Select(async p => await p.ToPart()))).ToList()
             };
 
             return order;

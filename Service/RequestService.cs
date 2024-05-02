@@ -144,7 +144,7 @@ namespace QuickRectify.Service
             existingOrder.PriceSubTotal = orderInput.PriceSubTotal;
             existingOrder.PriceTotal = orderInput.PriceTotal;
             existingOrder.ConsumerId = orderInput.ConsumerId;
-            existingOrder.Parts = orderInput.Parts.Select(p => p.ToPart()).ToList();
+            existingOrder.Parts = (await Task.WhenAll(orderInput.Parts.Select(async p => await p.ToPart()))).ToList();
         }
 
 
