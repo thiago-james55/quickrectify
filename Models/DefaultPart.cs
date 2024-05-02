@@ -27,7 +27,7 @@ public class DefaultParts
             new DefaultPart("Virabrequim", new List<string> {"Banho", "Retificar", "Encher Lateral", "Polir", "Venda", "Outros"}),
             new DefaultPart("Volante", new List<string> {"Banho", "Retificar", "Virar Gremalheira", "Outros"}),
             new DefaultPart("Solda", new List<string> {"Solda Ferro", "Solda Aluminio", "Solda Cart", "Outros"}),
-            new DefaultPart("Outros", new List<string> {"Outros", "Informação"}),
+            new DefaultPart("Outros", new List<string> {"Outros", "Informação", "Venda"}),
             new DefaultPart("Financeiro", new List<string> {"Dinheiro", "Pix", "Cartão de Débito", "Cartão de Crédito", "Deve", "Não Pagou"}),
 
         };
