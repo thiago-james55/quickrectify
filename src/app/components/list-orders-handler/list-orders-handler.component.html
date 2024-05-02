@@ -13,6 +13,12 @@
             <div class="serviceFilter">
                 <span>Serviço:</span>
             </div>
+            <div class="totalFilter">
+                <span>Total Ordem</span>
+            </div>
+            <div class="totalSelectionFilter">
+                <span>Total Geral</span>
+            </div>
         </div>
         <div class="filterInput">
             <div class="consumerFilter">
@@ -34,6 +40,18 @@
                     <option *ngFor="let part of defaultParts" [value]="part.name">
                         {{ part.name }}
                     </option>
+                </select>
+            </div>
+            <div class="totalFilter">
+                <select [(ngModel)]="filterTotalOfOrder">
+                    <option value="yes">Sim</option>
+                    <option value="no">Não</option>
+                </select>
+            </div>
+            <div class="totalSelectionFilter">
+                <select [(ngModel)]="filterTotalOfSelection">
+                    <option value="yes">Sim</option>
+                    <option value="no">Não</option>
                 </select>
             </div>
         </div>
@@ -69,6 +87,7 @@
                         <td>{{part.quantity}}</td>
                         <td>{{part.priceTotal?.toFixed(2)}}</td>
                     </tr>
+                    <ng-container *ngIf="filterTotalOfOrder == 'yes'">
                     <tr class="rowOrderTotal">
                         <td></td>
                         <td></td>
@@ -79,7 +98,20 @@
                         <td></td>
 						<td>{{order.priceTotal?.toFixed(2)}}</td>
                     </tr>
+                    </ng-container>
                 </ng-container>
+                <ng-container *ngIf="(filterTotalOfSelection == 'yes') && (filteredOrders.length > 0)">
+                    <tr class="rowOrderTotal totalOfSelectionRow">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>TOTAL GERAL</td>
+                        <td></td>
+						<td>{{this.getTotalOfFilteredOrders()}}</td>
+                    </tr>
+                    </ng-container>
             </tbody>
         </table>
     </div>

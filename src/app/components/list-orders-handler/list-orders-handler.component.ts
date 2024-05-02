@@ -35,6 +35,8 @@ export class ListOrdersHandlerComponent {
   filterByPart: string = "all";
   filterByInitialDate!: Date;
   filterByFinalDate!: Date;
+  filterTotalOfOrder: string = "yes";
+  filterTotalOfSelection: string = "no";
   
   constructor(private _route: ActivatedRoute, private _requestHandlerService: RequestHandlerService, private _toastService: ToastService) {
     this.filteredOrders = this.defaultOrders;
@@ -56,7 +58,6 @@ export class ListOrdersHandlerComponent {
     }
   }
   
-
 
   filter(): void {
 
@@ -106,6 +107,10 @@ export class ListOrdersHandlerComponent {
     this.filter();
   }
 
+
+  getTotalOfFilteredOrders (): string {
+    return this.filteredOrders.map(o => o.priceTotal ? o.priceTotal : 0).reduce((sum, current) => sum + current, 0).toFixed(2);
+  }
 
   showDropdown(event: MouseEvent, data: Order | Consumer | undefined): void {
 

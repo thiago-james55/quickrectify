@@ -18,10 +18,16 @@
 .consumerFilter,
 .dateInitialFilter,
 .dateFinalFilter,
-.serviceFilter {
+.serviceFilter{
     display: flex;
     flex-direction: row;
-    width: 25%;
+    width: 20%;
+}
+
+.totalFilter, .totalSelectionFilter {
+    display: flex;
+    flex-direction: row;
+    width: 10%;
 }
 
 .divForClick {
@@ -74,6 +80,10 @@ input::placeholder {
 .rowOrderTotal td {
     border: none;
     background-color: rgba(41, 54, 70, .1);
+}
+
+.totalOfSelectionRow {
+    font-weight: bold;
 }
 
 tr:hover {
