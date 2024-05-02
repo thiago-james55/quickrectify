@@ -18,11 +18,10 @@ services:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
 
-
   # .NET Core Application
   quickrectify-back:
     build:
-      context: ./back
+      context: ../back
       dockerfile: dot-net.Dockerfile
     ports:
       - "5000:8080"
@@ -34,7 +33,7 @@ services:
   # Angular App
   quickrectify-front:
     build:
-      context: ./front
+      context: ../front
       dockerfile: angular.Dockerfile
     ports:
       - "80:80"  
