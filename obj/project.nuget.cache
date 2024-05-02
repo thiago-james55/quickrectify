@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2sw2lfHdXwxRP77NjWZkQg9XLd0F7ee2PBm0y+IajBxpY6R9dQGIlevM7b1cOk0jQlh/OYBxQuP9qPOVE2Fk0w==",
+  "dgSpecHash": "vvFL1khV8vNLxjaMJHT0nfKOvT3RuumToNaOgwr+vapKx02+1EwSp4X1BnVZtmxvMizo42+Y1ap9nbwwgsd9Pg==",
   "success": true,
-  "projectFilePath": "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj",
+  "projectFilePath": "D:\\Coding\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tsyhw\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\tsyhw\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",

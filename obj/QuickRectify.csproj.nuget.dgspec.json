@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj": {}
+    "D:\\Coding\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj": {}
   },
   "projects": {
-    "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj": {
+    "D:\\Coding\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj",
+        "projectUniqueName": "D:\\Coding\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj",
         "projectName": "QuickRectify",
-        "projectPath": "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj",
+        "projectPath": "D:\\Coding\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\QuickRectify.csproj",
         "packagesPath": "C:\\Users\\tsyhw\\.nuget\\packages\\",
-        "outputPath": "D:\\Programação\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\obj\\",
+        "outputPath": "D:\\Coding\\Projetos\\DOTNET ANGULAR\\QuickRectify\\back\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -39,6 +39,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -97,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

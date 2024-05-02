@@ -40,9 +40,10 @@ namespace QuickRectify.Models
 
         private async Task<string> CapitalizeName(string name)
         {
+            
             TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
 
-            string capitalized = textInfo.ToTitleCase(name);
+            string capitalized = textInfo.ToTitleCase(name.ToLower());
 
             return capitalized;
         }
