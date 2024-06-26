@@ -34,8 +34,8 @@ namespace QuickRectify.Models.DTO
         {
             Id = order.Id;
             Date = order.Date;
-            DiscountPercent = order.DiscountPercent.HasValue ? DiscountPercent : 0;
-            DiscountCash = order.DiscountCash.HasValue ? DiscountCash : 0;
+            DiscountPercent = order.DiscountPercent ?? order.DiscountPercent : 0;
+            DiscountCash = order.DiscountCash ?? order.DiscountCash : 0;
             PriceSubTotal = order.PriceSubTotal;
             PriceTotal = order.PriceTotal;
             ConsumerId = order.ConsumerId;
