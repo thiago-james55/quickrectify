@@ -6,8 +6,8 @@ namespace QuickRectify.Models
     {
         public int Id { get; set; }
         public DateTime? Date { get; set; }
-        public float? DiscountPercent { get; set; }
-        public float? DiscountCash { get; set; }
+        public float DiscountPercent { get; set; } = 0;
+        public float DiscountCash { get; set; } = 0;
 
         [Required]
         public float PriceSubTotal { get; set; }
@@ -29,8 +29,8 @@ namespace QuickRectify.Models
             {
                 Id = Id,
                 Date = Date ?? DateTime.UtcNow,
-                DiscountPercent = DiscountPercent ?? 0,
-                DiscountCash = DiscountCash ?? 0,
+                DiscountPercent = DiscountPercent,
+                DiscountCash = DiscountCash,
                 PriceSubTotal = PriceSubTotal,
                 PriceTotal = PriceTotal,
                 ConsumerId = ConsumerId,

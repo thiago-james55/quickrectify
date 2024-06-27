@@ -9,8 +9,8 @@ namespace QuickRectify.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime Date { get; set; } = DateTime.UtcNow;
-        public float? DiscountPercent { get; set; }
-        public float? DiscountCash { get; set; }
+        public float DiscountPercent { get; set; } = 0;
+        public float DiscountCash { get; set; } = 0;
         [Required]
         public float PriceSubTotal { get; set; }
         [Required]

@@ -139,8 +139,8 @@ namespace QuickRectify.Service
 
         private async Task UpdateOrderInformation(Order existingOrder, OrderInput orderInput)
         {
-            existingOrder.DiscountPercent = orderInput.DiscountPercent.HasValue ? orderInput.DiscountPercent : 0;
-            existingOrder.DiscountCash = orderInput.DiscountCash.HasValue ? orderInput.DiscountCash : 0;
+            existingOrder.DiscountPercent = orderInput.DiscountPercent;
+            existingOrder.DiscountCash = orderInput.DiscountCash;
             existingOrder.PriceSubTotal = orderInput.PriceSubTotal;
             existingOrder.PriceTotal = orderInput.PriceTotal;
             existingOrder.ConsumerId = orderInput.ConsumerId;

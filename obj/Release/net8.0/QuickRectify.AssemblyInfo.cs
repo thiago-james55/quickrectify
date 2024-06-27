@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QuickRectify")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7bee068cc6a9ed5fe2362f125f39024d20d1abc8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c3178a6877da985bd74802bc43dff39bdfa8e82")]
 [assembly: System.Reflection.AssemblyProductAttribute("QuickRectify")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QuickRectify")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
