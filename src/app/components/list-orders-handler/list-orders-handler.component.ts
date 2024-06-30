@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Part} from '../../services/part.entity';
+import { Part } from '../../services/part.entity';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Consumer } from '../../services/consumer.entity';
@@ -18,37 +18,37 @@ import { ToastService } from '../../services/toast.service';
 })
 
 export class ListOrdersHandlerComponent {
-  
+
   isDropdownVisible: boolean = false;
   dropdownPosition: { left: number, top: number } = { left: 0, top: 0 };
   dropdownOptions: DropdownOption[] = [];
-  
+
   @ViewChild(DialogConsumerSearchComponent)
   dialogConsumerSearchComponent!: DialogConsumerSearchComponent;
-  
+
   defaultParts: Part[] = [];
-  
+
   defaultOrders: Order[] = [];
   filteredOrders: Order[] = [];
-  
+
   filterByConsumerName!: string;
   filterByPart: string = "all";
   filterByInitialDate!: Date;
   filterByFinalDate!: Date;
   filterTotalOfOrder: string = "yes";
   filterTotalOfSelection: string = "no";
-  
+
   constructor(private _route: ActivatedRoute, private _requestHandlerService: RequestHandlerService, private _toastService: ToastService) {
     this.filteredOrders = this.defaultOrders;
   }
 
-  
+
 
   async ngOnInit() {
     try {
       const consumerName = await this._route.snapshot.queryParamMap.get('consumerName');
       if (consumerName) this.setConsumerName(consumerName);
-  
+
       this.defaultParts = await this._requestHandlerService.getDefaultParts();
       this.defaultOrders = await this._requestHandlerService.getOrdersOfThisYear();
       this.filteredOrders = this.defaultOrders;
@@ -57,7 +57,7 @@ export class ListOrdersHandlerComponent {
       console.error('Error fetching data:', error);
     }
   }
-  
+
 
   filter(): void {
 
@@ -89,8 +89,8 @@ export class ListOrdersHandlerComponent {
 
       this.filteredOrders = this.defaultOrders.filter(order =>
         predicates.every(predicate => predicate(order))
-        );
-      }
+      );
+    }
   }
 
   setConsumerName(consumerName: string | undefined) {
@@ -108,7 +108,7 @@ export class ListOrdersHandlerComponent {
   }
 
 
-  getTotalOfFilteredOrders (): string {
+  getTotalOfFilteredOrders(): string {
     return this.filteredOrders.map(o => o.priceTotal ? o.priceTotal : 0).reduce((sum, current) => sum + current, 0).toFixed(2);
   }
 
@@ -172,26 +172,26 @@ export class ListOrdersHandlerComponent {
 
   async checkFilterIsForCurrentYear(): Promise<void> {
     if (!this.filterByInitialDate) return;
-  
+
     const currentYear = new Date().getFullYear();
     const initialDate = new Date(this.filterByInitialDate);
     const finalDate = this.filterByFinalDate ? new Date(this.filterByFinalDate) : new Date();
-  
+
     if (initialDate instanceof Date && isNaN(initialDate.getTime())) {
       this._toastService.showToastError("Data Inicial Inválida!");
       return;
     }
-  
+
     if (finalDate instanceof Date && isNaN(finalDate.getTime())) {
       this._toastService.showToastError("Data Final Inválida!");
       return;
     }
-  
+
     if (initialDate > finalDate) {
       this._toastService.showToastError("Data Final não pode ser menor que Data Inicial!");
       return;
     }
-  
+
     if (initialDate instanceof Date && initialDate.getFullYear() !== currentYear) {
       try {
         const orders = await this._requestHandlerService.getOrdersFromDate(initialDate, finalDate);
@@ -202,8 +202,6 @@ export class ListOrdersHandlerComponent {
       }
     }
   }
-  
-
 
   formatDate(date: Date | undefined): string {
     if (date) {

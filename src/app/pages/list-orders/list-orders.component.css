@@ -1,11 +1,25 @@
 
-@media print {
+.floating-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+    opacity: 0.8;
+  }
+
+  @media print {
     * {
         font-size: small;
         padding: 0;
     }
-
     app-navbar {
+        display: none;
+    }
+    
+    .floating-button-container {
         display: none;
     }
 }
