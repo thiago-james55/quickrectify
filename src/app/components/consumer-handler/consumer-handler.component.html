@@ -1,4 +1,4 @@
-<div class=".selfContainer">
+<div [ngClass]="{'defaultPadding selfContainer': defaultPadding, 'selfContainer': !defaultPadding}">
     <div class="consumer defaultBorder">
         <span>Cliente:</span>
         <input class="defaultInput" type="text" disabled

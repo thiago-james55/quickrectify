@@ -31,6 +31,7 @@ export class ListOrdersHandlerComponent {
   defaultOrders: Order[] = [];
   filteredOrders: Order[] = [];
 
+  filterByOrderNumber!: number;
   filterByConsumerName!: string;
   filterByPart: string = "all";
   filterByInitialDate!: Date;
@@ -61,16 +62,23 @@ export class ListOrdersHandlerComponent {
 
   filter(): void {
 
-    const dateCondition = (order: Order) => (
-      (!this.filterByInitialDate || order.date! >= new Date(this.filterByInitialDate)) &&
-      (!this.filterByFinalDate || order.date! <= new Date(this.filterByFinalDate))
+    const orderNumberCondition = (order: Order) => (
+      !this.filterByOrderNumber || ( order.id == this.filterByOrderNumber ) 
     );
+
 
     const consumerCondition = (order: Order) => (
       !this.filterByConsumerName || (
         order.consumer && order.consumer.name!.toLowerCase().includes(this.filterByConsumerName.toLowerCase())
       )
     );
+
+    const dateCondition = (order: Order) => (
+      (!this.filterByInitialDate || order.date! >= new Date(this.filterByInitialDate)) &&
+      (!this.filterByFinalDate || order.date! <= new Date(this.filterByFinalDate))
+    );
+
+    
 
     let orderPartCondition = (order: Order) => (
       !this.filterByPart || (
@@ -81,7 +89,7 @@ export class ListOrdersHandlerComponent {
 
     if (this.filterByPart.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
 
-    const predicates = [dateCondition, consumerCondition, orderPartCondition];
+    const predicates = [orderNumberCondition, consumerCondition, dateCondition, orderPartCondition];
 
     this.checkFilterIsForCurrentYear();
 

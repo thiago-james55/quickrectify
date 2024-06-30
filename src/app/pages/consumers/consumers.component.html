@@ -3,7 +3,7 @@
     <app-navbar></app-navbar>
     <div class="pageContent">
         <app-page-title [title]="this.consumer.id ? 'Ver/Editar Cliente N°' + this.consumer.id : 'Clientes'"></app-page-title>
-        <app-consumer-handler [consumer]="consumer" [table]="true"></app-consumer-handler>
+        <app-consumer-handler [defaultPadding]="true" [consumer]="consumer" [table]="true"></app-consumer-handler>
         <app-footer></app-footer>
     </div>
 </div>

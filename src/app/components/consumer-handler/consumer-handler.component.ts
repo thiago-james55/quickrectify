@@ -15,17 +15,20 @@ import { ToastService } from '../../services/toast.service';
 export class ConsumerHandlerComponent {
 
 
-  @ViewChild(DialogConsumerSearchComponent)
-  dialogConsumerSearchComponent!: DialogConsumerSearchComponent;
-
-  @ViewChild(DialogConsumerCreateComponent)
-  dialogConsumerCreateComponent!: DialogConsumerCreateComponent;
+  @Input() defaultPadding: boolean = false;
 
   @Input() table: boolean = false;
 
   @Input() consumer: Consumer = {};
   
   @Output() objectSentToParent: EventEmitter<any> = new EventEmitter();
+
+  @ViewChild(DialogConsumerSearchComponent)
+  dialogConsumerSearchComponent!: DialogConsumerSearchComponent;
+
+  @ViewChild(DialogConsumerCreateComponent)
+  dialogConsumerCreateComponent!: DialogConsumerCreateComponent;
+
 
   constructor(private toastService: ToastService) {}
 
