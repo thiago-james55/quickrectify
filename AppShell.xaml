@@ -4,12 +4,32 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:QuickRectifyMaui2"
-    Shell.FlyoutBehavior="Disabled"
+    FlyoutBehavior="Flyout"
+    FlyoutHeaderBehavior="CollapseOnScroll"
     Title="QuickRectifyMaui2">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <Shell.FlyoutHeader>
+        <StackLayout Padding="5" BackgroundColor="White">
+            <Image Source="logo.png" HeightRequest="100" />
+        </StackLayout>
+    </Shell.FlyoutHeader>
+    
+    <FlyoutItem Title="Home" Icon="home.png">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Home2" Icon="home.png">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+        </Tab>
+    </FlyoutItem>
+
+    <Shell.FlyoutFooter>
+        <StackLayout Padding="5">
+            <Label HorizontalTextAlignment="Center">Created by Thiago Gonçalves Souza</Label>
+        </StackLayout>
+    </Shell.FlyoutFooter>
 
 </Shell>
