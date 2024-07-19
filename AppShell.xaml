@@ -3,7 +3,7 @@
     x:Class="QuickRectifyMaui2.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:QuickRectifyMaui2"
+    xmlns:pages="clr-namespace:QuickRectifyMaui2.Pages"    
     FlyoutBehavior="Flyout"
     FlyoutHeaderBehavior="CollapseOnScroll"
     Title="QuickRectifyMaui2">
@@ -13,18 +13,38 @@
             <Image Source="logo.png" HeightRequest="100" />
         </StackLayout>
     </Shell.FlyoutHeader>
-    
-    <FlyoutItem Title="Home" Icon="home.png">
+
+
+    <FlyoutItem Title="Início">
         <Tab>
-            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+            <ShellContent ContentTemplate="{DataTemplate pages:MainPage}" />
         </Tab>
     </FlyoutItem>
 
-    <FlyoutItem Title="Home2" Icon="home.png">
+    <FlyoutItem Title="Nova Ordem">
         <Tab>
-            <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+            <ShellContent ContentTemplate="{DataTemplate pages:NewOrder}" />
         </Tab>
     </FlyoutItem>
+
+    <FlyoutItem Title="Ordens de Serviço">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate pages:ListOrders}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Clientes">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate pages:Consumers}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Configurações">
+        <Tab>
+            <ShellContent ContentTemplate="{DataTemplate pages:Settings}" />
+        </Tab>
+    </FlyoutItem>
+
 
     <Shell.FlyoutFooter>
         <StackLayout Padding="5">
