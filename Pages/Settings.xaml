@@ -3,10 +3,46 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuickRectifyMaui2.Pages.Settings"
              Title="Settings">
-    <VerticalStackLayout>
+    <VerticalStackLayout Spacing="10" Margin="10">
+        <Label
+            Text="Status do Servidor:"
+            HorizontalTextAlignment="Center"
+            />
+        <Entry
+            x:Name="serverStatusEntry"
+            Text="Servidor Offline ou IP inválido!"
+            TextColor="Red"
+            IsReadOnly="True"
+            HorizontalTextAlignment="Center"
+            />
         <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            Text="Digite o IP do Servidor:"
+            HorizontalTextAlignment="Center"
+            />
+        <Entry
+            x:Name="ipAddressEntry"
+            TextColor="Red"
+            Placeholder="Ex: 192.168.0.14"
+            HorizontalTextAlignment="Center"
+            />
+        <Label 
+            Text="Digite a Porta do Servidor:"
+            HorizontalTextAlignment="Center"
+            />
+        <Entry 
+            x:Name="ipPortEntry"
+            TextColor="Red"
+            Placeholder="Ex: 5000"
+            HorizontalTextAlignment="Center"
+            />
+        <Button
+            x:Name="saveButton"
+            Clicked="SaveButton_Clicked"
+            Text="Salvar"
+            TextColor="White"
+            BackgroundColor="Red"
+            />
+       
+
     </VerticalStackLayout>
 </ContentPage>
