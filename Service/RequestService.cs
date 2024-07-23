@@ -1,20 +1,22 @@
 ﻿using QuickRectifyMaui2.Utils;
 using System.Net;
 
+namespace QuickRectifyMaui2.Service;
+
 public static class RequestService
 {
     static readonly HttpClient _httpClient = new HttpClient();
 
     public static async Task<bool> ServerIsValid(String? ipAddress, String? ipPort)
     {
-        if (ipAddress == null || ipPort == null) 
+        if (ipAddress == null || ipPort == null)
         {
             ipAddress = Preferences.Get("serverIpAddress", String.Empty);
             ipPort = Preferences.Get("serverIpPort", String.Empty);
         }
 
 
-        if ( !(ipAddress != String.Empty && ipPort != String.Empty) )
+        if (!(ipAddress != String.Empty && ipPort != String.Empty))
         {
             await ToastMessage.ShowToastMessage("IP não configurado!");
             return false;
