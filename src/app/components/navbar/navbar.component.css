@@ -1,5 +1,5 @@
 .container {
-    width: max-content;
+    width: 100%;
     display: flex;
     flex-direction: column;
     background-color: #293646;
@@ -17,6 +17,7 @@ hr {
 .title {
     color: red;
     text-align: center;
+    width: 100%;
 }
 
 .mainPages, .auxiliarPages , .about{
@@ -52,4 +53,13 @@ a {
     color: white;
     text-decoration: none;
     width: 100%;
+}
+
+#logo {
+    width: 100%;
+}
+
+img {
+    width: 100%;
+    max-width: 200px;
 }

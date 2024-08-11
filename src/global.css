@@ -5,6 +5,11 @@
     height: 100vh;
 }
 
+app-navbar {
+    width: 15%;
+    max-width: max-content;
+}
+
 .pageContent {
     display: flex;
     flex-direction: column;
