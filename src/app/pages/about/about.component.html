@@ -1,0 +1,40 @@
+<div [ngClass]="easterEgg ? 'container easterEgg' : 'container'" >
+    <app-navbar></app-navbar>
+    <div class="pageContent">
+        <app-page-title title="Sobre"></app-page-title>
+        <div class="selfContainer defaultPadding">
+
+            <img *ngIf="!easterEgg" title="Não clique mais de 10x!" id="profilePhoto" src="/browser/assets/pic" (click)="plusCount()">
+            <img *ngIf="easterEgg"  title="Não clique mais de 10x!" id="profilePhoto" src="/browser/assets/easter/pic2" (click)="plusCount()" >
+
+
+            <p>Após um longo período de utilização (10 anos) do antigo sistema "dy_blacks", escrito em PHP pelo Rafael (infelizmente, só lembro o primeiro nome), percebi a necessidade de refazer o sistema da empresa do zero.</p>
+
+            <p>O programa nos serviu por muitos anos, mas apresentava sérios problemas de performance, muitos mesmo. Na época, eu ainda não tinha estudado programação, mas consegui, na raça, "fuçando", implementar algumas poucas melhorias no código, que era uma verdadeira bagunça.</p>
+            
+            <p>Os principais problemas que enfrentávamos eram:</p>
+            
+            <ul>
+                <li>Congelamentos frequentes</li>
+                <li>Demora excessiva para carregar as ordens de serviço</li>
+                <li>Problemas de NullPointer, que impediam o salvamento das ordens</li>
+                <li>Falhas na persistência, fazendo com que a ficha "desaparecesse" da lista no sistema</li>
+            </ul>
+                        
+            
+            <p>Era um verdadeiro caos, mas ainda assim, muito útil para o nosso dia a dia.</p>
+            
+            <p>Após adquirir o conhecimento necessário, criei o QuickRectify com muito amor e dedicação, adicionando cada detalhe que sabia que nos ajudaria no dia a dia, como a edição de ordens, a emissão de segunda via, o carregamento de ordens por ano (para evitar truncar tabelas), enfim, algo 100% útil e rápido para a nossa rotina.</p>
+            
+            <p>O backend foi escrito em C#, o frontend em Angular, e o banco de dados é MySQL, tudo containerizado com Docker para facilitar a gestão.</p>
+            
+            <p>Desde que comecei a estudar programação, sempre tive o desejo de recriar esse sistema, pois não há nada melhor do que facilitar o nosso próprio trabalho. Quando me dediquei a criar o QuickRectify, já tinha conhecimento suficiente para fazê-lo, então foi relativamente fácil, embora trabalhoso. Com meu tempo livre, que é escasso, levei cerca de 3 meses para concluir o sistema, e continuo a adicionar melhorias regularmente (veja o histórico de commits).</p>
+            
+            <p>Para mais informações sobre o código-fonte, basta clicar no logotipo no canto superior direito, que você será redirecionado para o GitHub do projeto. Para ver outros trabalhos meus, é só clicar no meu nome no rodapé, que você será direcionado para o meu perfil no GitHub.</p>
+            
+        </div>
+        <app-footer></app-footer>
+    </div>
+   
+
+</div>

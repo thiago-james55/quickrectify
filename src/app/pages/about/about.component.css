@@ -1,0 +1,35 @@
+
+p {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: large;
+
+}
+
+ul {
+    list-style-position: inside;
+    font-size: large;
+}
+
+#profilePhoto {
+    width: 20%;
+    max-width: 250px;
+    align-self: center;
+    border-radius: 50%;
+    border-width: .5rem;
+    border-color: #293646;
+    border-style: solid;
+  }
+
+  #profilePhoto:hover {
+    border-color: green;
+  }
+
+  .easterEgg {
+    color: white;
+    background-image: url('/browser/assets/easter/back');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
