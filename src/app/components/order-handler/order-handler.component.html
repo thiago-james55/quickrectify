@@ -75,8 +75,18 @@
         </div>
     </div>
     <div class="save defaultBorder">
-        <button class="defaultButton defaultBorder" (click)="handleSave(true)">Salvar e Imprimir</button>
-        <button class="defaultButton defaultBorder" (click)="handleSave(false)">Somente Salvar</button>
+        <button 
+            class="defaultButton defaultBorder" 
+            (click)="handleSave(true)" 
+            [disabled]="isSaving">
+            {{ isSaving ? 'Salvando...' : 'Salvar e Imprimir' }}
+        </button>
+        <button 
+            class="defaultButton defaultBorder" 
+            (click)="handleSave(false)" 
+            [disabled]="isSaving">
+            {{ isSaving ? 'Salvando...' : 'Somente Salvar' }}
+        </button>
     </div>
 
 </div>

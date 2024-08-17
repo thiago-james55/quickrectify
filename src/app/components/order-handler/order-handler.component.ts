@@ -23,6 +23,8 @@ export class OrderHandlerComponent {
 
   defaultParts: DefaultPart[] = [];
 
+  isSaving: boolean = false;
+
   @Input() order: Order = { parts: [] };
 
   constructor(
@@ -89,7 +91,13 @@ export class OrderHandlerComponent {
 
   handleSave(print: boolean): void {
 
-    if (!this.validateOrder()) return;
+    this.isSaving = true;
+    
+    if (!this.validateOrder()) {
+      this.isSaving = false;
+      return;
+    }
+    
 
     if (this.order.id) this.editOrder(print);
     else this.saveOrder(print);
@@ -103,6 +111,7 @@ export class OrderHandlerComponent {
   
       if (!savedOrder) {
         this._toastService.showToastError("Erro ao salvar ordem de serviço!");
+        this.isSaving = false;
         return;
       }
   
@@ -111,6 +120,7 @@ export class OrderHandlerComponent {
       if (print) this.print();  
       else this._toastService.showToastSuccess(`Ordem (${this.order.id}) salva com sucesso!`);
   
+      this.isSaving = false;
       this.clearOrder();
     
   }
@@ -122,6 +132,7 @@ export class OrderHandlerComponent {
 
     if (!editedOrder) {
       this._toastService.showToastError("Erro ao editar ordem de serviço!");
+      this.isSaving = false;
       return;
     }
 
@@ -130,6 +141,7 @@ export class OrderHandlerComponent {
       this._toastService.showToastSuccess(`Ordem (${this.order.id}) editada com sucesso!`);
     }
 
+    this.isSaving = false;
     this.clearOrder(); 
 
     setTimeout(() => {
