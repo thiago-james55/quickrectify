@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-
-namespace QuickRectify.Models.DTO
+﻿namespace QuickRectify.Models.DTO
 {
     public class OrderDTO
     {
@@ -25,9 +22,7 @@ namespace QuickRectify.Models.DTO
             PriceTotal = priceTotal;
             ConsumerId = consumerId;
             Consumer = consumerOrderDTO;
-
             Parts = parts.Select(part => new PartDTO(part)).ToList();
-
         }
 
         public OrderDTO(Order order)
@@ -42,9 +37,6 @@ namespace QuickRectify.Models.DTO
             Consumer = new ConsumerOrderDTO(order.Consumer);
             Parts = order.Parts.Select(part => new PartDTO(part)).ToList();
         }
-
-
-
 
     }
 }

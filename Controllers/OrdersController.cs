@@ -28,7 +28,6 @@ namespace QuickRectify.Controllers
             }
 
             return null;
-            
         }
 
         [HttpPost("fromDate")]
@@ -59,7 +58,37 @@ namespace QuickRectify.Controllers
             OrderDTO orderDTO = await _requestService.GetOrderByIdAsync(id);
 
             if (orderDTO != null) return Ok(orderDTO);
-            else return NotFound($"Error order with {id} not found!");
+            else return NotFound($"Order with {id} not found!");
+        }
+
+        [HttpGet("EngineBlockNumberImage/{id}", Name = "GetEngineBlockNumberImageByOrderIdAsync")]
+        public async Task<ActionResult> GetEngineBlockNumberImageByOrderIdAsync(int id)
+        {
+           Order order = await _requestService.GetEngineBlockNumberImageByOrderIdAsync(id);
+
+            if (order == null) return NotFound($"Order with {id} not found!");
+            if (order.EngineBlockNumberImage == null) return NotFound($"Engine Block Number Image of Order with {id} not found!");
+
+
+            var base64Image = Convert.ToBase64String(order.EngineBlockNumberImage);
+
+            return Ok(new { EngineBlockNumberImage = base64Image });
+        }
+
+        [HttpGet("EngineBlockNumberImage/{id}/Show", Name = "GetEngineBlockNumberImageHtmlByOrderIdAsync")]
+        public async Task<ActionResult> GetEngineBlockNumberImageHtmlByOrderIdAsync(int id)
+        {
+            Order order = await _requestService.GetEngineBlockNumberImageByOrderIdAsync(id);
+
+            if (order == null) return NotFound($"Order with {id} not found!");
+            if (order.EngineBlockNumberImage == null) return NotFound($"Engine Block Number Image of Order with {id} not found!");
+
+
+            var base64Image = Convert.ToBase64String(order.EngineBlockNumberImage);
+
+            var imgHtml = $"<img src='data:image/jpeg;base64,{base64Image}' alt='Engine Block Image' />";
+
+            return Content(imgHtml, "text/html");
         }
 
         [HttpPost]
@@ -103,7 +132,6 @@ namespace QuickRectify.Controllers
 
             if (deletedSuccessful) return NoContent();
             else return StatusCode(500, "Error deleting the consumer. Please try again.");
-
         }
 
 

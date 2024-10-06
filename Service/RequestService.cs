@@ -5,7 +5,6 @@ using QuickRectify.Models.DTO;
 using QuickRectify.Models.Input;
 using System.Linq.Expressions;
 using QuickRectify.HttpException;
-using System.Globalization;
 
 namespace QuickRectify.Service
 {
@@ -97,6 +96,20 @@ namespace QuickRectify.Service
         }
 
 
+        public async Task<Order> GetEngineBlockNumberImageByOrderIdAsync(int id)
+        {
+            try
+            {
+                return await _dbContextConfig.Orders.FirstOrDefaultAsync(o => o.Id == id);
+            }
+            catch (Exception ex)
+            {
+                HttpExceptionHandler.HandleCommonExceptions(ex);
+                return null;
+            }
+        }
+
+
         public async Task<int> SaveOrderAsyncAndReturnId(OrderInput orderInput)
         {
             Order order = await orderInput.ToOrder();
@@ -145,6 +158,7 @@ namespace QuickRectify.Service
             existingOrder.PriceTotal = orderInput.PriceTotal;
             existingOrder.ConsumerId = orderInput.ConsumerId;
             existingOrder.Parts = (await Task.WhenAll(orderInput.Parts.Select(async p => await p.ToPart()))).ToList();
+            existingOrder.EngineBlockNumberImage = orderInput.ConvertBase64ToByteArray(orderInput.EngineBlockNumberImage);
         }
 
 

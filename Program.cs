@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using QuickRectify.Config;
 using QuickRectify.Service;
@@ -18,7 +17,6 @@ builder.Services.AddDbContext<DbContextConfig>((options) =>
     });
 });
 
-
 builder.Services.AddScoped<RequestService, RequestService>();
 
 builder.Services.AddControllers();
@@ -26,9 +24,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
-
 
 app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
@@ -39,7 +35,6 @@ app.UseSwaggerUI();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.UseHttpsRedirection();
 
