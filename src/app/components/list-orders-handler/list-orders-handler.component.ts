@@ -23,6 +23,9 @@ export class ListOrdersHandlerComponent {
   dropdownPosition: { left: number, top: number } = { left: 0, top: 0 };
   dropdownOptions: DropdownOption[] = [];
 
+  isHoverVisible: boolean = false;
+  HoverContentOption: HoverContentOption = {};
+
   @ViewChild(DialogConsumerSearchComponent)
   dialogConsumerSearchComponent!: DialogConsumerSearchComponent;
 
@@ -39,8 +42,12 @@ export class ListOrdersHandlerComponent {
   filterTotalOfOrder: string = "yes";
   filterTotalOfSelection: string = "no";
 
+  public readonly ORDER_ENGINEBLOCKNUMBERIMAGE_URL: string;
+  lastOrderId: number = 0;
+
   constructor(private _route: ActivatedRoute, private _requestHandlerService: RequestHandlerService, private _toastService: ToastService) {
     this.filteredOrders = this.defaultOrders;
+    this.ORDER_ENGINEBLOCKNUMBERIMAGE_URL = _requestHandlerService.ORDER_ENGINEBLOCKNUMBERIMAGE_URL;
   }
 
 
@@ -136,6 +143,25 @@ export class ListOrdersHandlerComponent {
 
   }
 
+  async showHover(event: MouseEvent, order: Order | undefined ): Promise<void> {
+
+    if (!order) return;
+
+    this.isHoverVisible = true;
+    this.calculateDropdownPosition(event);
+
+    if (this.lastOrderId === order.id) return;
+    else this.HoverContentOption = {};
+
+    if (order.id) {
+      this.lastOrderId = order.id;
+      this.HoverContentOption.orderId = order.id;
+      this.HoverContentOption.consumerName = order.consumer?.name;
+      this.HoverContentOption.engineBlockNumberImage = await this._requestHandlerService.getOrderEngineBlockNumberImageById(order.id);
+    }
+
+  }
+
   orderDropdownOptions(order: Order) {
     const queryParam = { orderId: order.id };
     this.dropdownOptions = [
@@ -171,10 +197,14 @@ export class ListOrdersHandlerComponent {
     this.isDropdownVisible = false;
   }
 
+  hideHover() {
+    this.isHoverVisible = false;
+  }
+
   calculateDropdownPosition(event: MouseEvent) {
     this.dropdownPosition = {
-      left: event.clientX - 10,
-      top: event.clientY - 10
+      left: event.clientX -10,
+      top: event.clientY -10
     };
   }
 
@@ -228,5 +258,12 @@ export interface DropdownOption {
   target?: string;
   consumerName?: string;
 }
+
+export interface HoverContentOption {
+  orderId?: number;
+  consumerName?: string;
+  engineBlockNumberImage?: string;
+}
+
 
 

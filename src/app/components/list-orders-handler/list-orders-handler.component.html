@@ -87,7 +87,10 @@
                         <td class="tdWithDropdown" (click)="showDropdown($event, order.consumer)">
                             {{order.consumer?.name}}
                         </td>
-                        <td>{{part.name}}</td>
+                        <td class="tdWithDropdown" *ngIf="part.name == 'Bloco'" title="Clique para ver o numero do bloco!"
+                            (mouseenter)="showHover($event, order)" (mouseleave)="hideHover()"
+                        ><a style="text-decoration: none; color: inherit;"  [href]="this.ORDER_ENGINEBLOCKNUMBERIMAGE_URL + '/' + order.id + '/Show'" target="_blank">{{part.name}}</a></td>
+                        <td *ngIf="!(part.name == 'Bloco')">{{part.name}}</td>
                         <td>{{part.service}}</td>
                         <td>{{part.description}}</td>
                         <td>{{part.quantity}}</td>
@@ -122,6 +125,7 @@
         </table>
     </div>
 </div>
+
 <app-dialog-consumer-search
     (objectSentToParent)="getConsumerFromChildAndSendToParent($event)"></app-dialog-consumer-search>
 
@@ -149,5 +153,13 @@
         </ng-container>
     </div>
 
-
 </div>
+
+<div class="hoverContent defaultBorder" *ngIf="isHoverVisible"> 
+    <div class="hoverContentInfo">
+        <span>OS N°: {{this.HoverContentOption.orderId}}</span>
+        <span>Cliente: {{this.HoverContentOption.consumerName}}</span>
+    </div>
+    <img id="hoverImage" src="data:image/jpeg;base64,{{this.HoverContentOption.engineBlockNumberImage}}" alt="Foto do Numero do Bloco">
+</div>
+

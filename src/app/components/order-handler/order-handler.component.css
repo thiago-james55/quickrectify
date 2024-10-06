@@ -7,6 +7,19 @@
 
 }
 
+.engineBlockNumberImage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: .5rem;
+    margin-bottom: 1rem;
+}
+
+#engineBlockNumberImage {
+    width: 50%; 
+    max-width: 500px;
+}
+
 .tableParts {
     display: flex;
     align-items: center;

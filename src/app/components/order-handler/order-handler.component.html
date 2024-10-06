@@ -6,6 +6,11 @@
         <p>Adicionar a Ordem: </p>
         <button class="defaultButton defaultBorder" *ngFor="let part of defaultParts"
             (click)="insertRow(part)">{{part.name}}</button>
+        <button class="defaultButton defaultBorder" style="background-color: red;" (click)="fileInput.click()">Foto N° do Bloco</button>
+    </div>
+
+    <div *ngIf="this.order.engineBlockNumberImage || this.order.id" class="engineBlockNumberImage defaultBorder">
+        <img id="engineBlockNumberImage" src="data:image/jpeg;base64,{{this.order.engineBlockNumberImage}}" alt="Foto Numero do Bloco">
     </div>
 
     <div class="tableParts defaultBorder">
@@ -88,5 +93,7 @@
             {{ isSaving ? 'Salvando...' : 'Somente Salvar' }}
         </button>
     </div>
+
+    <input type="file" #fileInput (change)="onFileSelected($event)" accept=".jpg, .jpeg" style="display: none;" />
 
 </div>

@@ -12,6 +12,7 @@ export class RequestHandlerService {
   private readonly SERVER = "http://localhost:5000";
   private readonly CONSUMERS_URL = `${this.SERVER}/Consumers`;
   private readonly ORDERS_URL = `${this.SERVER}/Orders`;
+  public readonly ORDER_ENGINEBLOCKNUMBERIMAGE_URL = `${this.ORDERS_URL}/EngineBlockNumberImage`;
   private readonly DEFAULTPARTS_URL = `${this.SERVER}/DefaultParts`;
 
   private readonly dateOptions: Intl.DateTimeFormatOptions = {
@@ -38,7 +39,7 @@ export class RequestHandlerService {
     };
   }
 
-  //GET
+  //GET CONSUMERS
   async getConsumers(): Promise<Consumer[]> {
     try {
       let consumers: Consumer[] = await this.getMethod(this.CONSUMERS_URL);
@@ -120,6 +121,7 @@ export class RequestHandlerService {
     }
   }
 
+
   //GET ORDER BY ID
   async getOrderById(orderId: number): Promise<Order> {
     try {
@@ -131,7 +133,22 @@ export class RequestHandlerService {
         return order;
       }
 
-      throw new Error("Ordem com essa id não encontradas");
+      throw new Error("Ordem com essa id não encontrada!");
+
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  //GET ENGINEBLOCKNUMBERIMAGE ORDER BY ID
+  async getOrderEngineBlockNumberImageById(orderId: number): Promise<string> {
+    try {
+      const response = await this.getMethod(`${this.ORDER_ENGINEBLOCKNUMBERIMAGE_URL}/${orderId}`);
+
+      if (response) { return response.engineBlockNumberImage; }
+
+      throw new Error("Foto de bloco com essa ID não encontrada!");
 
     } catch (error) {
       this.handleError(error);

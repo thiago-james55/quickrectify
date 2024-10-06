@@ -11,4 +11,5 @@ export interface Order {
     discountCash?: number;
     priceSubTotal?: number;
     priceTotal?: number;
+    engineBlockNumberImage?: string;
 }
