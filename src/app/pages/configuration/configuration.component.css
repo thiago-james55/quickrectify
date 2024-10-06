@@ -1,0 +1,44 @@
+.vacationInfo {
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+}
+
+.vacationField {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+}
+
+.vacationField span,
+.vacationField input,
+.vacationField button {
+    width: 100%;
+    text-align: center;
+}
+
+.vacationField input {
+    padding: .5rem;
+}
+
+.vacationActivated {
+    width: 10%;
+}
+
+.vacationDateInitial {
+    width: 20%;
+}
+
+.vacationDateFinal {
+    width: 20%;
+}
+
+.vacationMessage {
+    width: 30%;
+}
+
+.vacationSave {
+    width: 10%;
+}

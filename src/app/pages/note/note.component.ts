@@ -6,6 +6,8 @@ import { ToastService } from '../../services/toast.service';
 import { CommonModule } from '@angular/common';
 import { NoCommaPipe } from "../../pipes/no-comma.pipe";
 import { RequestHandlerService } from '../../services/request-handler.service';
+import { VacationInfoData } from '../configuration/configuration.component';
+import { StorageService } from '../../services/storage.service';
 
 @Component({
   selector: 'app-note',
@@ -18,16 +20,27 @@ export class NoteComponent {
 
   print():void { window.print(); }
 
+  isVacationInfo: boolean = false;
+  vacationInfoData: VacationInfoData = {};
+
   constructor(
     private _route: ActivatedRoute,
     private _toastService: ToastService,
     private _requestHandlerService: RequestHandlerService,
-    public _companyInfo: CompanyInfoService
-  ) { this.getOrder(); }
+    public _companyInfo: CompanyInfoService,
+    private _storageService: StorageService
+  ) { 
+    this.loadNoteInfo();
+  }
 
   order: Order = { parts: [] };
   installments: number[] = [];
 
+
+  loadNoteInfo(): void {
+    this.getOrder();
+    this.getVacationInfo();
+  }
 
   getOrder(): void {
 
@@ -58,6 +71,16 @@ export class NoteComponent {
     }
 
   }
+
+  async getVacationInfo(): Promise<void> {
+    const savedvacationInfoData = this._storageService.getItem("vacationInfoData");
+
+    if (savedvacationInfoData !== null) {
+      this.vacationInfoData = JSON.parse(savedvacationInfoData) as VacationInfoData;
+      this.isVacationInfo = true;
+  }
+
+ }
 
   @HostListener('window:click', ['$event'])
   onClick(event: MouseEvent) { window.print(); }

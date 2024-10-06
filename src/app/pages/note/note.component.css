@@ -44,10 +44,18 @@
     width: 10rem;
 }
 
-.partsTable, .totalTable {
+.partsTable, .totalTable, .vacationInfo {
     align-self: center;
     width: 90%;
     margin-bottom: 2rem;
+}
+
+.vacationInfo {
+    text-align: center;
+}
+
+.vacationInfo h3, .vacationInfo p {
+    margin: .5rem 0 .5rem 0;
 }
 
 .totalTable table, .totalTable td, .totalTable th {
