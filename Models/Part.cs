@@ -19,6 +19,8 @@ namespace QuickRectify.Models
         public float PricePerQuantity { get; set; }
         [Required]
         public float PriceTotal { get; set; }
+        [Required]
+        public bool IsPaid { get; set; }
 
         public int OrderId {  get; set; }
 

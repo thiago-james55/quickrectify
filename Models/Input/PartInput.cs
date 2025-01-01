@@ -19,6 +19,7 @@ namespace QuickRectify.Models
         public float PricePerQuantity { get; set; }
         [Required]
         public float PriceTotal { get; set; }
+        public bool IsPaid { get; set; } = false;
 
         public PartInput() { }
 
@@ -33,6 +34,7 @@ namespace QuickRectify.Models
             part.Quantity = Quantity;
             part.PricePerQuantity = PricePerQuantity;
             part.PriceTotal = PriceTotal;
+            part.IsPaid = IsPaid;
 
             return part;
         }

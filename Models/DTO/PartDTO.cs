@@ -12,8 +12,9 @@ namespace QuickRectify.Models
         public int Quantity { get; set; }
         public float PricePerQuantity { get; set; }
         public float PriceTotal { get; set; }
+        public bool IsPaid { get; set; }
 
-        public PartDTO(string name, string service, string description, int quantity, float pricePerQuantity, float priceTotal)
+        public PartDTO(string name, string service, string description, int quantity, float pricePerQuantity, float priceTotal, bool isPaid)
         {
             Name = name;
             Service = service;
@@ -21,6 +22,7 @@ namespace QuickRectify.Models
             Quantity = quantity;
             PricePerQuantity = pricePerQuantity;
             PriceTotal = priceTotal;
+            IsPaid = isPaid;
         }
 
         public PartDTO(Part part)
@@ -31,6 +33,7 @@ namespace QuickRectify.Models
             Quantity = part.Quantity;
             PricePerQuantity = part.PricePerQuantity;
             PriceTotal = part.PriceTotal;
+            IsPaid = part.IsPaid;
         }
     }
 }
