@@ -2,25 +2,28 @@
     <div class="searchOptions defaultBorder">
         <div class="filterSpan">
             <div class="orderNumberFilter">
-                <span>N°:</span>
+                <span>N°</span>
             </div>
             <div class="consumerFilter">
                 <span (click)="openSearchDialog()" id="consumerSearchSpan" title="Clique para procurar clientes!">Cliente:</span>
             </div>
             <div class="dateInitialFilter">
-                <span>Data Inicial:</span>
+                <span>Data Inicial</span>
             </div>
             <div class="dateFinalFilter">
-                <span>Data Final:</span>
+                <span>Data Final</span>
             </div>
             <div class="serviceFilter">
-                <span>Serviço:</span>
+                <span>Serviço</span>
             </div>
             <div class="totalFilter">
                 <span>Total Ordem</span>
             </div>
             <div class="totalSelectionFilter">
                 <span>Total Geral</span>
+            </div>
+            <div class="paidFilter">
+                <span>Pago</span>
             </div>
         </div>
         <div class="filterInput">
@@ -54,12 +57,22 @@
                     <option value="no">Não</option>
                 </select>
             </div>
+
             <div class="totalSelectionFilter">
                 <select [(ngModel)]="filterTotalOfSelection">
                     <option value="yes">Sim</option>
                     <option value="no">Não</option>
                 </select>
             </div>
+
+            <div class="paidFilter">
+                <select [(ngModel)]="filterIsPartPaid" (ngModelChange)="filter()">
+                    <option value="all">Todos</option>
+                    <option value="yes">Sim</option>
+                    <option value="no">Não</option>
+                </select>
+            </div>
+
         </div>
     </div>
     <div class="tableOrders">
@@ -74,12 +87,12 @@
                     <th>Descrição</th>
                     <th>Qtd</th>
 					<th>Total Qtd</th>
-
+					<th>Pago</th>
                 </tr>
             </thead>
             <tbody>
                 <ng-container *ngFor="let order of filteredOrders">
-                    <tr *ngFor="let part of order.parts">
+                    <tr *ngFor="let part of order.parts" [ngClass]="part.isPaid ? 'paidRow' : ''">
                         <td class="tdWithDropdown" (click)="showDropdown($event, order)">
                             {{order.id}}
                         </td>
@@ -95,9 +108,10 @@
                         <td>{{part.description}}</td>
                         <td>{{part.quantity}}</td>
                         <td>{{part.priceTotal?.toFixed(2)}}</td>
+                        <td>{{part.isPaid ? "Sim" : "Não"}}</td>
                     </tr>
                     <ng-container *ngIf="filterTotalOfOrder == 'yes'">
-                    <tr class="rowOrderTotal">
+                    <tr [ngClass]="{ 'rowOrderTotal': true, 'paidRowTotal': checkAllPartsOfOrderIsPaid(order) }">
                         <td></td>
                         <td></td>
                         <td></td>
@@ -106,6 +120,7 @@
                         <td></td>
                         <td></td>
 						<td>{{order.priceTotal?.toFixed(2)}}</td>
+                        <td></td>
                     </tr>
                     </ng-container>
                 </ng-container>

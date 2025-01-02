@@ -41,6 +41,7 @@ export class ListOrdersHandlerComponent {
   filterByFinalDate!: Date;
   filterTotalOfOrder: string = "yes";
   filterTotalOfSelection: string = "no";
+  filterIsPartPaid: string = "all";
 
   public readonly ORDER_ENGINEBLOCKNUMBERIMAGE_URL: string;
   lastOrderId: number = 0;
@@ -93,10 +94,16 @@ export class ListOrdersHandlerComponent {
       )
     );
 
-
+    let partPaidCondition = (order: Order) =>
+      !this.filterIsPartPaid || (
+        order.parts && order.parts.some(part => part.isPaid === (this.filterIsPartPaid === "yes"))
+      );
+  
     if (this.filterByPart.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
+    if (this.filterIsPartPaid.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
 
-    const predicates = [orderNumberCondition, consumerCondition, dateCondition, orderPartCondition];
+
+    const predicates = [orderNumberCondition, consumerCondition, dateCondition, orderPartCondition, partPaidCondition];
 
     this.checkFilterIsForCurrentYear();
 
@@ -248,6 +255,9 @@ export class ListOrdersHandlerComponent {
     return '';
   }
 
+  checkAllPartsOfOrderIsPaid(order: Order): boolean {
+    return order.parts.every(e => e.isPaid);
+  }
 
 }
 

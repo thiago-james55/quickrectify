@@ -21,10 +21,10 @@
 .serviceFilter{
     display: flex;
     flex-direction: row;
-    width: 17.5%;
+    width: 15%;
 }
 
-.totalFilter, .totalSelectionFilter, .orderNumberFilter {
+.totalFilter, .totalSelectionFilter, .orderNumberFilter, .paidFilter {
     display: flex;
     flex-direction: row;
     width: 10%;
@@ -149,4 +149,16 @@ li:hover {
 .dropdownContent a:focus {
     color: darkblue;
     text-decoration: none;
+}
+
+.paidRow {
+    color: green;
+}
+
+.paidRowTotal {
+    color: green;
+}
+
+.paidRowTotal td {
+    color: green;
 }

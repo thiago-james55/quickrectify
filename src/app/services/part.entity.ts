@@ -11,4 +11,5 @@ export interface Part {
     quantity?: number;
     pricePerQuantity?: number;
     priceTotal?: number;
+    isPaid? : boolean;
 }

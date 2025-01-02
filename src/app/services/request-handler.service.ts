@@ -145,10 +145,9 @@ export class RequestHandlerService {
   async getOrderEngineBlockNumberImageById(orderId: number): Promise<string> {
     try {
       const response = await this.getMethod(`${this.ORDER_ENGINEBLOCKNUMBERIMAGE_URL}/${orderId}`);
-
       if (response) { return response.engineBlockNumberImage; }
-
-      throw new Error("Foto de bloco com essa ID não encontrada!");
+      this._toastService.showToastError("Foto de bloco com essa ID não encontrada!");
+      return "";
 
     } catch (error) {
       this.handleError(error);
@@ -192,7 +191,6 @@ export class RequestHandlerService {
 
 
   formatDate(date: Date): string {
-    // Assuming date is in UTC and you want to convert it to Brasília time
     const brasiliaTime = new Date(date.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
 
     return new Intl.DateTimeFormat('pt-BR', this.dateOptions).format(brasiliaTime);
@@ -281,8 +279,6 @@ export class RequestHandlerService {
   }
 
   async handleError(error: any) {
-
-
     if (error.message && error.message == "NetworkError when attempting to fetch resource.") {
       this._toastService.showToastError("Erro ao Contatar Servidor!");
       return;

@@ -1,16 +1,20 @@
 <div class="selfContainer defaultPadding">
 
-    <app-consumer-handler [consumer]="this.order.consumer || {}" (objectSentToParent)="getConsumerFromChild($event)"></app-consumer-handler>
+    <app-consumer-handler [consumer]="order.consumer || {}" (objectSentToParent)="getConsumerFromChild($event)"></app-consumer-handler>
 
     <div class="addParts defaultBorder">
         <p>Adicionar a Ordem: </p>
         <button class="defaultButton defaultBorder" *ngFor="let part of defaultParts"
             (click)="insertRow(part)">{{part.name}}</button>
-        <button class="defaultButton defaultBorder" style="background-color: red;" (click)="fileInput.click()">Foto N° do Bloco</button>
+                <p> | </p>
+        <button *ngIf="!order.engineBlockNumberImage" class="defaultButton defaultBorder" style="background-color: red;" (click)="fileInput.click()">Adicionar Foto N° do Bloco</button>
+        <button *ngIf="order.engineBlockNumberImage" class="defaultButton defaultBorder" style="background-color: red;" (click)="removeEngineBlockImage()">Remover Foto N° do Bloco</button>
+        <button *ngIf="!isAllPartsPaid" class="defaultButton defaultBorder" style="background-color: green;" (click)="changeAllPartsToPaidOrNotPaid()">Marcar Tudo Pago</button>
+        <button *ngIf="isAllPartsPaid" class="defaultButton defaultBorder" style="background-color: green;" (click)="changeAllPartsToPaidOrNotPaid()">Marcar Tudo Não Pago</button>
     </div>
 
-    <div *ngIf="this.order.engineBlockNumberImage || this.order.id" class="engineBlockNumberImage defaultBorder">
-        <img id="engineBlockNumberImage" src="data:image/jpeg;base64,{{this.order.engineBlockNumberImage}}" alt="Foto Numero do Bloco">
+    <div *ngIf="order.engineBlockNumberImage || order.id" class="engineBlockNumberImage defaultBorder">
+        <img id="engineBlockNumberImage" src="data:image/jpeg;base64,{{order.engineBlockNumberImage}}" alt="Foto Numero do Bloco">
     </div>
 
     <div class="tableParts defaultBorder">
@@ -23,6 +27,7 @@
                  <th class="quantity">Qtd.</th>
                  <th class="unitPrice">Preço Unit.</th>
                  <th class="totalPrice">Total</th>
+                 <th class="isPaid">Pago</th>
                  <th class="exclude">Excluir</th>
              </tr>
            </thead>
@@ -49,6 +54,12 @@
                     </td>
                     <td>
                         <span> R${{formatValue(part.priceTotal)}}</span>
+                    </td>
+                    <td>
+                        <select [(ngModel)]="part.isPaid" (ngModelChange)="checkAllPartsIsPaid()">
+                            <option [ngValue]="false">Não</option>
+                            <option [ngValue]="true">Sim</option>
+                        </select>
                     </td>
                     <td>
                         <button class="buttonExclude" (click)="deleteRow(part)">

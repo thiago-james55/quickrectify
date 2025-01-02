@@ -21,8 +21,8 @@ export class OrderHandlerComponent implements OnInit {
 
   defaultParts: DefaultPart[] = [];
   isSaving: boolean = false;
-  isEditingEngineBlockNumberImage: boolean = false;
   private timeoutId: any;
+  isAllPartsPaid: boolean = false;
 
   @Input() order: Order = { parts: [] };
 
@@ -35,6 +35,10 @@ export class OrderHandlerComponent implements OnInit {
   ngOnInit(): void {
     this.loadDefaultParts();
     this.getEngineBlockNumberImage();
+  }
+
+  ngDoCheck(): void {
+    this.checkAllPartsIsPaid();
   }
 
   private async loadDefaultParts(): Promise<void> {
@@ -74,9 +78,10 @@ export class OrderHandlerComponent implements OnInit {
   }
 
   insertRow(defaultPart: DefaultPart): void {
-    const part: Part = { name: defaultPart.name, service: defaultPart.services[0], quantity: 1, pricePerQuantity: 100, priceTotal: 100 };
+    const part: Part = { name: defaultPart.name, service: defaultPart.services[0], quantity: 1, pricePerQuantity: 100, priceTotal: 100, isPaid: false };
     this.order.parts.push(part);
     this.sumRow(part);
+    this.checkAllPartsIsPaid();
   }
 
   deleteRow(part: Part): void {
@@ -122,12 +127,11 @@ export class OrderHandlerComponent implements OnInit {
       clearTimeout(this.timeoutId);
     }
 
-    // Set a new timeout
     this.timeoutId = setTimeout(async () => {
       if (this.order.id) {
         this.order.engineBlockNumberImage = await this._requestHandlerService.getOrderEngineBlockNumberImageById(this.order.id);
       }
-    }, 1000); // 1000 ms delay
+    }, 1000);
   }
   
 
@@ -182,9 +186,9 @@ export class OrderHandlerComponent implements OnInit {
   formatValue(value: number | undefined): string {
     return value ? value.toFixed(2) : "0.00";
   }
-
+  
   onFileSelected(event: any): void {
-    this.isEditingEngineBlockNumberImage = true;
+  
     const file = event.target.files[0];
     
     if (file) {
@@ -197,4 +201,27 @@ export class OrderHandlerComponent implements OnInit {
       reader.readAsDataURL(file);
     }
   }
+
+  removeEngineBlockImage() {
+      this.order.engineBlockNumberImage = undefined;
+  }
+
+  checkAllPartsIsPaid() {
+    if (this.orderHaveParts()) {
+      this.isAllPartsPaid = this.order.parts.every(e => e.isPaid);
+    }
+  }
+  
+  changeAllPartsToPaidOrNotPaid() {
+    if (!this.orderHaveParts()) return;
+  
+    this.isAllPartsPaid = !this.isAllPartsPaid;
+    this.order.parts.forEach(e => e.isPaid = this.isAllPartsPaid);
+  }
+  
+  orderHaveParts(): boolean {
+    return this.order.parts.length > 0;
+  }
+  
+
 }
