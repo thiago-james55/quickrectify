@@ -37,8 +37,10 @@ export class ListOrdersHandlerComponent {
   filterByOrderNumber!: number;
   filterByConsumerName!: string;
   filterByPart: string = "all";
-  filterByInitialDate!: Date;
-  filterByFinalDate!: Date;
+  filterByInitialDate!: string;
+  lastFilterByInitialDate!: string;
+  filterByFinalDate!: string;
+  lastFilterByFinalDate!: string;
   filterTotalOfOrder: string = "yes";
   filterTotalOfSelection: string = "no";
   filterIsPartPaid: string = "all";
@@ -65,10 +67,26 @@ export class ListOrdersHandlerComponent {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
+    this.setDates();
+  }
+
+  setDates(): void {
+    const firstDayOfYear = new Date(new Date().getFullYear(), 0, 1);
+    const today = new Date();
+    this.filterByInitialDate = firstDayOfYear.toISOString().split('T')[0];
+    this.filterByFinalDate = today.toISOString().split('T')[0];
+    this.setLastDates();
+  }
+
+  setLastDates() {
+    this.lastFilterByInitialDate = this.filterByInitialDate;
+    this.lastFilterByFinalDate = this.filterByFinalDate;
   }
 
 
-  filter(): void {
+  async filter(): Promise<void> {
+    
+    await this.checkFilterIsForCurrentYear();
 
     const orderNumberCondition = (order: Order) => (
       !this.filterByOrderNumber || ( order.id == this.filterByOrderNumber ) 
@@ -100,15 +118,13 @@ export class ListOrdersHandlerComponent {
       );
   
     if (this.filterByPart.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
-    if (this.filterIsPartPaid.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
+    if (this.filterIsPartPaid.toLocaleLowerCase().includes("all")) partPaidCondition = () => true;
 
 
     const predicates = [orderNumberCondition, consumerCondition, dateCondition, orderPartCondition, partPaidCondition];
 
-    this.checkFilterIsForCurrentYear();
 
     if (this.defaultOrders) {
-
       this.filteredOrders = this.defaultOrders.filter(order =>
         predicates.every(predicate => predicate(order))
       );
@@ -216,7 +232,7 @@ export class ListOrdersHandlerComponent {
   }
 
   async checkFilterIsForCurrentYear(): Promise<void> {
-    if (!this.filterByInitialDate) return;
+    if (!this.filterByInitialDate || ( this.lastFilterByInitialDate === this.filterByInitialDate && this.lastFilterByFinalDate === this.filterByFinalDate )) return;
 
     const currentYear = new Date().getFullYear();
     const initialDate = new Date(this.filterByInitialDate);
@@ -242,6 +258,7 @@ export class ListOrdersHandlerComponent {
         const orders = await this._requestHandlerService.getOrdersFromDate(initialDate, finalDate);
         this.defaultOrders = orders;
         this.filteredOrders = this.defaultOrders;
+        this.setLastDates();
       } catch (error) {
         this._requestHandlerService.handleError(error);
       }
