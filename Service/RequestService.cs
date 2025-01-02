@@ -261,7 +261,7 @@ namespace QuickRectify.Service
 
                 Consumer existingConsumer = await _dbContextConfig.Consumers.FirstOrDefaultAsync(c => c.Id == id);
 
-                await UpdateConsumerInformationAsync(existingConsumer, consumerInput);
+                await UpdateConsumerInformationAsync(existingConsumer, await consumerInput.ToConsumer());
 
                 await _dbContextConfig.SaveChangesAsync();
 
@@ -274,7 +274,7 @@ namespace QuickRectify.Service
             }
         }
 
-        private async Task UpdateConsumerInformationAsync(Consumer existingConsumer, ConsumerInput consumerInput)
+        private async Task UpdateConsumerInformationAsync(Consumer existingConsumer, Consumer consumerInput)
         {
             existingConsumer.Name = consumerInput.Name;
             existingConsumer.Document = consumerInput.Document;

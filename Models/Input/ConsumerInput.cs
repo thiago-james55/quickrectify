@@ -35,7 +35,6 @@ namespace QuickRectify.Models
             consumer.Phone3 = Phone3;
 
             return consumer;
-
         }
 
         private async Task<string> CapitalizeName(string name)
