@@ -15,7 +15,7 @@ export class AboutComponent {
 
     clicked: number = 0;
     easterEgg: boolean = false;
-    audio = new Audio('/browser/assets/easter/mp3');
+    audio = new Audio('./assets/easter/mp3');
     
     plusCount() {
         this.clicked++;

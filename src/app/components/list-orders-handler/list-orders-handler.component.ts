@@ -85,13 +85,12 @@ export class ListOrdersHandlerComponent {
 
 
   async filter(): Promise<void> {
-    
+      
     await this.checkFilterIsForCurrentYear();
 
     const orderNumberCondition = (order: Order) => (
       !this.filterByOrderNumber || ( order.id == this.filterByOrderNumber ) 
     );
-
 
     const consumerCondition = (order: Order) => (
       !this.filterByConsumerName || (
@@ -99,12 +98,15 @@ export class ListOrdersHandlerComponent {
       )
     );
 
-    const dateCondition = (order: Order) => (
-      (!this.filterByInitialDate || order.date! >= new Date(this.filterByInitialDate)) &&
-      (!this.filterByFinalDate || order.date! <= new Date(this.filterByFinalDate))
-    );
-
+    const dateCondition = async (order: Order) => {
+      const finalDate = this.finalDateToEndOfDay();
     
+      return (
+        (!this.filterByInitialDate || order.date! >= new Date(this.filterByInitialDate)) &&
+        (!this.filterByFinalDate || order.date! <= finalDate!)
+      );
+    };
+ 
 
     let orderPartCondition = (order: Order) => (
       !this.filterByPart || (
@@ -236,7 +238,8 @@ export class ListOrdersHandlerComponent {
 
     const currentYear = new Date().getFullYear();
     const initialDate = new Date(this.filterByInitialDate);
-    const finalDate = this.filterByFinalDate ? new Date(this.filterByFinalDate) : new Date();
+
+    const finalDate =  this.finalDateToEndOfDay();
 
     if (initialDate instanceof Date && isNaN(initialDate.getTime())) {
       this._toastService.showToastError("Data Inicial Inválida!");
@@ -264,6 +267,13 @@ export class ListOrdersHandlerComponent {
       }
     }
   }
+
+  finalDateToEndOfDay(): Date {
+    const finalDate = this.filterByFinalDate ? new Date(this.filterByFinalDate) : new Date();
+    finalDate.setUTCHours(23, 59, 59, 999);
+    return finalDate;
+  }
+  
 
   formatDate(date: Date | undefined): string {
     if (date) {

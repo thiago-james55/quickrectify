@@ -27,7 +27,7 @@ ul {
 
   .easterEgg {
     color: white;
-    background-image: url('/browser/assets/easter/back');
+    background-image: url('/../../../../assets/easter/back');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
