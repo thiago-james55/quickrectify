@@ -98,7 +98,7 @@ export class ListOrdersHandlerComponent {
       )
     );
 
-    const dateCondition = async (order: Order) => {
+    const dateCondition = (order: Order) => {
       const finalDate = this.finalDateToEndOfDay();
     
       return (
