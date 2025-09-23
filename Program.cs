@@ -1,18 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 using QuickRectify.Config;
 using QuickRectify.Service;
+using Microsoft.AspNetCore.ResponseCompression;
+using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddDbContext<DbContextConfig>((options) =>
 {
     options.UseMySql(DbContextConfig.ConnectionURL, ServerVersion.Parse("8.0.33"), mySqlOptions =>
     {
         mySqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 5,           
-            maxRetryDelay: TimeSpan.FromSeconds(30), 
-            errorNumbersToAdd: null     
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null
         );
     });
 });
@@ -20,9 +21,27 @@ builder.Services.AddDbContext<DbContextConfig>((options) =>
 builder.Services.AddScoped<RequestService, RequestService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+    options.Providers.Add<BrotliCompressionProvider>();
+});
+
+
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
+
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Optimal;
+});
 
 var app = builder.Build();
 
@@ -31,6 +50,7 @@ app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseResponseCompression();
 
 app.UseAuthorization();
 
@@ -50,4 +70,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-

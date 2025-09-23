@@ -18,29 +18,44 @@ namespace QuickRectify.Service
         }
 
         #region Order
-        public async Task<List<OrderDTO>> GetAllOrdersOfThisYearAsync()
+        public async Task<PagedResult<OrderDTO>> GetAllOrdersOfThisYearAsync(int page, int pageSize)
         {
             try
             {
                 int currentYear = DateTime.Now.Year;
 
+                // total de registros do ano atual
+                int totalCount = await _dbContextConfig.Orders
+                    .Where(o => o.Date.Year == currentYear)
+                    .CountAsync();
+
+                // registros da página atual
                 List<Order> orders = await _dbContextConfig.Orders
                     .Where(o => o.Date.Year == currentYear)
                     .Include(o => o.Consumer)
                     .Include(o => o.Parts)
+                    .OrderByDescending(o => o.Id)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
                     .ToListAsync();
 
-                List<OrderDTO> orderDTOs = orders.Select(o => new OrderDTO(o)).ToList();
+                var orderDTOs = orders.Select(o => new OrderDTO(o)).ToList();
 
-                return orderDTOs;
+                return new PagedResult<OrderDTO>
+                {
+                    Items = orderDTOs,
+                    CurrentPage = page,
+                    PageSize = pageSize,
+                    TotalCount = totalCount
+                };
             }
             catch (Exception ex)
             {
                 HttpExceptionHandler.HandleCommonExceptions(ex);
                 return null;
             }
-
         }
+
 
         public async Task<List<OrderDTO>> GetAllOrdersOfDateAsync(DateFilterInput dateFilterInput)
         {
@@ -62,6 +77,7 @@ namespace QuickRectify.Service
                     .Where(filter)
                     .Include(o => o.Consumer)
                     .Include(o => o.Parts)
+                    .OrderByDescending(o => o.Id)
                     .ToListAsync();
 
                 List<OrderDTO> orderDTOs = orders.Select(o => new OrderDTO(o)).ToList();

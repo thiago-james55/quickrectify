@@ -17,18 +17,19 @@ namespace QuickRectify.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllOrdersOfThisYearAsync()
+        public async Task<ActionResult<PagedResult<OrderDTO>>> GetAllOrdersOfThisYearAsync(int? page, int? pageSize)
         {
-            List<OrderDTO> ordersDTO = await _requestService.GetAllOrdersOfThisYearAsync();
+            int currentPage = page ?? 1;            
+            int currentPageSize = pageSize ?? 100;  
 
-            if (ordersDTO != null)
-            {
-                if (ordersDTO.Count > 0) return Ok(ordersDTO);
-                else return NotFound("No orders of current year found!");
-            }
+            var result = await _requestService.GetAllOrdersOfThisYearAsync(currentPage, currentPageSize);
 
-            return null;
+            if (result != null && result.Items.Any())
+                return Ok(result);
+
+            return Ok(new PagedResult<OrderDTO>());
         }
+
 
         [HttpPost("fromDate")]
         public async Task<ActionResult> GetAllOrdersOfThatYearAsync([FromBody] DateFilterInputString dateFilterString)
