@@ -5,7 +5,8 @@
                 <span>N°</span>
             </div>
             <div class="consumerFilter">
-                <span (click)="openSearchDialog()" id="consumerSearchSpan" title="Clique para procurar clientes!">Cliente:</span>
+                <span (click)="openSearchDialog()" id="consumerSearchSpan"
+                    title="Clique para procurar clientes!">Cliente:</span>
             </div>
             <div class="dateInitialFilter">
                 <span>Data Inicial</span>
@@ -86,8 +87,8 @@
                     <th>Serviço</th>
                     <th>Descrição</th>
                     <th>Qtd</th>
-					<th>Total Qtd</th>
-					<th>Pago</th>
+                    <th>Total Qtd</th>
+                    <th>Pago</th>
                 </tr>
             </thead>
             <tbody>
@@ -100,9 +101,11 @@
                         <td class="tdWithDropdown" (click)="showDropdown($event, order.consumer)">
                             {{order.consumer?.name}}
                         </td>
-                        <td class="tdWithDropdown" *ngIf="part.name == 'Bloco'" title="Clique para ver o numero do bloco!"
-                            (mouseenter)="showHover($event, order)" (mouseleave)="hideHover()"
-                        ><a style="text-decoration: none; color: inherit;"  [href]="this.ORDER_ENGINEBLOCKNUMBERIMAGE_URL + '/' + order.id + '/Show'" target="_blank">{{part.name}}</a></td>
+                        <td class="tdWithDropdown" *ngIf="part.name == 'Bloco'"
+                            title="Clique para ver o numero do bloco!" (mouseenter)="showHover($event, order)"
+                            (mouseleave)="hideHover()"><a style="text-decoration: none; color: inherit;"
+                                [href]="this.ORDER_ENGINEBLOCKNUMBERIMAGE_URL + '/' + order.id + '/Show'"
+                                target="_blank">{{part.name}}</a></td>
                         <td *ngIf="!(part.name == 'Bloco')">{{part.name}}</td>
                         <td>{{part.service}}</td>
                         <td>{{part.description}}</td>
@@ -111,17 +114,17 @@
                         <td>{{part.isPaid ? "Sim" : "Não"}}</td>
                     </tr>
                     <ng-container *ngIf="filterTotalOfOrder == 'yes'">
-                    <tr [ngClass]="{ 'rowOrderTotal': true, 'paidRowTotal': checkAllPartsOfOrderIsPaid(order) }">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-						<td>{{order.priceTotal?.toFixed(2)}}</td>
-                        <td></td>
-                    </tr>
+                        <tr [ngClass]="{ 'rowOrderTotal': true, 'paidRowTotal': checkAllPartsOfOrderIsPaid(order) }">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>{{order.priceTotal?.toFixed(2)}}</td>
+                            <td></td>
+                        </tr>
                     </ng-container>
                 </ng-container>
                 <ng-container *ngIf="(filterTotalOfSelection == 'yes') && (filteredOrders.length > 0)">
@@ -133,9 +136,15 @@
                         <td></td>
                         <td>TOTAL GERAL</td>
                         <td></td>
-						<td>{{this.getTotalOfFilteredOrders()}}</td>
+                        <td>{{this.getTotalOfFilteredOrders()}}</td>
                     </tr>
-                    </ng-container>
+                </ng-container>
+                <tr *ngIf="haveNextPage && !filteredByDate">
+                    <td colspan="9" style="text-align: center; padding: 10px;">
+                        <button style="width: 100%;" class="defaultButton" (click)="loadOrders()">Carregar Mais Ordens de Serviço
+                        </button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -151,14 +160,14 @@
         <ng-container *ngFor="let option of dropdownOptions">
             <ul>
                 <li *ngIf="!option.url?.includes('whatsapp')">
-                    <a  [routerLink]="option.url" [queryParams]="option.queryParam" [target]="option.target"
+                    <a [routerLink]="option.url" [queryParams]="option.queryParam" [target]="option.target"
                         (click)="option.consumerName?setConsumerName(option.consumerName):null">
                         {{option.description}}
                     </a>
                 </li>
 
                 <li *ngIf="option.url?.includes('whatsapp')">
-                    <a  [href]="option.url" [target]="option.target"
+                    <a [href]="option.url" [target]="option.target"
                         (click)="option.consumerName?setConsumerName(option.consumerName):null">
                         {{option.description}}
                     </a>
@@ -170,11 +179,11 @@
 
 </div>
 
-<div class="hoverContent defaultBorder" *ngIf="isHoverVisible"> 
+<div class="hoverContent defaultBorder" *ngIf="isHoverVisible">
     <div class="hoverContentInfo">
         <span>OS N°: {{this.HoverContentOption.orderId}}</span>
         <span>Cliente: {{this.HoverContentOption.consumerName}}</span>
     </div>
-    <img id="hoverImage" src="data:image/jpeg;base64,{{this.HoverContentOption.engineBlockNumberImage}}" alt="Foto do Numero do Bloco">
+    <img id="hoverImage" src="data:image/jpeg;base64,{{this.HoverContentOption.engineBlockNumberImage}}"
+        alt="Foto do Numero do Bloco">
 </div>
-

@@ -34,6 +34,12 @@ export class ListOrdersHandlerComponent {
   defaultOrders: Order[] = [];
   filteredOrders: Order[] = [];
 
+  page: number = 1;
+  pageSize: number = 100;
+  haveNextPage: boolean = true;
+
+  filteredByDate: boolean = false;
+
   filterByOrderNumber!: number;
   filterByConsumerName!: string;
   filterByPart: string = "all";
@@ -53,15 +59,12 @@ export class ListOrdersHandlerComponent {
     this.ORDER_ENGINEBLOCKNUMBERIMAGE_URL = _requestHandlerService.ORDER_ENGINEBLOCKNUMBERIMAGE_URL;
   }
 
-
-
   async ngOnInit() {
     try {
       const consumerName = await this._route.snapshot.queryParamMap.get('consumerName');
       if (consumerName) this.setConsumerName(consumerName);
 
-      this.defaultParts = await this._requestHandlerService.getDefaultParts();
-      this.defaultOrders = await this._requestHandlerService.getOrdersOfThisYear();
+      await this.loadOrders();
       this.filteredOrders = this.defaultOrders;
 
     } catch (error) {
@@ -69,6 +72,33 @@ export class ListOrdersHandlerComponent {
     }
     this.setDates();
   }
+
+  async loadOrders(reseting: boolean = false): Promise<void> {
+    if (!this.haveNextPage) return;
+
+    try {
+      const result = await this._requestHandlerService.getOrdersOfThisYear(this.page, this.pageSize);
+
+      if (result.items && result.items.length > 0) {
+
+        if (reseting) {
+          this.defaultOrders = [...result.items];
+        } else {
+          this.defaultOrders.push(...result.items);
+        }
+
+        this.filteredOrders = [...this.defaultOrders];
+        this.page++;
+        this.haveNextPage = result.haveNextPage;
+      } else {
+        this.haveNextPage = false;
+      }
+
+    } catch (error) {
+      this._requestHandlerService.handleError(error);
+    }
+  }
+
 
   setDates(): void {
     const firstDayOfYear = new Date(new Date().getFullYear(), 0, 1);
@@ -85,11 +115,11 @@ export class ListOrdersHandlerComponent {
 
 
   async filter(): Promise<void> {
-      
+
     await this.checkFilterIsForCurrentYear();
 
     const orderNumberCondition = (order: Order) => (
-      !this.filterByOrderNumber || ( order.id == this.filterByOrderNumber ) 
+      !this.filterByOrderNumber || (order.id == this.filterByOrderNumber)
     );
 
     const consumerCondition = (order: Order) => (
@@ -100,13 +130,13 @@ export class ListOrdersHandlerComponent {
 
     const dateCondition = (order: Order) => {
       const finalDate = this.finalDateToEndOfDay();
-    
+
       return (
         (!this.filterByInitialDate || order.date! >= new Date(this.filterByInitialDate)) &&
         (!this.filterByFinalDate || order.date! <= finalDate!)
       );
     };
- 
+
 
     let orderPartCondition = (order: Order) => (
       !this.filterByPart || (
@@ -118,7 +148,7 @@ export class ListOrdersHandlerComponent {
       !this.filterIsPartPaid || (
         order.parts && order.parts.some(part => part.isPaid === (this.filterIsPartPaid === "yes"))
       );
-  
+
     if (this.filterByPart.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
     if (this.filterIsPartPaid.toLocaleLowerCase().includes("all")) partPaidCondition = () => true;
 
@@ -168,7 +198,7 @@ export class ListOrdersHandlerComponent {
 
   }
 
-  async showHover(event: MouseEvent, order: Order | undefined ): Promise<void> {
+  async showHover(event: MouseEvent, order: Order | undefined): Promise<void> {
 
     if (!order) return;
 
@@ -228,18 +258,18 @@ export class ListOrdersHandlerComponent {
 
   calculateDropdownPosition(event: MouseEvent) {
     this.dropdownPosition = {
-      left: event.clientX -10,
-      top: event.clientY -10
+      left: event.clientX - 10,
+      top: event.clientY - 10
     };
   }
 
   async checkFilterIsForCurrentYear(): Promise<void> {
-    if (!this.filterByInitialDate || ( this.lastFilterByInitialDate === this.filterByInitialDate && this.lastFilterByFinalDate === this.filterByFinalDate )) return;
+    if (!this.filterByInitialDate || (this.lastFilterByInitialDate === this.filterByInitialDate && this.lastFilterByFinalDate === this.filterByFinalDate)) return;
 
     const currentYear = new Date().getFullYear();
     const initialDate = new Date(this.filterByInitialDate);
 
-    const finalDate =  this.finalDateToEndOfDay();
+    const finalDate = this.finalDateToEndOfDay();
 
     if (initialDate instanceof Date && isNaN(initialDate.getTime())) {
       this._toastService.showToastError("Data Inicial Inválida!");
@@ -256,16 +286,37 @@ export class ListOrdersHandlerComponent {
       return;
     }
 
+    const [initYear, initMonth, initDay] = this.filterByInitialDate.split('-').map(Number);
+    const [finalYear, finalMonth, finalDay] = this.filterByFinalDate.split('-').map(Number);
+
+    const localInitialDate = new Date(initYear, initMonth - 1, initDay); // mês 0-index
+    const localFinalDate = new Date(finalYear, finalMonth - 1, finalDay);
+
+    if (localInitialDate.getFullYear() === currentYear && localFinalDate.getFullYear() === currentYear) {
+      this.resetPagination();
+      this.setLastDates();
+      return;
+    }
+
     if (initialDate instanceof Date && initialDate.getFullYear() !== currentYear) {
       try {
         const orders = await this._requestHandlerService.getOrdersFromDate(initialDate, finalDate);
         this.defaultOrders = orders;
         this.filteredOrders = this.defaultOrders;
         this.setLastDates();
+        this.filteredByDate = true;
       } catch (error) {
         this._requestHandlerService.handleError(error);
       }
     }
+  }
+
+  resetPagination() {
+    this.page = 1;
+    this.pageSize = 100;
+    this.haveNextPage = true;
+    this.loadOrders(true);
+    this.filteredByDate = false;
   }
 
   finalDateToEndOfDay(): Date {
@@ -273,7 +324,7 @@ export class ListOrdersHandlerComponent {
     finalDate.setUTCHours(23, 59, 59, 999);
     return finalDate;
   }
-  
+
 
   formatDate(date: Date | undefined): string {
     if (date) {

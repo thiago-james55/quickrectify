@@ -24,7 +24,6 @@ export class RequestHandlerService {
     hour12: false,
   };
 
-
   constructor(private _toastService: ToastService) { }
 
   //GET CONSUMER
@@ -79,22 +78,22 @@ export class RequestHandlerService {
   }
 
   //GET - LIST OF ORDER OF THIS YEAR
-  async getOrdersOfThisYear(): Promise<Order[]> {
-    try {
-      const response = await this.getMethod(this.ORDERS_URL);
+  async getOrdersOfThisYear(page: number = 1, pageSize: number = 100): Promise<PagedResult<Order>> {
+  try {
+    const url = `${this.ORDERS_URL}?page=${page}&pageSize=${pageSize}`;
+    const response: PagedResult<Order> = await this.getMethod(url);
 
-      if (response) {
-        const orders: Order[] = response;
-        await this.convertSerializedDate(orders);
-        return orders;
-      } else {
-        throw new Error("Ordens desse ano não encontradas!");
-      }
-    } catch (error) {
-      this.handleError(error);
-      throw error;
+    if (response) {
+      await this.convertSerializedDate(response.items);
+      return response;
+    } else {
+      return { items: [], currentPage: page, pageSize: pageSize, totalCount: 0, haveNextPage: false };
     }
+  } catch (error) {
+    this.handleError(error);
+    throw error;
   }
+}
   
 
   //GET - LIST OF ORDER FROM DATE
@@ -291,5 +290,13 @@ export class RequestHandlerService {
 
   }
 
+}
+
+export interface PagedResult<T> {
+  items: T[];
+  currentPage: number;
+  pageSize: number;
+  totalCount: number;
+  haveNextPage: boolean;
 }
 
