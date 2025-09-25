@@ -87,7 +87,6 @@ export class ListOrdersHandlerComponent {
           this.defaultOrders.push(...result.items);
         }
 
-        this.filteredOrders = [...this.defaultOrders];
         this.page++;
         this.haveNextPage = result.haveNextPage;
       } else {
@@ -97,6 +96,7 @@ export class ListOrdersHandlerComponent {
     } catch (error) {
       this._requestHandlerService.handleError(error);
     }
+    await this.filter();
   }
 
 
