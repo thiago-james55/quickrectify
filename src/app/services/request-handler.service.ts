@@ -9,7 +9,7 @@ import { ToastService } from './toast.service';
 })
 export class RequestHandlerService {
 
-  private readonly SERVER = "http://localhost:5000";
+  private readonly SERVER = "http://host.docker.internal:5000";
   private readonly CONSUMERS_URL = `${this.SERVER}/Consumers`;
   private readonly ORDERS_URL = `${this.SERVER}/Orders`;
   public readonly ORDER_ENGINEBLOCKNUMBERIMAGE_URL = `${this.ORDERS_URL}/EngineBlockNumberImage`;
