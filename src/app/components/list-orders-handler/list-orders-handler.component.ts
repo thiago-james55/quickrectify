@@ -76,6 +76,7 @@ export class ListOrdersHandlerComponent {
 
   async loadOrders(reseting: boolean = false): Promise<void> {
      if (this.isLoadingOrders) return;
+     this.isLoadingOrders = true;
 
     if (!this.haveNextPage) return;
 
