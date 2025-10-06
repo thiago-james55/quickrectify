@@ -25,7 +25,8 @@ services:
       dockerfile: dot-net.Dockerfile
     ports:
       - "5000:8080"
-      - "5001:8081"
+    environment:
+      DOTNET_URLS: "http://+:8080"
     depends_on:
       - mysql
     restart: unless-stopped
