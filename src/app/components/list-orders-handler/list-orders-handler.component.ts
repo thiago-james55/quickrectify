@@ -37,6 +37,7 @@ export class ListOrdersHandlerComponent {
   page: number = 1;
   pageSize: number = 100;
   haveNextPage: boolean = true;
+  isLoadingOrders: boolean = false;
 
   filteredByDate: boolean = false;
 
@@ -74,6 +75,8 @@ export class ListOrdersHandlerComponent {
   }
 
   async loadOrders(reseting: boolean = false): Promise<void> {
+     if (this.isLoadingOrders) return;
+
     if (!this.haveNextPage) return;
 
     try {
@@ -97,6 +100,7 @@ export class ListOrdersHandlerComponent {
       this._requestHandlerService.handleError(error);
     }
     await this.filter();
+    this.isLoadingOrders = false;
   }
 
 

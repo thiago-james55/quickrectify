@@ -141,7 +141,10 @@
                 </ng-container>
                 <tr *ngIf="haveNextPage && !filteredByDate">
                     <td colspan="9" style="text-align: center; padding: 10px;">
-                        <button style="width: 100%;" class="defaultButton" (click)="loadOrders()">Carregar Mais Ordens de Serviço
+                        <button style="width: 100%;" class="defaultButton" (click)="loadOrders()"
+                            [disabled]="isLoadingOrders">
+                            <span *ngIf="!isLoadingOrders">Carregar Mais Ordens de Serviço - Página {{page}}</span>
+                            <span *ngIf="isLoadingOrders">Carregando...</span>
                         </button>
                     </td>
                 </tr>
