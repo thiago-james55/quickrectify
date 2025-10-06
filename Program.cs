@@ -27,7 +27,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddResponseCompression(options =>
 {
-    options.EnableForHttps = true;
     options.Providers.Add<GzipCompressionProvider>();
     options.Providers.Add<BrotliCompressionProvider>();
 });
@@ -55,8 +54,6 @@ app.UseResponseCompression();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseHttpsRedirection();
 
 using (var scope = app.Services.CreateScope())
 {

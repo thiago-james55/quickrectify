@@ -6,9 +6,8 @@ namespace QuickRectify.Config
     public class DbContextConfig : DbContext
     {
 
-       //public static readonly string ConnectionURL = "server=mysql;port=3306;database=quickrectify;user=root;password=root";
-        public static readonly string ConnectionURL = "server=host.docker.internal;port=3306;database=quickrectify;user=root;password=root";
-
+        public static readonly string ConnectionURL = "server=mysql;port=3306;database=quickrectify;user=root;password=root";
+     
         public DbSet<Order> Orders { get; set; }
         public DbSet<Consumer> Consumers { get; set; }
         public DbSet<Part> Parts { get; set; }
