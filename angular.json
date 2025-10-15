@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "quick-rect": {
+    "quickrectify": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -11,12 +11,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "baseHref" : "/browser/",
-            "outputPath": "dist/quick-rect",
+            "baseHref" : "/quickrectify/",
+            "outputPath": "dist/quickrectify",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -28,12 +28,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
-            "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -63,10 +58,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "quick-rect:build:production"
+              "buildTarget": "quickrectify:build:production"
             },
             "development": {
-              "buildTarget": "quick-rect:build:development"
+              "buildTarget": "quickrectify:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -74,7 +69,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "quick-rect:build"
+            "buildTarget": "quickrectify:build"
           }
         },
         "test": {

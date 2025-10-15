@@ -15,8 +15,8 @@ export class CompanyInfoService {
   public phone3!: string;
   public address: string = 'R. Italina, 99 - Itaquera - 08290-705';
   public mail: string = 'retificareacao@gmail.com';
-  public logo: string = './browser/assets/company-logo.jpg';
-  public qrcode: string = '/browser/assets/pix.jpeg';
+  public logo: string = './assets/company-logo.jpg';
+  public qrcode: string = './assets/pix.jpeg';
   public info1: string = 'Lavar e Varetar Bem as Peças!';
   public info2: string = 'As peças só serão retiradas mediante apresentação desta via!';
   public info3: string = 'O prazo de retirada das peças é de 30 dias desde a data da emissão da ordem, não retirando as peças neste prazo determinado,será cobrada uma taxa de estadia no valor de R$20,00 (Vinte Reais) por dia excedido!';

@@ -1,5 +1,5 @@
 {
-  "name": "quick-rect",
+  "name": "quickrectify",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:quick-rect": "node dist/quick-rect/server/server.mjs"
+    "serve:ssr:quickrectify": "node dist/quickrectify/server/server.mjs"
   },
   "private": true,
   "dependencies": {
@@ -19,10 +19,7 @@
     "@angular/material": "^17.1.1",
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
-    "@angular/platform-server": "^17.0.0",
     "@angular/router": "^17.0.0",
-    "@angular/ssr": "^17.0.9",
-    "express": "^4.18.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

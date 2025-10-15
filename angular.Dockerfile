@@ -1,22 +1,18 @@
-FROM node:latest as node
-
+# Stage 1: Build Angular
+FROM node:20-alpine AS build
 WORKDIR /app
 
-# Copy the Angular application source files
-COPY . .
-
-# Install dependencies and build the application
+COPY package*.json ./
 RUN npm install
+
+COPY . .
 RUN npm run build --prod
 
-# Stage 2: Serve the Angular application using NGINX
+# Stage 2: Serve with NGINX
 FROM nginx:alpine
-
-# Copy NGINX configuration file
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy built Angular files from the previous stage
-COPY --from=node /app/dist/quick-rect /etc/nginx/html
+# Atenção: usar o nome correto do stage
+COPY --from=build /app/dist/quickrectify /etc/nginx/html/quickrectify
 
-# Expose port 80
 EXPOSE 80
