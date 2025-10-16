@@ -1,3 +1,4 @@
+using QuickRectifyMaui2.Service;
 using QuickRectifyMaui2.Utils;
 
 namespace QuickRectifyMaui2.Pages;

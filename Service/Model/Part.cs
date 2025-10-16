@@ -14,4 +14,6 @@ public class Part
 
     public Part() { }
 
+    public string Summary => $"{Name} - {Service} - {Description} -  {Quantity} - {PriceTotal:F2}";
+
 }

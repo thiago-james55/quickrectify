@@ -13,9 +13,20 @@ public class Order
 
     public Consumer Consumer { get; set; }
 
-    public ICollection<Part> Parts { get; set; } = new List<Part>();
+    public List<Part> Parts { get; set; } = new List<Part>();
 
     public Order () { }
+
+    // -------------------
+    // Strings para UI
+    // -------------------
+    public string OrderInfo => $"OS N° {Id}     {Date:dd/MM/yyyy}";
+    public string ConsumerInfo => $"{Consumer?.Name ?? ""}     {Consumer?.Phone1 ?? ""}";
+    public string DiscountInfo => $"Desconto % {DiscountPercent:F2}     Desconto R$ {DiscountCash:F2}";
+    public string PriceInfo => $"SubTotal R$ {PriceSubTotal:F2}     Total R$ {PriceTotal:F2}";
+
+    // String resumida das peças (opcional, para performance)
+    public string PartsSummary => string.Join("\n", Parts.Select(p => $"{p.Summary}"));
 
 
 }

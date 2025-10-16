@@ -10,7 +10,7 @@ public class Consumer
     public string? Phone2 { get; set; }
     public string? Phone3 { get; set; }
 
-    public ICollection<Order> Orders { get; set; } = new List<Order>();
+    public List<Order> Orders { get; set; } = new List<Order>();
 
     public Consumer() { }
 
