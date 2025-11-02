@@ -175,7 +175,7 @@ export class OrderHandlerComponent implements OnInit {
   }
 
   print(): void {
-    const url = this._router.createUrlTree(['./browser/note'], { queryParams: { orderId: this.order.id } }).toString();
+    const url = this._router.createUrlTree(['./quickrectify/note'], { queryParams: { orderId: this.order.id } }).toString();
     window.open(url, '_blank');
   }
 
