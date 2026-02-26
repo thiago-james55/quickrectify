@@ -1,12 +1,6 @@
-version: '3.4'
-
 services:
-  # MySQL Service
   mysql:
     image: mysql:8.0.33
-    build:
-      context: .
-      dockerfile: mysql.Dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: quickrectify
@@ -18,7 +12,6 @@ services:
       - mysql_data:/var/lib/mysql
     restart: unless-stopped
 
-  # .NET Core Application
   quickrectify-back:
     build:
       context: ../back
@@ -31,15 +24,14 @@ services:
       - mysql
     restart: unless-stopped
 
-  # Angular App
   quickrectify-front:
     build:
       context: ../front
       dockerfile: angular.Dockerfile
     ports:
-      - "80:80"  
+      - "80:80"
     depends_on:
-      - quickrectify-back  
+      - quickrectify-back
     restart: unless-stopped
 
 volumes:
