@@ -43,6 +43,7 @@ export class ListOrdersHandlerComponent {
 
   filterByOrderNumber!: number;
   filterByConsumerName!: string;
+  filterByDescription!: string;
   filterByPart: string = "all";
   filterByInitialDate!: string;
   lastFilterByInitialDate!: string;
@@ -75,8 +76,8 @@ export class ListOrdersHandlerComponent {
   }
 
   async loadOrders(reseting: boolean = false): Promise<void> {
-     if (this.isLoadingOrders) return;
-     this.isLoadingOrders = true;
+    if (this.isLoadingOrders) return;
+    this.isLoadingOrders = true;
 
     if (!this.haveNextPage) return;
 
@@ -129,7 +130,13 @@ export class ListOrdersHandlerComponent {
 
     const consumerCondition = (order: Order) => (
       !this.filterByConsumerName || (
-        order.consumer && order.consumer.name!.toLowerCase().includes(this.filterByConsumerName.toLowerCase())
+        order.consumer?.name && this.normalize(order.consumer.name).includes(this.normalize(this.filterByConsumerName))
+      )
+    );
+
+    const descriptionCondition = (order: Order) => (
+      !this.filterByDescription || (
+        order.parts && order.parts.some(part => part.description?.toLowerCase().includes(this.filterByDescription.toLowerCase()))
       )
     );
 
@@ -158,7 +165,7 @@ export class ListOrdersHandlerComponent {
     if (this.filterIsPartPaid.toLocaleLowerCase().includes("all")) partPaidCondition = () => true;
 
 
-    const predicates = [orderNumberCondition, consumerCondition, dateCondition, orderPartCondition, partPaidCondition];
+    const predicates = [orderNumberCondition, consumerCondition, descriptionCondition, dateCondition, orderPartCondition, partPaidCondition];
 
 
     if (this.defaultOrders) {
@@ -166,6 +173,13 @@ export class ListOrdersHandlerComponent {
         predicates.every(predicate => predicate(order))
       );
     }
+  }
+
+  private normalize(text: string): string {
+    return text
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
   }
 
   setConsumerName(consumerName: string | undefined) {
@@ -233,24 +247,60 @@ export class ListOrdersHandlerComponent {
   consumerDropDownOptions(consumer: Consumer) {
 
     const queryParam = { consumerId: consumer.id };
+
     this.dropdownOptions = [
       { description: "Listar Ordens", consumerName: consumer.name },
       { description: "Ver/Editar Cliente", url: "/consumers", queryParam, target: "_self" },
-    ]
-
-    const whatsappURL: string = "https://api.whatsapp.com/send?phone=+55";
+    ];
 
     const phoneProperties: (keyof Consumer)[] = ['phone1', 'phone2', 'phone3'];
 
-    phoneProperties.forEach(property => {
-      if (consumer[property]) {
-        this.dropdownOptions.push({
-          description: `Tel (${phoneProperties.indexOf(property) + 1}): ${consumer[property]}`,
-          url: whatsappURL + consumer[property],
-          target: "_blank"
-        });
-      }
+    phoneProperties.forEach((property, index) => {
+
+      const phone = consumer[property];
+
+      if (!phone) return;
+
+      const whatsappLink = this.buildWhatsappLink(phone.toString());
+
+      if (!whatsappLink) return;
+
+      this.dropdownOptions.push({
+        description: `Tel (${index + 1}): ${phone}`,
+        url: whatsappLink,
+        target: "_blank"
+      });
     });
+  }
+
+  private normalizePhone(rawPhone: string): string | null {
+
+    if (!rawPhone) return null;
+
+    let numbers = rawPhone.replace(/\D/g, '');
+
+    if (numbers.startsWith('55') && numbers.length > 11) {
+      numbers = numbers.substring(2);
+    }
+
+    if (numbers.length === 8 || numbers.length === 9) {
+      numbers = '11' + numbers; // adiciona DDD padrão
+    }
+
+    if (numbers.length !== 10 && numbers.length !== 11) {
+      return null; // número inválido
+    }
+
+    return numbers;
+  }
+
+  private buildWhatsappLink(phone: string): string | null {
+
+    const normalized = this.normalizePhone(phone);
+
+    if (!normalized) return null;
+
+    return `https://wa.me/55${normalized}`;
   }
 
   hideDropdown() {

@@ -8,6 +8,9 @@
                 <span (click)="openSearchDialog()" id="consumerSearchSpan"
                     title="Clique para procurar clientes!">Cliente:</span>
             </div>
+            <div class="descriptionFilter">
+                <span>Descrição</span>
+            </div>
             <div class="dateInitialFilter">
                 <span>Data Inicial</span>
             </div>
@@ -33,10 +36,13 @@
                 <input class="searchOrderNumberInput" [(ngModel)]="filterByOrderNumber" (ngModelChange)="filter()"
                     type="number" min="0" placeholder="N° OS">
             </div>
-
             <div class="consumerFilter">
                 <input class="searchConsumerInput" [(ngModel)]="filterByConsumerName" (ngModelChange)="filter()"
                     type="text" placeholder="Digite o nome do cliente">
+            </div>
+            <div class="descriptionFilter">
+                <input class="searchConsumerInput" [(ngModel)]="filterByDescription" (ngModelChange)="filter()"
+                    type="text" placeholder="Digite a descrição">
             </div>
             <div class="dateInitialFilter">
                 <input [(ngModel)]="filterByInitialDate" (ngModelChange)="filter()" type="date">
@@ -93,7 +99,7 @@
             </thead>
             <tbody>
                 <ng-container *ngFor="let order of filteredOrders">
-                    <tr *ngFor="let part of order.parts" [ngClass]="part.isPaid ? 'paidRow' : ''">
+                    <tr *ngFor="let part of order.parts" [ngClass]="{ negativePriceRow: (part.priceTotal ?? 0) <= 0, paidRow: part.isPaid }">
                         <td class="tdWithDropdown" (click)="showDropdown($event, order)">
                             {{order.id}}
                         </td>
@@ -162,14 +168,14 @@
     <div class="dropdownOptions">
         <ng-container *ngFor="let option of dropdownOptions">
             <ul>
-                <li *ngIf="!option.url?.includes('whatsapp')">
+                <li *ngIf="!option.url?.startsWith('http')">
                     <a [routerLink]="option.url" [queryParams]="option.queryParam" [target]="option.target"
                         (click)="option.consumerName?setConsumerName(option.consumerName):null">
                         {{option.description}}
                     </a>
                 </li>
 
-                <li *ngIf="option.url?.includes('whatsapp')">
+                <li *ngIf="option.url?.startsWith('http')">
                     <a [href]="option.url" [target]="option.target"
                         (click)="option.consumerName?setConsumerName(option.consumerName):null">
                         {{option.description}}

@@ -57,7 +57,7 @@ export class OrderHandlerComponent implements OnInit {
   sumRow(part: Part): void {
     if (part.quantity && part.pricePerQuantity) {
       part.priceTotal = part.quantity * part.pricePerQuantity;
-      this.sumTotal();     
+      this.sumTotal();
     }
   }
 
@@ -94,7 +94,7 @@ export class OrderHandlerComponent implements OnInit {
 
   handleSave(print: boolean): void {
     this.isSaving = true;
-    
+
     if (!this.validateOrder()) {
       this.isSaving = false;
       return;
@@ -115,7 +115,7 @@ export class OrderHandlerComponent implements OnInit {
 
     this.order.id = savedOrderId;
 
-    if (print) this.print();  
+    if (print) this.print();
     else this._toastService.showToastSuccess(`Ordem (${this.order.id}) salva com sucesso!`);
 
     this.isSaving = false;
@@ -133,7 +133,7 @@ export class OrderHandlerComponent implements OnInit {
       }
     }, 1000);
   }
-  
+
 
   async editOrder(print: boolean): Promise<void> {
     const editedOrderId = await this._requestHandlerService.putOrder(this.order);
@@ -160,7 +160,7 @@ export class OrderHandlerComponent implements OnInit {
 
     if (!this.order.consumer) fields.push("Cliente");
     if (this.order.parts.length === 0) fields.push("Tabela de Serviços");
-    if (this.order.priceTotal === undefined || this.order.priceTotal <= 0) fields.push("Valor Total");
+    if (this.order.priceTotal === undefined) fields.push("Valor Total");
 
     if (this.order.parts.some(p => !p.description)) {
       fields.push("Descrição de Serviços");
@@ -186,11 +186,11 @@ export class OrderHandlerComponent implements OnInit {
   formatValue(value: number | undefined): string {
     return value ? value.toFixed(2) : "0.00";
   }
-  
+
   onFileSelected(event: any): void {
-  
+
     const file = event.target.files[0];
-    
+
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -211,17 +211,17 @@ export class OrderHandlerComponent implements OnInit {
       this.isAllPartsPaid = this.order.parts.every(e => e.isPaid);
     }
   }
-  
+
   changeAllPartsToPaidOrNotPaid() {
     if (!this.orderHaveParts()) return;
-  
+
     this.isAllPartsPaid = !this.isAllPartsPaid;
     this.order.parts.forEach(e => e.isPaid = this.isAllPartsPaid);
   }
-  
+
   orderHaveParts(): boolean {
     return this.order.parts.length > 0;
   }
-  
+
 
 }

@@ -16,6 +16,7 @@
 }
 
 .consumerFilter,
+.descriptionFilter,
 .dateInitialFilter,
 .dateFinalFilter,
 .serviceFilter{
@@ -27,7 +28,7 @@
 .totalFilter, .totalSelectionFilter, .orderNumberFilter, .paidFilter {
     display: flex;
     flex-direction: row;
-    width: 10%;
+    width: 8%;
 }
 
 .divForClick {
@@ -155,10 +156,18 @@ li:hover {
     color: green;
 }
 
+.paidRowTotal td {
+    color: green;
+}
+
 .paidRowTotal {
     color: green;
 }
 
-.paidRowTotal td {
-    color: green;
+.negativePriceRow {
+    color: red;
+}
+
+.negativePriceRow td {
+    color: red;
 }

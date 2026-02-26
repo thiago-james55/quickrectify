@@ -94,7 +94,7 @@ export class RequestHandlerService {
     throw error;
   }
 }
-  
+
 
   //GET - LIST OF ORDER FROM DATE
   async getOrdersFromDate(filterByInitialDate: Date, filterByFinalDate: Date): Promise<Order[]> {
