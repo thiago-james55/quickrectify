@@ -1,4 +1,5 @@
 
+
 p {
     margin-top: 1rem;
     margin-bottom: 1rem;
@@ -26,8 +27,7 @@ ul {
   }
 
   .easterEgg {
-    color: white;
-    background-image: url('/../../../../assets/easter/back');
+    color: yellow;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

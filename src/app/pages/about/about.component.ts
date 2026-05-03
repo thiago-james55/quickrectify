@@ -16,7 +16,7 @@ export class AboutComponent {
     clicked: number = 0;
     easterEgg: boolean = false;
     audio = new Audio('./assets/easter/mp3');
-    
+
     plusCount() {
         this.clicked++;
         if (this.clicked == 10) {
@@ -27,13 +27,19 @@ export class AboutComponent {
 
     doEasterEgg() {
 
-        if(this.easterEgg) {
+        if (this.easterEgg) {
             this.stopAudio();
             this.easterEgg = false;
             return;
         }
         this.audio.play();
         this.easterEgg = true;
+    }
+
+    get backgroundImage(): string {
+        return this.easterEgg
+            ? "url('assets/easter/back')"
+            : "url('')";
     }
 
     ngOnDestroy() {

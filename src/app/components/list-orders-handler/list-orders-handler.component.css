@@ -15,20 +15,53 @@
     justify-content: space-between;
 }
 
+
+.orderNumberFilter,
 .consumerFilter,
 .descriptionFilter,
 .dateInitialFilter,
 .dateFinalFilter,
-.serviceFilter{
+.groupFilter,
+.totalFilter,
+.totalSelectionFilter,
+.paidFilter,
+.initialOrderFilter,
+.finalOrderFilter,
+.removeOrdersFilter,
+.saveConsumerBalance,
+.allInThisPageArePaid {
     display: flex;
     flex-direction: row;
-    width: 15%;
 }
 
-.totalFilter, .totalSelectionFilter, .orderNumberFilter, .paidFilter {
+/* Linha 1  */
+
+.orderNumberFilter { width: 14.28%;}
+.consumerFilter { width: 14.28%;}
+.descriptionFilter { width: 14.28%;}
+.dateInitialFilter { width: 14.28%;}
+.dateFinalFilter { width: 14.28%;}
+.groupFilter { width: 14.28%;}
+.totalFilter { width: 14.28%;}
+
+
+/* Linha 2  */
+
+.initialOrderFilter { width: 14.28%;}
+.finalOrderFilter { width: 14.28%;}
+.removeOrdersFilter { width: 14.28%;}
+.totalSelectionFilter { width: 14.28%;}
+.paidFilter { width: 14.28%;}
+.saveConsumerBalance { width: 14.28%;}
+.allInThisPageArePaid { width: 14.28%;}
+
+.balanceTitle {
     display: flex;
-    flex-direction: row;
-    width: 8%;
+    justify-content: space-between;
+    font-weight: bold;
+    color: red;
+    width: 100%;
+    font-size: large;
 }
 
 .divForClick {
@@ -65,9 +98,6 @@ input::placeholder {
     color: #293646;
 }
 
-.searchConsumerInput::disabled {
-    pointer-events: auto;
-}
 
 .rowOrderTotal td {
     border: none;
@@ -98,6 +128,12 @@ tr:hover {
     padding: 1rem;
     z-index: 100;
     text-align: center;
+}
+
+.dropdownOptions li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .hoverContent {
@@ -170,4 +206,9 @@ li:hover {
 
 .negativePriceRow td {
     color: red;
+}
+
+.excludedFromFilterRow {
+    background-color: red !important;
+    color: white !important;
 }

@@ -1,0 +1,163 @@
+<div class="container">
+    <app-navbar></app-navbar>
+    <div #pageContent class="pageContent">
+
+        <app-page-title title="Fechamentos"></app-page-title>
+        <div>
+            <div class="selfContainer defaultPadding">
+                <div class="searchOptions defaultBorder">
+
+                    <div class="filterSpan">
+                        <div class="consumerFilter">
+                            <span id="consumerSearchSpan" (click)="openSearchDialog()"
+                                title="Clique para procurar clientes!">Cliente</span>
+                        </div>
+                        <div class="monthFilter"><span>Mês</span></div>
+                        <div class="yearFilter"><span>Ano</span></div>
+                        <div class="paidFilter"><span>Pago</span></div>
+                        <div class="totalOfMonths"><span>Total Meses</span></div>
+                    </div>
+
+                    <div class="filterInput">
+                        <div class="consumerFilter"><input [(ngModel)]="filterByConsumerName" (ngModelChange)="filter()"
+                                type="text"></div>
+                        <div class="yearFilter">
+                            <select [(ngModel)]="filterByMonth" (ngModelChange)="filter()">
+                                <option [ngValue]="0">Selecione um mês</option>
+                                <option *ngFor="let m of months" [ngValue]="m.value">
+                                    {{ m.label }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="yearFilter"><input type="number" min="1900" max="9999" [(ngModel)]="filterByYear"
+                                (ngModelChange)="addYearToFilter()">
+                        </div>
+                        <div class="paidFilter"> <select [(ngModel)]="filterIsPaid" (ngModelChange)="filter()">
+                                <option value="all">Todos</option>
+                                <option value="yes">Sim</option>
+                                <option value="no">Não</option>
+                            </select></div>
+                        <div class="totalOfMonths"> <select [(ngModel)]="filterTotalOfMonths"
+                                (ngModelChange)="filter()">
+                                <option value="no">Não</option>
+                                <option value="yes">Sim</option>
+                            </select></div>
+                    </div>
+
+                    <div class="filterSpan" style="margin-top: 1%;">
+                        <div class="idOfEditingDescription">
+                            <span>ID</span>
+                        </div>
+                        <div class="editingDescription">
+                            <span>Descrição</span>
+                        </div>
+                        <div class="saveDescription">
+                            <span>Salvar</span>
+                        </div>
+                    </div>
+                    <div class="filterInput">
+                        <div class="idOfEditingDescription">
+                            <input type="number" readonly  [(ngModel)]="idOfEditingDescription">
+                        </div>
+                        <div class="editingDescription">
+                            <input type="text" [(ngModel)]="editingDescription">
+                        </div>
+                        <div class="saveDescription">
+                            <button class="defaultButton" style="width: 100%;" (click)="saveNewDescriptionOfBalance()">Salvar</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <table>
+                    <tr>
+                        <th>N°</th>
+                        <th>Data</th>
+                        <th>Pago em</th>
+                        <th>Intervalo OS</th>
+                        <th>Os Excluidas</th>
+                        <th>Cliente</th>
+                        <th>Descrição</th>
+                        <th>Total</th>
+                        <th>Pago</th>
+                    </tr>
+
+                    <tbody>
+                        <ng-container *ngFor="let group of balancesByMonth">
+
+                            <!-- HEADER -->
+                            <tr style="font-weight:bold;">
+                                <td colspan="10">
+                                    {{ group.label }}
+                                </td>
+                            </tr>
+
+                            <!-- ITEMS -->
+                            <tr [ngClass]="{ paidRow: balance.isPaid}" *ngFor="let balance of group.items;">
+                                <td class="tdWithDropdown" (click)="showDropdown($event, balance,'id')">{{ balance.id }}
+                                </td>
+                                <td>{{ balance.date | date:'dd/MM/yyyy' }}</td>
+                                <td>{{ balance.dateOfPayment | date:'dd/MM/yyyy' }}</td>
+                                <td>{{ balance.initialOrder }} - {{ balance.finalOrder }}</td>
+                                <td>{{ balance.excludedOrders }}</td>
+                                <td class="tdWithDropdown" (click)="showDropdown($event, balance.consumer,'consumer')">
+                                    {{ balance.consumer?.name }}</td>
+                                <td class="tdWithDropdown" (click)="showDropdown($event, balance,'description')">{{
+                                    balance.description }}</td>
+                                <td>{{ balance.priceTotal | currency:'BRL' }}</td>
+                                <td *ngIf="balance.isPaid">Sim</td>
+                                <td *ngIf="!balance.isPaid"><button class="defaultButton" style="font-size: small;" (click)="showDropdown($event, balance,'paid')">Dar
+                                        baixa</button></td>
+
+                            </tr>
+
+                            <tr *ngIf="filterTotalOfMonths === 'yes'" class="month-total">
+                                <td colspan="10">
+                                    Total do mês: {{ group.total | currency:'BRL' }}
+                                </td>
+                            </tr>
+
+                        </ng-container>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+        <app-footer></app-footer>
+    </div>
+
+    <div class="dropdownContent defaultBorder" *ngIf="isDropdownVisible" [style.left.px]="dropdownPosition.left"
+        [style.top.px]="dropdownPosition.top" (mouseleave)="hideDropdown()">
+        <div class="dropdownOptions">
+            <ng-container *ngFor="let option of dropdownOptions">
+                <ul>
+
+                    <!-- INTERNAL -->
+                    <li *ngIf="option.type === 'internal'">
+                        <a [routerLink]="option.url" [queryParams]="option.queryParam" [target]="option.target">
+                            {{option.description}}
+                        </a>
+                    </li>
+
+                    <!-- EXTERNAL -->
+                    <li *ngIf="option.type === 'external'">
+                        <a [href]="option.url" [target]="option.target">
+                            {{option.description}}
+                        </a>
+                    </li>
+
+                    <!-- JUST BIND -->
+                    <li *ngIf="option.type === 'bind'">
+                        <button class="defaultButton" style="width: 100%;" (click)="option.action?.()">
+                            {{option.description}}
+                        </button>
+                    </li>
+
+                </ul>
+            </ng-container>
+        </div>
+
+    </div>
+    <app-dialog-consumer-search
+        (objectSentToParent)="getConsumerFromChildAndSendToParent($event)"></app-dialog-consumer-search>
+</div>

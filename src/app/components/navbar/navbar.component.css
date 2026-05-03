@@ -1,51 +1,51 @@
 .container {
-    width: 100%;
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    width: 100%;
     background-color: #293646;
     color: white;
-    height: 100vh;
-    padding: 1rem;
+    padding: .5rem;
 }
 
-hr {
-    border: 1px solid red;
-    margin-top: .5rem;
-    margin-bottom: .5rem;
+.separator {
+    color: red;
+}
+
+.separator:hover {
+    background-color: #293646;
+    cursor: text;
 }
 
 .title {
-    color: red;
-    text-align: center;
-    width: 100%;
+    margin-left: auto;
 }
 
-.mainPages, .auxiliarPages , .about{
-    width: 100%;
-    z-index: 1;
+img {
+    height: 40px;
 }
 
 
 ul {
     list-style: none;
-    height: 100%;
-    text-wrap: nowrap;
+    display: flex;
+    flex-direction: row;
     flex-wrap: nowrap;
+
+    align-items: center;      /* centraliza vertical */
+    justify-content: center;  /* centraliza horizontal */
+
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
 }
 
 li {
-    margin-bottom: .5rem;
     padding: .5rem;
 }
 
 li:hover {
     background-color: red;
-    width: 150%;
-    display: flex;
     cursor: pointer;
-    border-radius: 1rem;
-    text-align: center;
-
 }
 
 
@@ -53,13 +53,4 @@ a {
     color: white;
     text-decoration: none;
     width: 100%;
-}
-
-#logo {
-    width: 100%;
-}
-
-img {
-    width: 100%;
-    max-width: 200px;
 }

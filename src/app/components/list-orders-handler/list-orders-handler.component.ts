@@ -8,6 +8,8 @@ import { Order } from '../../services/order.entity';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { RequestHandlerService } from '../../services/request-handler.service';
 import { ToastService } from '../../services/toast.service';
+import { Balance } from '../../services/balance.entity';
+import { SimpleBalance } from '../../services/simple-balance.entity';
 
 @Component({
   selector: 'app-list-orders-handler',
@@ -31,6 +33,7 @@ export class ListOrdersHandlerComponent {
 
   defaultParts: Part[] = [];
 
+  balance: Balance = {} as Balance;
   defaultOrders: Order[] = [];
   filteredOrders: Order[] = [];
 
@@ -38,13 +41,16 @@ export class ListOrdersHandlerComponent {
   pageSize: number = 100;
   haveNextPage: boolean = true;
   isLoadingOrders: boolean = false;
+  isBalancePage: boolean = false;
 
   filteredByDate: boolean = false;
 
-  filterByOrderNumber!: number;
+  consumer?: Consumer;
+
+  filterByOrderNumber?: number;
   filterByConsumerName!: string;
   filterByDescription!: string;
-  filterByPart: string = "all";
+  filterByGroup: string = "all";
   filterByInitialDate!: string;
   lastFilterByInitialDate!: string;
   filterByFinalDate!: string;
@@ -52,6 +58,12 @@ export class ListOrdersHandlerComponent {
   filterTotalOfOrder: string = "yes";
   filterTotalOfSelection: string = "no";
   filterIsPartPaid: string = "all";
+
+  filterByInitialOrder?: number;
+  filterByFinalOrder?: number;
+  excludeOrderFromFilter: number[] = [];
+  excludeOrderFromFilterText: string = "";
+
 
   public readonly ORDER_ENGINEBLOCKNUMBERIMAGE_URL: string;
   lastOrderId: number = 0;
@@ -63,11 +75,9 @@ export class ListOrdersHandlerComponent {
 
   async ngOnInit() {
     try {
-      const consumerName = await this._route.snapshot.queryParamMap.get('consumerName');
-      if (consumerName) this.setConsumerName(consumerName);
-
       await this.loadOrders();
-      this.filteredOrders = this.defaultOrders;
+      await this.filter();
+      await this.loadDefaultParts();
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -77,6 +87,9 @@ export class ListOrdersHandlerComponent {
 
   async loadOrders(reseting: boolean = false): Promise<void> {
     if (this.isLoadingOrders) return;
+
+    if (await this.changeToBalancePage()) return;
+
     this.isLoadingOrders = true;
 
     if (!this.haveNextPage) return;
@@ -105,6 +118,42 @@ export class ListOrdersHandlerComponent {
     this.isLoadingOrders = false;
   }
 
+  async changeToBalancePage(): Promise<boolean> {
+
+    const balanceId = await this._route.snapshot.queryParamMap.get('balanceId') ?? undefined;
+
+    if (balanceId != null) {
+      this.isBalancePage = true;
+      this.balance = await this._requestHandlerService.getBalanceById(parseInt(balanceId));
+    } else {
+      return false;
+    }
+
+    if (this.balance.id) {
+      await this.setBalanceInfo(
+        this.balance.consumer?.name,
+        this.balance.initialOrder,
+        this.balance.finalOrder,
+        this.balance.excludedOrders
+      )
+      this.isLoadingOrders = true;
+      this.filterTotalOfOrder = "no";
+      this.filterTotalOfSelection = "yes"
+      this.isLoadingOrders = false;
+      this.defaultOrders = await this._requestHandlerService.getBalanceOrders(this.balance.id);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async resetOrdersFromBalance(): Promise<void> {
+    window.location.href = window.location.pathname;
+  }
+
+  private async loadDefaultParts(): Promise<void> {
+    this.defaultParts = await this._requestHandlerService.getDefaultParts();
+  }
 
   setDates(): void {
     const firstDayOfYear = new Date(new Date().getFullYear(), 0, 1);
@@ -119,6 +168,120 @@ export class ListOrdersHandlerComponent {
     this.lastFilterByFinalDate = this.filterByFinalDate;
   }
 
+  async setPaidAllOrdersOfTheFilter(): Promise<void> {
+
+    if (!this.checkFilterInformation()) return;
+
+    var success = false;
+
+    if (this.balance.id) {
+      if (await this._requestHandlerService.setPaidBalance(this.balance)) {
+        this._toastService.showToastSuccess("Fechamento salvo como pago com sucesso!");
+        success = true;
+      } else {
+        this._toastService.showToastError("Fechamento não salvo como pago!");
+      }
+    } else {
+      const consumerName = this.filterByConsumerName;
+      const ids: number[] = this.filteredOrders
+        .map(o => o.id)
+        .filter((id): id is number => id !== undefined);
+
+      if (consumerName && ids) {
+        const consumerId = this.filteredOrders.find(o => o.consumer?.name?.toLocaleLowerCase() === consumerName.toLowerCase())?.consumerId;
+        if (consumerId) {
+          const simpleBalance: SimpleBalance = { consumerId: consumerId, orderIds: ids }
+          if (await this._requestHandlerService.setPaidAllOrdersOfTheFilter(simpleBalance)) {
+            this._toastService.showToastSuccess("Ordens salvas como pagas com sucesso!");
+            success = true;
+          }
+          else {
+            this._toastService.showToastError("Ordens não salvas como pagas!")
+          }
+        }
+      }
+    }
+
+    if (!success) return;
+
+    const defaultMap = new Map(this.defaultOrders.map(o => [o.id, o]));
+
+    this.filteredOrders.forEach(order => {
+      order.parts?.forEach(part => part.isPaid = true);
+
+      const defaultOrder = defaultMap.get(order.id);
+      defaultOrder?.parts?.forEach(part => part.isPaid = true);
+    });
+  }
+
+  checkFilterInformation() {
+
+    const filterName = this.filterByConsumerName?.toLowerCase();
+
+    if (!filterName) {
+      this._toastService.showToastError("O nome do cliente não pode estar vazio!");
+      return false;
+    }
+
+    if (this.filteredOrders.length <= 1) {
+      this._toastService.showToastError("Um fechamento precisa ter mais de 1 OS");
+      return;
+    }
+
+    this.filterByInitialOrder = this.filterByInitialOrder ? this.filterByInitialOrder : this.filteredOrders[this.filteredOrders.length - 1]?.id;
+    this.filterByFinalOrder = this.filterByFinalOrder ? this.filterByFinalOrder : this.filteredOrders[0]?.id;
+
+    if ((this.filterByInitialOrder && this.filterByFinalOrder) && (this.filterByInitialOrder > this.filterByFinalOrder)) {
+      this._toastService.showToastError("Os inicial não poder ser maior que OS final!");
+      return;
+    }
+
+    const allMatch = this.filteredOrders.every(order =>
+      (order.consumer?.name ?? '').toLowerCase() === filterName
+    );
+
+    if (!allMatch) {
+      this._toastService.showToastError(
+        "O nome do cliente precisa ser EXATAMENTE IGUAL ao salvo nas orders de serviço!"
+      );
+      return false;
+    }
+    return true;
+  }
+
+  async saveBalance(): Promise<void> {
+    if (!this.checkFilterInformation()) return;
+
+    const consumerId = this.filteredOrders.find(o => o.consumer?.name?.toLowerCase())?.consumerId;
+
+    const balance: Balance = {
+      initialOrder: this.filterByInitialOrder,
+      finalOrder: this.filterByFinalOrder,
+      excludedOrders: this.excludeOrderFromFilter,
+      consumerId: consumerId,
+      priceTotal: parseInt(this.getTotalOfFilteredOrders())
+    };
+
+    if (this.balance.id) {
+      if (await this._requestHandlerService.putBalance(balance)) {
+        this._toastService.showToastSuccess(`Fechamento (${this.balance.id}) editado com sucesso!`);
+        this.isBalancePage = true;
+      }
+      else {
+        this._toastService.showToastError("Erro ao editar Fechamento!");
+      }
+    }
+    else {
+      const balanceId = await this._requestHandlerService.postBalance(balance);
+      if (balanceId) {
+        this._toastService.showToastSuccess(`Fechamento (${balanceId}) salvo com sucesso!`);
+        this.isBalancePage;
+      } else {
+        this._toastService.showToastError("Erro ao salvar Fechamento!");
+      }
+    }
+
+  }
 
   async filter(): Promise<void> {
 
@@ -127,6 +290,12 @@ export class ListOrdersHandlerComponent {
     const orderNumberCondition = (order: Order) => (
       !this.filterByOrderNumber || (order.id == this.filterByOrderNumber)
     );
+
+    const initialOrderNumberCondition = (order: Order) =>
+      !this.filterByInitialOrder || (order.id ?? -Infinity) >= this.filterByInitialOrder;
+
+    const finalOrderNumberCondition = (order: Order) =>
+      !this.filterByFinalOrder || (order.id ?? Infinity) <= this.filterByFinalOrder;
 
     const consumerCondition = (order: Order) => (
       !this.filterByConsumerName || (
@@ -151,8 +320,8 @@ export class ListOrdersHandlerComponent {
 
 
     let orderPartCondition = (order: Order) => (
-      !this.filterByPart || (
-        order.parts && order.parts.some(part => part.name.toLowerCase().includes(this.filterByPart.toLowerCase()))
+      !this.filterByGroup || (
+        order.parts && order.parts.some(part => part.name.toLowerCase().includes(this.filterByGroup.toLowerCase()))
       )
     );
 
@@ -161,11 +330,11 @@ export class ListOrdersHandlerComponent {
         order.parts && order.parts.some(part => part.isPaid === (this.filterIsPartPaid === "yes"))
       );
 
-    if (this.filterByPart.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
+    if (this.filterByGroup.toLocaleLowerCase().includes("all")) orderPartCondition = () => true;
     if (this.filterIsPartPaid.toLocaleLowerCase().includes("all")) partPaidCondition = () => true;
 
 
-    const predicates = [orderNumberCondition, consumerCondition, descriptionCondition, dateCondition, orderPartCondition, partPaidCondition];
+    const predicates = [orderNumberCondition, initialOrderNumberCondition, finalOrderNumberCondition, consumerCondition, descriptionCondition, dateCondition, orderPartCondition, partPaidCondition];
 
 
     if (this.defaultOrders) {
@@ -175,6 +344,29 @@ export class ListOrdersHandlerComponent {
     }
   }
 
+  async addOrderIdToExclude(orderId?: number, ordersId?: number[]): Promise<void> {
+    if (orderId == undefined && ordersId == undefined) return;
+
+    if (orderId) {
+      const isInFilter = this.excludeOrderFromFilter.includes(orderId);
+
+      if (!isInFilter) {
+        this.excludeOrderFromFilter.push(orderId);
+      } else {
+        this.excludeOrderFromFilter = this.excludeOrderFromFilter.filter(x => x !== orderId);
+      }
+    } else if (ordersId) this.excludeOrderFromFilter = [...ordersId]
+
+    this.excludeOrderFromFilter.sort((a, b) => a - b);
+    this.excludeOrderFromFilterText = this.excludeOrderFromFilter.join(',');
+
+    await this.filter();
+  }
+
+  isExcluded(orderId?: number): boolean {
+    return this.excludeOrderFromFilter.includes(orderId ?? -1);
+  }
+
   private normalize(text: string): string {
     return text
       .normalize('NFD')
@@ -182,9 +374,12 @@ export class ListOrdersHandlerComponent {
       .toLowerCase();
   }
 
-  setConsumerName(consumerName: string | undefined) {
+  async setBalanceInfo(consumerName?: string, initialOrder?: string | number, finalOrder?: string | number, excludedOrders?: number[]): Promise<void> {
     if (consumerName) this.filterByConsumerName = consumerName;
-    this.filter();
+    if (initialOrder) this.filterByInitialOrder = Number(initialOrder);
+    if (finalOrder) this.filterByFinalOrder = Number(finalOrder);
+    if (excludedOrders) await this.addOrderIdToExclude(undefined, excludedOrders);
+    await this.filter();
   }
 
   openSearchDialog(): void {
@@ -192,13 +387,18 @@ export class ListOrdersHandlerComponent {
   }
 
   getConsumerFromChildAndSendToParent(consumer: Consumer): void {
-    this.filterByConsumerName = consumer.name!;
+    this.consumer = consumer;
+    this.filterByConsumerName = this.consumer.name!;
     this.filter();
   }
 
 
   getTotalOfFilteredOrders(): string {
-    return this.filteredOrders.map(o => o.priceTotal ? o.priceTotal : 0).reduce((sum, current) => sum + current, 0).toFixed(2);
+    return this.filteredOrders
+      .filter(o => !this.excludeOrderFromFilter.includes(o.id ?? -1))
+      .map(o => o.priceTotal ?? 0)
+      .reduce((sum, current) => sum + current, 0)
+      .toFixed(2);
   }
 
   showDropdown(event: MouseEvent, data: Order | Consumer | undefined): void {
@@ -239,8 +439,11 @@ export class ListOrdersHandlerComponent {
   orderDropdownOptions(order: Order) {
     const queryParam = { orderId: order.id };
     this.dropdownOptions = [
-      { description: "2° Via", url: "/note", queryParam, target: "_blank" },
-      { description: "Editar", url: "/new-order", queryParam, target: "_self" },
+      { description: "2° Via", url: "/note", queryParam, target: "_blank", type: 'internal' },
+      { description: "Editar", url: "/new-order", queryParam, target: "_self", type: 'internal' },
+      { description: "Os Inicial", type: 'bind', action: () => this.setBalanceInfo(undefined, order.id, undefined) },
+      { description: "Os Final", type: 'bind', action: () => this.setBalanceInfo(undefined, undefined, order.id) },
+      { description: this.excludeOrderFromFilter.includes(order.id ?? -1) ? "Readicionar OS no Filtro" : "Excluir OS do Filtro", type: 'bind', action: () => this.addOrderIdToExclude(order.id) },
     ]
   }
 
@@ -249,8 +452,8 @@ export class ListOrdersHandlerComponent {
     const queryParam = { consumerId: consumer.id };
 
     this.dropdownOptions = [
-      { description: "Listar Ordens", consumerName: consumer.name },
-      { description: "Ver/Editar Cliente", url: "/consumers", queryParam, target: "_self" },
+      { description: "Listar Ordens", consumerName: consumer.name, type: 'bind', action: () => this.setBalanceInfo(consumer.name) },
+      { description: "Ver/Editar Cliente", url: "/consumers", queryParam, target: "_self", type: 'internal' }
     ];
 
     const phoneProperties: (keyof Consumer)[] = ['phone1', 'phone2', 'phone3'];
@@ -268,7 +471,8 @@ export class ListOrdersHandlerComponent {
       this.dropdownOptions.push({
         description: `Tel (${index + 1}): ${phone}`,
         url: whatsappLink,
-        target: "_blank"
+        target: "_blank",
+        type: 'external'
       });
     });
   }
@@ -396,17 +600,18 @@ export class ListOrdersHandlerComponent {
 
 export interface DropdownOption {
   description?: string;
+  type: DropdownOptionType;
   url?: string;
   queryParam?: {};
   target?: string;
   consumerName?: string;
+  action?: () => void;
 }
+
+type DropdownOptionType = 'internal' | 'external' | 'bind';
 
 export interface HoverContentOption {
   orderId?: number;
   consumerName?: string;
   engineBlockNumberImage?: string;
 }
-
-
-

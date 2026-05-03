@@ -1,48 +1,30 @@
 <div class="selfContainer defaultPadding">
     <div class="searchOptions defaultBorder">
         <div class="filterSpan">
-            <div class="orderNumberFilter">
-                <span>N°</span>
-            </div>
+            <div class="orderNumberFilter"><span>N°</span></div>
             <div class="consumerFilter">
                 <span (click)="openSearchDialog()" id="consumerSearchSpan"
-                    title="Clique para procurar clientes!">Cliente:</span>
+                    title="Clique para procurar clientes!">Cliente</span>
             </div>
-            <div class="descriptionFilter">
-                <span>Descrição</span>
-            </div>
-            <div class="dateInitialFilter">
-                <span>Data Inicial</span>
-            </div>
-            <div class="dateFinalFilter">
-                <span>Data Final</span>
-            </div>
-            <div class="serviceFilter">
-                <span>Serviço</span>
-            </div>
-            <div class="totalFilter">
-                <span>Total Ordem</span>
-            </div>
-            <div class="totalSelectionFilter">
-                <span>Total Geral</span>
-            </div>
-            <div class="paidFilter">
-                <span>Pago</span>
-            </div>
+            <div class="descriptionFilter"><span>Descrição</span></div>
+            <div class="dateInitialFilter"><span>Data Inicial</span></div>
+            <div class="dateFinalFilter"><span>Data Final</span></div>
+            <div class="groupFilter"><span>Grupo</span></div>
+            <div class="totalFilter"><span>Total Ordem</span></div>
         </div>
         <div class="filterInput">
 
             <div class="orderNumberFilter">
-                <input class="searchOrderNumberInput" [(ngModel)]="filterByOrderNumber" (ngModelChange)="filter()"
-                    type="number" min="0" placeholder="N° OS">
+                <input [(ngModel)]="filterByOrderNumber" (ngModelChange)="filter()" type="number" min="0"
+                    placeholder="N° OS">
             </div>
             <div class="consumerFilter">
-                <input class="searchConsumerInput" [(ngModel)]="filterByConsumerName" (ngModelChange)="filter()"
-                    type="text" placeholder="Digite o nome do cliente">
+                <input [(ngModel)]="filterByConsumerName" (ngModelChange)="filter()" type="text"
+                    placeholder="Digite o nome do cliente">
             </div>
             <div class="descriptionFilter">
-                <input class="searchConsumerInput" [(ngModel)]="filterByDescription" (ngModelChange)="filter()"
-                    type="text" placeholder="Digite a descrição">
+                <input [(ngModel)]="filterByDescription" (ngModelChange)="filter()" type="text"
+                    placeholder="Digite a descrição">
             </div>
             <div class="dateInitialFilter">
                 <input [(ngModel)]="filterByInitialDate" (ngModelChange)="filter()" type="date">
@@ -50,8 +32,8 @@
             <div class="dateFinalFilter">
                 <input [(ngModel)]="filterByFinalDate" (ngModelChange)="filter()" type="date">
             </div>
-            <div class="serviceFilter">
-                <select [(ngModel)]="filterByPart" (ngModelChange)="filter()">
+            <div class="groupFilter">
+                <select [(ngModel)]="filterByGroup" (ngModelChange)="filter()">
                     <option value="all">Todos</option>
                     <option *ngFor="let part of defaultParts" [value]="part.name">
                         {{ part.name }}
@@ -63,6 +45,35 @@
                     <option value="yes">Sim</option>
                     <option value="no">Não</option>
                 </select>
+            </div>
+
+        </div>
+
+
+        <div class="filterSpan" style="margin-top: 1%;">
+            <div class="initialOrderFilter"><span>OS Inicial</span></div>
+            <div class="finalOrderFilter"><span>OS Final</span></div>
+            <div class="removeOrdersFilter"><span>Excluir OS do Filtro</span></div>
+            <div class="totalSelectionFilter"><span>Total Geral</span></div>
+            <div class="paidFilter"><span>Filtrar Pagos</span></div>
+            <div class="saveConsumerBalance"><span>Salvar Fechamento</span></div>
+            <div class="allInThisPageArePaid"><span>Tudo Pago</span></div>
+        </div>
+        <div class="filterInput">
+            <div class="initialOrderFilter">
+                <input [(ngModel)]="filterByInitialOrder" (ngModelChange)="filter()" type="number" min="0"
+                    placeholder="N° OS Inicial">
+            </div>
+
+            <div class="finalOrderFilter">
+                <input [(ngModel)]="filterByFinalOrder" (ngModelChange)="filter()" type="number" min="0"
+                    placeholder="N° OS Final">
+            </div>
+
+
+            <div class="removeOrdersFilter">
+                <input readonly [(ngModel)]="excludeOrderFromFilterText" type="text" min="0"
+                    placeholder="0001,0002,0003">
             </div>
 
             <div class="totalSelectionFilter">
@@ -78,6 +89,15 @@
                     <option value="yes">Sim</option>
                     <option value="no">Não</option>
                 </select>
+            </div>
+
+            <div class="saveConsumerBalance">
+                <button class="defaultButton" (click)="saveBalance()" style="width: 100%">Salvar</button>
+            </div>
+
+            <div class="allInThisPageArePaid">
+                <button class="defaultButton" (click)="setPaidAllOrdersOfTheFilter()" style="width: 100%">Tudo
+                    Pago</button>
             </div>
 
         </div>
@@ -98,8 +118,17 @@
                 </tr>
             </thead>
             <tbody>
+                <tr *ngIf="isBalancePage">
+                    <td colspan="9">
+                        <div class="balanceTitle">
+                            <span>Data: {{balance.date | date : 'dd/MM/yyyy HH:mm' }}</span>
+                            <span>Fechamento N°{{balance.id}}</span>
+                            <span>Data do Pagamento: {{balance.dateOfPayment | date : 'dd/MM/yyyy HH:mm' }} </span>
+                        </div>
+                    </td>
+                </tr>
                 <ng-container *ngFor="let order of filteredOrders">
-                    <tr *ngFor="let part of order.parts" [ngClass]="{ negativePriceRow: (part.priceTotal ?? 0) <= 0, paidRow: part.isPaid }">
+                    <tr *ngFor="let part of order.parts " [ngClass]="{ excludedFromFilterRow: isExcluded(order.id), negativePriceRow: (part.priceTotal ?? 0) <= 0, paidRow: part.isPaid}">
                         <td class="tdWithDropdown" (click)="showDropdown($event, order)">
                             {{order.id}}
                         </td>
@@ -145,7 +174,8 @@
                         <td>{{this.getTotalOfFilteredOrders()}}</td>
                     </tr>
                 </ng-container>
-                <tr *ngIf="haveNextPage && !filteredByDate">
+
+                <tr *ngIf="haveNextPage && !filteredByDate && !isBalancePage">
                     <td colspan="9" style="text-align: center; padding: 10px;">
                         <button style="width: 100%;" class="defaultButton" (click)="loadOrders()"
                             [disabled]="isLoadingOrders">
@@ -154,6 +184,14 @@
                         </button>
                     </td>
                 </tr>
+
+                <tr *ngIf="isBalancePage">
+                    <td colspan="9" style="text-align: center; padding: 10px;">
+                        <button style="width: 100%;" class="defaultButton" (click)="resetOrdersFromBalance()">Resetar
+                            Ordens de Serviço</button>
+                    </td>
+                </tr>
+
             </tbody>
         </table>
     </div>
@@ -168,31 +206,37 @@
     <div class="dropdownOptions">
         <ng-container *ngFor="let option of dropdownOptions">
             <ul>
-                <li *ngIf="!option.url?.startsWith('http')">
-                    <a [routerLink]="option.url" [queryParams]="option.queryParam" [target]="option.target"
-                        (click)="option.consumerName?setConsumerName(option.consumerName):null">
+
+                <!-- INTERNAL -->
+                <li *ngIf="option.type === 'internal'">
+                    <a [routerLink]="option.url" [queryParams]="option.queryParam" [target]="option.target">
                         {{option.description}}
                     </a>
                 </li>
 
-                <li *ngIf="option.url?.startsWith('http')">
-                    <a [href]="option.url" [target]="option.target"
-                        (click)="option.consumerName?setConsumerName(option.consumerName):null">
+                <!-- EXTERNAL -->
+                <li *ngIf="option.type === 'external'">
+                    <a [href]="option.url" [target]="option.target">
                         {{option.description}}
                     </a>
+                </li>
+
+                <!-- JUST BIND -->
+                <li *ngIf="option.type === 'bind'">
+                    <button class="defaultButton" style="width: 100%;" (click)="option.action?.()">
+                        {{option.description}}
+                    </button>
                 </li>
 
             </ul>
         </ng-container>
     </div>
 
-</div>
-
-<div class="hoverContent defaultBorder" *ngIf="isHoverVisible">
-    <div class="hoverContentInfo">
-        <span>OS N°: {{this.HoverContentOption.orderId}}</span>
-        <span>Cliente: {{this.HoverContentOption.consumerName}}</span>
+    <div class="hoverContent defaultBorder" *ngIf="isHoverVisible">
+        <div class="hoverContentInfo">
+            <span>OS N°: {{this.HoverContentOption.orderId}}</span>
+            <span>Cliente: {{this.HoverContentOption.consumerName}}</span>
+        </div>
+        <img id="hoverImage" src="data:image/jpeg;base64,{{this.HoverContentOption.engineBlockNumberImage}}"
+            alt="Foto do Numero do Bloco">
     </div>
-    <img id="hoverImage" src="data:image/jpeg;base64,{{this.HoverContentOption.engineBlockNumberImage}}"
-        alt="Foto do Numero do Bloco">
-</div>

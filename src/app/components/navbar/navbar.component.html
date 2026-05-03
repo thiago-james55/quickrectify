@@ -1,35 +1,23 @@
-<aside class="container">
-    <div class="title">
-        <div id="logo">
-            <a href="https://github.com/thiago-james55/quickrectify" target="_blank">
-                <img src="./assets/quickrectify.png">
-            </a>
-        </div>
-    </div>
-    <hr>
+<div class="container">
     <div class="mainPages">
         <ul>
             <li><a [routerLink]="['/home']">Inicio</a></li>
+            <li class="separator">|</li>
             <li><a [routerLink]="['/new-order']">Nova Ordem</a></li>
             <li><a [routerLink]="['/list-orders']">Ordens de Serviço</a></li>
             <li><a [routerLink]="['/consumers']">Clientes</a></li>
-            <li><a [routerLink]="['/cashier']">Caixa (W.I.P)</a></li>
-        </ul>
-    </div>
-    <hr>
-    <div class="auxiliarPages">
-        <ul>
-            <li><a [routerLink]="['/cashier']">Contas a Pagar(W.I.P)</a></li>
+            <li><a [routerLink]="['/balances']">Fechamentos</a></li>
+            <li class="separator">|</li>
             <li><a target="_blank" href="https://www.simploonline2.com/">Simplo Medidas</a></li>
             <li><a target="_blank" href="https://nfe.prefeitura.sp.gov.br/login.aspx">Nota Fiscal Paulista</a></li>
-        </ul>
-    </div>
-    <div class="about">
-        <ul>
-            <hr>
+            <li class="separator">|</li>
             <li><a [routerLink]="['/configuration']">Configurações</a></li>
             <li><a [routerLink]="['/about']">Sobre</a></li>
-            <li><a href="">Ajuda</a></li>
         </ul>
     </div>
-</aside>
+        <div class="title">
+            <a href="https://github.com/thiago-james55/quickrectify" target="_blank">
+                <img src="./assets/quickrectify.png">
+            </a>
+    </div>
+</div>
