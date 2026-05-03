@@ -6,11 +6,14 @@ namespace QuickRectify.Config
     public class DbContextConfig : DbContext
     {
 
+        //public static readonly string ConnectionURL = "server=host.docker.internal;port=3306;database=quickrectify;user=root;password=root";
         public static readonly string ConnectionURL = "server=mysql;port=3306;database=quickrectify;user=root;password=root";
-     
+
         public DbSet<Order> Orders { get; set; }
         public DbSet<Consumer> Consumers { get; set; }
         public DbSet<Part> Parts { get; set; }
+        public DbSet<Balance> Balances { get; set; }
+
 
         public DbContextConfig(DbContextOptions<DbContextConfig> options) : base(options) { 
         
@@ -36,9 +39,14 @@ namespace QuickRectify.Config
                 .WithOne(o => o.Consumer)
                 .HasForeignKey(o => o.ConsumerId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Balance>()
+                .HasOne(b => b.Consumer)
+                .WithMany(c => c.Balances)
+                .HasForeignKey(b => b.ConsumerId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
         }
-
-
 
     }
 }

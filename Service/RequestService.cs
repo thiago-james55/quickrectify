@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using QuickRectify.Config;
+using QuickRectify.HttpException;
+using QuickRectify.Migrations;
 using QuickRectify.Models;
 using QuickRectify.Models.DTO;
 using QuickRectify.Models.Input;
 using System.Linq.Expressions;
-using QuickRectify.HttpException;
 
 namespace QuickRectify.Service
 {
@@ -90,7 +92,6 @@ namespace QuickRectify.Service
                 return null;
             }
         }
-
 
 
         public async Task<OrderDTO> GetOrderByIdAsync(int id)
@@ -347,9 +348,221 @@ namespace QuickRectify.Service
             return await _dbContextConfig.Orders
                 .AnyAsync(o => o.ConsumerId == consumerId);
         }
-          
+
         #endregion
 
+        #region Balance
+
+        public async Task<BalanceDTO> GetBalanceByIdAsync(int id)
+        {
+            try
+            {
+                Balance balance = await _dbContextConfig.Balances
+                            .Include(b => b.Consumer)
+                            .FirstOrDefaultAsync(o => o.Id == id);
+                return new BalanceDTO(balance);
+            }
+            catch (Exception ex)
+            {
+                HttpExceptionHandler.HandleCommonExceptions(ex);
+                return null;
+            }
+        }
+
+        public async Task<List<BalanceDTO>> GetBalancesOfYearAsync(int year)
+        {
+            try
+            {
+                List<Balance> balances = await _dbContextConfig.Balances
+                        .Where(b => b.Date.Year == year)
+                        .Include(b => b.Consumer)
+                        .OrderByDescending(o => o.Id)
+                        .ToListAsync();
+
+                List<BalanceDTO> balancesDTOs = balances.Select(b => new BalanceDTO(b)).ToList();
+                return balancesDTOs;
+            }
+            catch (Exception ex)
+            {
+                HttpExceptionHandler.HandleCommonExceptions(ex);
+                return null;
+            }
+        }
+
+        public async Task<int> SaveBalanceAsyncAndReturnId(BalanceInput balanceInput)
+        {
+            Balance balance = await balanceInput.ToBalance();
+
+            try
+            {
+                _dbContextConfig.Balances.Add(balance);
+
+                await _dbContextConfig.SaveChangesAsync();
+
+                return balance.Id;
+            }
+            catch (Exception ex)
+            {
+                HttpExceptionHandler.HandleCommonExceptions(ex);
+                return 0;
+            }
+        }
+
+        public async Task<bool> UpdateBalanceAsync(BalanceInput balanceInput)
+        {
+            try
+            {
+
+                Balance existingBalance = await _dbContextConfig.Balances.FirstOrDefaultAsync(b => b.Id == balanceInput.Id);
+
+                await UpdateBalanceInformationAsync(existingBalance, await balanceInput.ToBalance());
+
+                await _dbContextConfig.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                HttpExceptionHandler.HandleCommonExceptions(ex);
+                return false;
+            }
+        }
+
+        private async Task UpdateBalanceInformationAsync(Balance existingBalance, Balance balanceInput)
+        {
+            existingBalance.Date = balanceInput.Date;
+            existingBalance.DateOfPayment = balanceInput.DateOfPayment;
+            existingBalance.InitialOrder = balanceInput.InitialOrder;
+            existingBalance.FinalOrder = balanceInput.FinalOrder;
+            existingBalance.ExcludedOrders = balanceInput.ExcludedOrders;
+            existingBalance.Description = balanceInput.Description;
+            existingBalance.ConsumerId = balanceInput.ConsumerId;
+            existingBalance.PriceTotal = balanceInput.PriceTotal;
+            existingBalance.IsPaid = balanceInput.IsPaid;
+        }
+
+        public async Task<bool> UpdateBalanceToPaid(BalanceInput balanceInput)
+        {
+            try
+            {
+                var existingBalance = await _dbContextConfig.Balances
+                    .FirstOrDefaultAsync(b => b.Id == balanceInput.Id);
+
+                if (existingBalance == null)
+                    return false;
+
+                int rows = await PayPartsByBalanceAsync(balanceInput);
+
+                if (rows >= 1)
+                {
+                    existingBalance.IsPaid = true;
+                    existingBalance.DateOfPayment = DateTime.UtcNow;
+
+                    await _dbContextConfig.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                HttpExceptionHandler.HandleCommonExceptions(ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateSimpleBalanceToPaid(SimpleBalanceInput simpleBalanceInput)
+        {
+            try
+            {
+                int rows = await PayPartsByListAndConsumerIdAsync(simpleBalanceInput.OrderIds, simpleBalanceInput.ConsumerId);
+
+                if (rows >= 1) return true;
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                HttpExceptionHandler.HandleCommonExceptions(ex);
+                return false;
+            }
+        }
+
+        public async Task<List<OrderDTO>> GetBalanceOrders(int id)
+        {
+            Balance balance = await _dbContextConfig.Balances
+                .Include(b => b.Consumer)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (balance == null)
+                return new List<OrderDTO>();
+
+            List<Order> orders = await _dbContextConfig.Orders
+                .Where(o => o.Id >= balance.InitialOrder
+                         && o.Id <= balance.FinalOrder
+                         && o.ConsumerId == balance.ConsumerId)
+                .Include(o => o.Consumer)
+                .Include(o => o.Parts)
+                .OrderByDescending(o => o.Id)
+                .ToListAsync();
+
+            var orderDTOs = orders.Select(o => new OrderDTO(o)).ToList();
+
+            return orderDTOs;
+        }
+
+        public async Task<bool> BalanceExistsAsync(int id)
+        {
+            return await GetBalanceByIdAsync(id) != null;
+        }
+
+        #endregion
+
+        public async Task<int> PayPartsByBalanceAsync(BalanceInput balanceInput)
+        {
+            try
+            {
+                var orderIds = await _dbContextConfig.Orders
+                        .Where(o =>
+                            o.Id >= balanceInput.InitialOrder &&
+                            o.Id <= balanceInput.FinalOrder &&
+                            o.Consumer.Id == balanceInput.ConsumerId)
+                        .Select(o => o.Id)
+                        .ToListAsync();
+
+                return await _dbContextConfig.Parts
+                    .Where(p => orderIds.Contains(p.OrderId))
+                    .ExecuteUpdateAsync(p => p.SetProperty(x => x.IsPaid, true));
+            }
+            catch (Exception ex)
+            {
+                HttpExceptionHandler.HandleCommonExceptions(ex);
+                return 0;
+            }
+        }
+
+        public async Task<int> PayPartsByListAndConsumerIdAsync(List<int> orderIds, int consumerId)
+        {
+            try
+            {
+                if (orderIds == null || orderIds.Count == 0)
+                    return 0;
+
+                var orders = await _dbContextConfig.Orders
+                        .Where(o => orderIds.Contains(o.Id) && o.ConsumerId == consumerId)
+                        .Select(o => o.Id)
+                        .ToListAsync();
+
+                return await _dbContextConfig.Parts
+                    .Where(p => orders.Contains(p.OrderId))
+                    .ExecuteUpdateAsync(p => p.SetProperty(x => x.IsPaid, true));
+
+            }
+            catch (Exception ex)
+            {
+                HttpExceptionHandler.HandleCommonExceptions(ex);
+                return 0;
+            }
+        }
     }
 
 }

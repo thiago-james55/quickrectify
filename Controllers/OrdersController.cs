@@ -48,8 +48,6 @@ namespace QuickRectify.Controllers
                 if (ordersDTO.Count > 0) return Ok(ordersDTO);
                 else  return NotFound("No orders with this filter found!");
             } 
-            
-
            return null;
         }
 

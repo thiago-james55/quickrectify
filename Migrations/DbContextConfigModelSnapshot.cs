@@ -22,6 +22,48 @@ namespace QuickRectify.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("QuickRectify.Models.Balance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConsumerId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DateOfPayment")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ExcludedOrders")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("FinalOrder")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InitialOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<float>("PriceTotal")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsumerId");
+
+                    b.ToTable("Balances");
+                });
+
             modelBuilder.Entity("QuickRectify.Models.Consumer", b =>
                 {
                     b.Property<int>("Id")
@@ -139,6 +181,17 @@ namespace QuickRectify.Migrations
                     b.ToTable("Parts");
                 });
 
+            modelBuilder.Entity("QuickRectify.Models.Balance", b =>
+                {
+                    b.HasOne("QuickRectify.Models.Consumer", "Consumer")
+                        .WithMany("Balances")
+                        .HasForeignKey("ConsumerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Consumer");
+                });
+
             modelBuilder.Entity("QuickRectify.Models.Order", b =>
                 {
                     b.HasOne("QuickRectify.Models.Consumer", "Consumer")
@@ -163,6 +216,8 @@ namespace QuickRectify.Migrations
 
             modelBuilder.Entity("QuickRectify.Models.Consumer", b =>
                 {
+                    b.Navigation("Balances");
+
                     b.Navigation("Orders");
                 });
 
