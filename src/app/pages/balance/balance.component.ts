@@ -261,6 +261,8 @@ export class BalanceComponent {
 
     if (balance) {
 
+      balance.description = this.editingDescription;
+
       const result = await this._requestHandlerService.putBalance(balance);
 
       if (result) {
