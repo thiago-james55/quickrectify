@@ -36,7 +36,7 @@ export class BalanceComponent {
   dropdownOptions: DropdownOption[] = [];
 
   defaultBalances: Balance[] = [];
-  filteredBalances: Balance[]  = [];
+  filteredBalances: Balance[] = [];
   balancesByMonth!: MonthGroup[];
 
   idOfEditingDescription!: number;
@@ -240,7 +240,7 @@ export class BalanceComponent {
       const localBalance = this.defaultBalances.find(b => b.id == balance.id);
       if (localBalance) localBalance.isPaid = true
       this.filter();
-    }else { this._toastService.showToastError("Fechamento não salvo como pago!") }
+    } else { this._toastService.showToastError("Fechamento não salvo como pago!") }
   }
 
   editDescription(balance: Balance): void {
@@ -249,35 +249,34 @@ export class BalanceComponent {
   }
 
   async saveNewDescriptionOfBalance(): Promise<void> {
-  if (
-    this.idOfEditingDescription &&
-    this.idOfEditingDescription > 0 &&
-    this.editingDescription?.length > 1
-  ) {
+    if (
+      this.idOfEditingDescription &&
+      this.idOfEditingDescription > 0 &&
+      this.editingDescription?.length > 1
+    ) {
 
-    const balance = this.defaultBalances.find(
-      b => b.id === this.idOfEditingDescription
-    );
+      const balance = this.defaultBalances.find(
+        b => b.id === this.idOfEditingDescription
+      );
 
-    if (balance) {
+      if (balance) {
 
-      balance.description = this.editingDescription;
-
-      const result = await this._requestHandlerService.putBalance(balance);
-
-      if (result) {
         balance.description = this.editingDescription;
+        const result = await this._requestHandlerService.putBalance(balance);
 
-        this._toastService.showToastSuccess(
-          "Descrição do Fechamento N°" + this.idOfEditingDescription + " editada com sucesso!"
-        );
+        if (result) {
+          balance.description = this.editingDescription;
 
-        this.resetDescriptionEditing();
+          this._toastService.showToastSuccess(
+            "Descrição do Fechamento N°" + this.idOfEditingDescription + " editada com sucesso!"
+          );
+
+          this.resetDescriptionEditing();
+        }
       }
     }
+    this.filter();
   }
-  this.filter();
-}
 
   resetDescriptionEditing(): void {
     this.idOfEditingDescription = -1;

@@ -120,13 +120,14 @@ export class ListOrdersHandlerComponent {
 
   async changeToBalancePage(): Promise<boolean> {
 
-    const balanceId = await this._route.snapshot.queryParamMap.get('balanceId') ?? undefined;
-
-    if (balanceId != null) {
-      this.isBalancePage = true;
-      this.balance = await this._requestHandlerService.getBalanceById(parseInt(balanceId));
-    } else {
-      return false;
+    if (!this.balance.id) {
+      const balanceId = await this._route.snapshot.queryParamMap.get('balanceId') ?? undefined;
+      if (balanceId != null) {
+        this.isBalancePage = true;
+        this.balance = await this._requestHandlerService.getBalanceById(parseInt(balanceId));
+      } else {
+        return false;
+      }
     }
 
     if (this.balance.id) {
@@ -140,7 +141,7 @@ export class ListOrdersHandlerComponent {
       this.filterTotalOfOrder = "no";
       this.filterTotalOfSelection = "yes"
       this.isLoadingOrders = false;
-      this.defaultOrders = await this._requestHandlerService.getBalanceOrders(this.balance.id);
+      this.defaultOrders = [... await this._requestHandlerService.getBalanceOrders(this.balance.id)];
       return true;
     } else {
       return false;
@@ -254,28 +255,33 @@ export class ListOrdersHandlerComponent {
 
     const consumerId = this.filteredOrders.find(o => o.consumer?.name?.toLowerCase())?.consumerId;
 
-    const balance: Balance = {
-      initialOrder: this.filterByInitialOrder,
-      finalOrder: this.filterByFinalOrder,
-      excludedOrders: this.excludeOrderFromFilter,
-      consumerId: consumerId,
-      priceTotal: parseInt(this.getTotalOfFilteredOrders())
-    };
-
     if (this.balance.id) {
-      if (await this._requestHandlerService.putBalance(balance)) {
+      this.balance.initialOrder = this.filterByInitialOrder,
+        this.balance.finalOrder = this.filterByFinalOrder,
+        this.balance.excludedOrders = this.excludeOrderFromFilter,
+        this.balance.consumerId = consumerId,
+        this.balance.priceTotal = parseInt(this.getTotalOfFilteredOrders())
+      if (await this._requestHandlerService.putBalance(this.balance)) {
         this._toastService.showToastSuccess(`Fechamento (${this.balance.id}) editado com sucesso!`);
-        this.isBalancePage = true;
       }
       else {
         this._toastService.showToastError("Erro ao editar Fechamento!");
       }
     }
     else {
+      const balance: Balance = {
+        initialOrder: this.filterByInitialOrder,
+        finalOrder: this.filterByFinalOrder,
+        excludedOrders: this.excludeOrderFromFilter,
+        consumerId: consumerId,
+        priceTotal: parseInt(this.getTotalOfFilteredOrders())
+      };
+
       const balanceId = await this._requestHandlerService.postBalance(balance);
       if (balanceId) {
         this._toastService.showToastSuccess(`Fechamento (${balanceId}) salvo com sucesso!`);
-        this.isBalancePage;
+        this.isBalancePage = true;
+        this.changeToBalancePage();
       } else {
         this._toastService.showToastError("Erro ao salvar Fechamento!");
       }
@@ -317,7 +323,6 @@ export class ListOrdersHandlerComponent {
         (!this.filterByFinalDate || order.date! <= finalDate!)
       );
     };
-
 
     let orderPartCondition = (order: Order) => (
       !this.filterByGroup || (
