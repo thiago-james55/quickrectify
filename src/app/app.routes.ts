@@ -7,6 +7,7 @@ import { ConsumersComponent } from './pages/consumers/consumers.component';
 import { AboutComponent } from './pages/about/about.component';
 import { ConfigurationComponent } from './pages/configuration/configuration.component';
 import { BalanceComponent } from './pages/balance/balance.component';
+import { BalancePrintComponent } from './pages/balance-print/balance-print.component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent, pathMatch:'full' },
@@ -14,6 +15,7 @@ export const routes: Routes = [
     { path: 'list-orders', component: ListOrdersComponent },
     { path: 'consumers', component: ConsumersComponent },
     { path: 'balances', component: BalanceComponent },
+    { path: 'balance', component: BalancePrintComponent },
     { path: 'configuration', component: ConfigurationComponent },
     { path: 'about', component: AboutComponent },
     { path: 'note', component: NoteComponent },

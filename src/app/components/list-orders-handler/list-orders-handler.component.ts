@@ -74,15 +74,19 @@ export class ListOrdersHandlerComponent {
   }
 
   async ngOnInit() {
-    try {
-      await this.loadOrders();
-      await this.filter();
-      await this.loadDefaultParts();
-
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
+    await this.loadOrders();
+    await this.filter();
+    await this.loadDefaultParts();
+    await this.setConsumerNameByQueryParam();
     this.setDates();
+  }
+
+  async setConsumerNameByQueryParam(): Promise<void> {
+    const consumerName = await this._route.snapshot.queryParamMap.get('consumerName') ?? undefined;
+    if (consumerName != null) {
+      this.filterByConsumerName = consumerName;
+      this.filter();
+    }
   }
 
   async loadOrders(reseting: boolean = false): Promise<void> {
@@ -454,11 +458,13 @@ export class ListOrdersHandlerComponent {
 
   consumerDropDownOptions(consumer: Consumer) {
 
-    const queryParam = { consumerId: consumer.id };
+    const consumerIdQueryParam = { consumerId: consumer.id };
+    const consumerNameQueryParam = { consumerName: consumer.name };
 
     this.dropdownOptions = [
       { description: "Listar Ordens", consumerName: consumer.name, type: 'bind', action: () => this.setBalanceInfo(consumer.name) },
-      { description: "Ver/Editar Cliente", url: "/consumers", queryParam, target: "_self", type: 'internal' }
+      { description: "Listar Fechamentos", url: "/balances", queryParam: consumerNameQueryParam, target: "_self", type: 'internal' },
+      { description: "Ver/Editar Cliente", url: "/consumers", queryParam: consumerIdQueryParam, target: "_self", type: 'internal' }
     ];
 
     const phoneProperties: (keyof Consumer)[] = ['phone1', 'phone2', 'phone3'];

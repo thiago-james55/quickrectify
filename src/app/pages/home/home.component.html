@@ -3,16 +3,33 @@
     <div class="pageContent">
         <div class="greetings ">
             <app-page-title title="Bem vindo ao QuickRectify"></app-page-title>
-            <!-- Change for measurement tool photo -->
             <p>O melhor programa de gerenciamento de Ordens de Serviço para Retíficas. </p>
-            <p>Escolha a opção desejada a esquerda, ou clique em ajuda para mais informações. </p>
-            <img src="./assets/company-logo.png" alt="">
         </div>
-        <div class="statistics">
 
+        <div class="statistics">
+            <h3 style="color: #293646; padding-bottom: 1rem;">Relatórios</h3>
+            <div class="chart-container">
+                <canvas #weeklyChart></canvas>
+            </div>
+
+            <div class="chart-container">
+                <canvas #monthlyChart></canvas>
+            </div>
+
+            <div class="chart-container">
+                <canvas #yearlyChart></canvas>
+            </div>
+
+            <div class="chart-container">
+                <canvas #topClientsMonthlyChart></canvas>
+            </div>
+
+            <div class="chart-container">
+                <canvas #topClientsYearlyChart></canvas>
+            </div>
         </div>
         <app-footer></app-footer>
     </div>
-   
+
 
 </div>

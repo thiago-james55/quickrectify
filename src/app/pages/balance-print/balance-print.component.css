@@ -1,0 +1,126 @@
+.balanceContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.upperInfo {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.upperData {
+    padding: .5rem;
+    width: 30%;
+    margin-bottom: 0;
+}
+
+.upperTitle {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1rem;
+}
+
+.companyInfo, .paymentInfo {
+    border-right: 1px solid #293646;
+}
+
+.companyInfo, .consumerInfo{
+    width: 50%;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    text-align: center;
+}
+
+* {
+    font-size: small;
+}
+
+.tableOrders, .totalTable {
+    align-self: center;
+    width: 90%;
+    margin-bottom: 2rem;
+}
+
+.totalTable table, .totalTable td, .totalTable th {
+    border: none !important;
+}
+
+.tableOrders th, .totalTable th {
+    background-color: white;
+    color: #293646;
+    padding: .5rem;
+}
+
+.lowerInfo {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    border-collapse: collapse;
+    font-size: small;
+}
+
+.paymentInfo, .companyInfoForConsumer {
+    width: 50%;
+}
+
+.tableOrders th.group,
+.tableOrders td.group {
+  width: 15%;
+}
+
+.tableOrders th.service,
+.tableOrders td.service {
+  width: 15%;
+}
+
+.tableOrders th.description,
+.tableOrders td.description {
+  width: 50%;
+}
+
+.tableOrders th.quantity,
+.tableOrders td.quantity,
+.tableOrders th.unitPrice,
+.tableOrders td.unitPrice,
+.tableOrders th.totalPrice,
+.tableOrders td.totalPrice {
+  width: 15%;
+}
+
+
+.companyInfoForConsumer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.companyInfoForConsumer p, .companyInfoForConsumer h3 {
+    width: 80%;
+}
+
+h1, h2, h3,  p {
+    margin-bottom: 1rem;
+}
+
+.totalTable h3 {
+    margin-bottom: 0rem;
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+hr {
+    margin-bottom: .5rem;
+    border: 1px solid #293646;
+}
+
+.excluded, .total {
+    width: 50%;
+}

@@ -13,11 +13,12 @@ import { SimpleBalance } from './simple-balance.entity';
 })
 export class RequestHandlerService {
 
-  private readonly SERVER = "http://host.docker.internal:5000";
-  //private readonly SERVER = "http://localhost:32801";
+  //private readonly SERVER = "http://host.docker.internal:5000";
+  private readonly SERVER = "http://localhost:5164"; //USE VSTUDIO LAUNCH "HTTP"
   private readonly CONSUMERS_URL = `${this.SERVER}/Consumers`;
   private readonly ORDERS_URL = `${this.SERVER}/Orders`;
   private readonly BALANCE_URL = `${this.SERVER}/Balances`;
+  private readonly CHART_URL = `${this.SERVER}/Chart`;
   public readonly ORDER_ENGINEBLOCKNUMBERIMAGE_URL = `${this.ORDERS_URL}/EngineBlockNumberImage`;
   private readonly DEFAULTPARTS_URL = `${this.SERVER}/DefaultParts`;
 
@@ -271,6 +272,16 @@ export class RequestHandlerService {
   }
 
   // ========================
+  // CHART
+  // ========================
+
+  async getCharts(): Promise<any> {
+  return await firstValueFrom(
+    this.http.get(`${this.CHART_URL}`)
+  );
+}
+
+  // ========================
   // UTILS
   // ========================
 
@@ -316,7 +327,10 @@ export class RequestHandlerService {
       return;
     }
   }
+
 }
+
+
 
 export interface PagedResult<T> {
   items: T[];

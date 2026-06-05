@@ -63,8 +63,16 @@ export class BalanceComponent {
   }
 
   async ngOnInit() {
+    await this.setConsumerNameByQueryParam();
     this.defaultBalances = await this._requestHandlerService.getBalancesByYear(this.filterByYear);
     await this.filter();
+  }
+
+  async setConsumerNameByQueryParam(): Promise<void> {
+    const consumerName = await this._route.snapshot.queryParamMap.get('consumerName') ?? undefined;
+    if (consumerName != null) {
+      this.filterByConsumerName = consumerName;
+    }
   }
 
   async filter(): Promise<void> {
@@ -190,7 +198,8 @@ export class BalanceComponent {
 
   consumerDropDownOptions(consumer: Consumer) {
 
-    const queryParam = { consumerId: consumer.id };
+    const consumerIdQueryParam = { consumerId: consumer.id };
+    const consumerNameQueryParam = { consumerName: consumer.name };
 
     this.dropdownOptions = [
       {
@@ -199,7 +208,8 @@ export class BalanceComponent {
           this.filter();
         }
       },
-      { description: "Ver/Editar Cliente", url: "/consumers", queryParam, target: "_self", type: 'internal' }
+      { description: "Listar Ordens", url: "/list-orders", queryParam: consumerNameQueryParam, target: "_self", type: 'internal' },
+      { description: "Ver/Editar Cliente", url: "/consumers", queryParam: consumerIdQueryParam, target: "_self", type: 'internal' }
     ];
 
     const phoneProperties: (keyof Consumer)[] = ['phone1', 'phone2', 'phone3'];

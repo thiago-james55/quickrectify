@@ -1,0 +1,95 @@
+<div *ngIf="this.balance?.date" (load)="print()" class="balanceContainer">
+    <div class="upperInfo">
+        <p class="defaultBorder upperData">Data: {{ this.balance.date | date : 'dd/MM/yyyy HH:mm'}}</p>
+        <p class="defaultBorder upperData">Fechamento N°: {{ this.balance.id | number:'4.0' | noComma }}</p>
+    </div>
+    <div class="upperTitle">
+        <div class="companyInfo">
+            <h2 *ngIf="this._companyInfo.name">{{this._companyInfo.name}}</h2>
+            <p *ngIf="this._companyInfo.detail2">{{this._companyInfo.detail2}}</p>
+            <p *ngIf="this._companyInfo.detail3">{{this._companyInfo.detail3}}</p>
+            <p *ngIf="this._companyInfo.phone1">{{this._companyInfo.phone1}}</p>
+            <p *ngIf="this._companyInfo.phone2">{{this._companyInfo.phone2}}</p>
+            <p *ngIf="this._companyInfo.phone3">{{this._companyInfo.phone3}}</p>
+            <p *ngIf="this._companyInfo.address">{{this._companyInfo.address}}</p>
+        </div>
+        <div class="consumerInfo">
+            <h2 *ngIf="this.balance.consumer?.name">{{this.balance.consumer?.name}}</h2>
+            <p *ngIf="this.balance.consumer?.address">{{this.balance.consumer?.address}}</p>
+            <p *ngIf="this.balance.consumer?.phone1">{{this.balance.consumer?.phone1}}</p>
+            <p *ngIf="this.balance.consumer?.phone2">{{this.balance.consumer?.phone2}}</p>
+            <p *ngIf="this.balance.consumer?.phone3">{{this.balance.consumer?.phone3}}</p>
+        </div>
+    </div>
+
+    <div class="tableOrders">
+        <table>
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Data</th>
+                    <th>Grupo</th>
+                    <th>Serviço</th>
+                    <th>Descrição</th>
+                    <th>Qtd</th>
+                    <th>Total Qtd</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let order of orders">
+                    <tr *ngFor="let part of order.parts">
+                        <td>{{order.id}}</td>
+                        <td>{{order.date | date : 'dd/MM/yyyy' }}</td>
+                        <td>{{part.name}}</td>
+                        <td>{{part.service}}</td>
+                        <td>{{part.description}}</td>
+                        <td>{{part.quantity}}</td>
+                        <td>{{part.priceTotal?.toFixed(2)}}</td>
+                    </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="balance.description?.length" class="totalTable defaultBorder">
+        <table>
+            <tbody>
+                <tr>
+                    <th class="description">
+                        <h3>Descrição</h3>
+                    </th>
+                </tr>
+                <tr>
+                    <td class="description">
+                        <h3>{{this.balance.description}}</h3>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="totalTable defaultBorder">
+        <table>
+            <tbody>
+                <tr>
+                    <th *ngIf="this.balance.excludedOrders?.length" class="excluded">
+                        <h3>Ordens Excluidas</h3>
+                    </th>
+                    <th class="total">
+                        <h3>Total Geral</h3>
+                    </th>
+                </tr>
+                <tr>
+                    <td *ngIf="this.balance.excludedOrders?.length" class="excluded">
+                        <h3>{{this.balance.excludedOrders}}</h3>
+                    </td>
+                    <td class="total">
+                        <h3>{{this.balance.priceTotal?.toFixed(2) }}</h3>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
