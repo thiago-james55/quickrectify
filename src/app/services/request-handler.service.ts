@@ -13,8 +13,8 @@ import { SimpleBalance } from './simple-balance.entity';
 })
 export class RequestHandlerService {
 
-  //private readonly SERVER = "http://host.docker.internal:5000";
-  private readonly SERVER = "http://localhost:5164"; //USE VSTUDIO LAUNCH "HTTP"
+  private readonly SERVER = "http://host.docker.internal:5000";
+  //private readonly SERVER = "http://localhost:5164"; //USE VSTUDIO LAUNCH "HTTP"
   private readonly CONSUMERS_URL = `${this.SERVER}/Consumers`;
   private readonly ORDERS_URL = `${this.SERVER}/Orders`;
   private readonly BALANCE_URL = `${this.SERVER}/Balances`;
