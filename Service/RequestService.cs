@@ -155,7 +155,6 @@ namespace QuickRectify.Service
                                         .Include(o => o.Parts)
                                         .FirstOrDefaultAsync(o => o.Id == id);
 
-
                 await UpdateOrderInformation(existingOrder, orderInput);
                 await _dbContextConfig.SaveChangesAsync();
                 return true;
@@ -391,18 +390,36 @@ namespace QuickRectify.Service
 
         public async Task<int> SaveBalanceAsyncAndReturnId(BalanceInput balanceInput)
         {
-            Balance balance = await balanceInput.ToBalance();
+            await using var transaction = await _dbContextConfig.Database.BeginTransactionAsync();
 
             try
             {
-                _dbContextConfig.Balances.Add(balance);
+                Balance balance = await balanceInput.ToBalance();
 
+                _dbContextConfig.Balances.Add(balance);
                 await _dbContextConfig.SaveChangesAsync();
+
+                OrderInput orderInput = await CreateOrEditOrderInputForBalance(balance);
+
+                int orderId = await SaveOrderAsyncAndReturnId(orderInput);
+
+                if (orderId == 0)
+                {
+                    await transaction.RollbackAsync();
+                    return 0;
+                }
+
+                balance.OrderId = orderId;
+                await _dbContextConfig.SaveChangesAsync();
+
+                await transaction.CommitAsync();
 
                 return balance.Id;
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
+
                 HttpExceptionHandler.HandleCommonExceptions(ex);
                 return 0;
             }
@@ -410,19 +427,43 @@ namespace QuickRectify.Service
 
         public async Task<bool> UpdateBalanceAsync(BalanceInput balanceInput)
         {
+            await using var transaction = await _dbContextConfig.Database.BeginTransactionAsync();
+
             try
             {
+                Balance existingBalance = await _dbContextConfig.Balances
+                    .FirstOrDefaultAsync(b => b.Id == balanceInput.Id);
 
-                Balance existingBalance = await _dbContextConfig.Balances.FirstOrDefaultAsync(b => b.Id == balanceInput.Id);
+                if (existingBalance == null)
+                    return false;
 
-                await UpdateBalanceInformationAsync(existingBalance, await balanceInput.ToBalance());
+                await UpdateBalanceInformationAsync(existingBalance,await balanceInput.ToBalance());
+
+                OrderInput orderInput = await CreateOrEditOrderInputForBalance(existingBalance);
+
+                if (existingBalance.OrderId.HasValue)
+                {
+                    await UpdateOrderAsync(existingBalance.OrderId.Value,orderInput);
+                }
+                else
+                {
+                    int orderId = await SaveOrderAsyncAndReturnId(orderInput);
+
+                    if (orderId == 0)throw new Exception("Failed to create Order.");
+
+                    existingBalance.OrderId = orderId;
+                }
 
                 await _dbContextConfig.SaveChangesAsync();
+
+                await transaction.CommitAsync();
 
                 return true;
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
+
                 HttpExceptionHandler.HandleCommonExceptions(ex);
                 return false;
             }
@@ -441,8 +482,32 @@ namespace QuickRectify.Service
             existingBalance.IsPaid = balanceInput.IsPaid;
         }
 
+        private async Task<OrderInput> CreateOrEditOrderInputForBalance(Balance balance)
+        {
+            OrderInput orderInput = new OrderInput();
+            orderInput.PriceSubTotal = balance.PriceTotal;
+            orderInput.PriceTotal = balance.PriceTotal;
+            orderInput.ConsumerId = balance.ConsumerId;
+
+            PartInput partInput = new PartInput();
+            partInput.Name = "Financeiro";
+            partInput.Service = "Fechamento";
+            partInput.Description = balance.ToStringBasic();
+            partInput.Quantity = 1;
+            partInput.PricePerQuantity = balance.PriceTotal;
+            partInput.PriceTotal = balance.PriceTotal;
+            partInput.IsPaid = balance.IsPaid;
+
+            orderInput.Parts.Add(partInput);
+
+            return orderInput;
+        }
+
         public async Task<bool> UpdateBalanceToPaid(BalanceInput balanceInput)
         {
+            await using var transaction =
+                await _dbContextConfig.Database.BeginTransactionAsync();
+
             try
             {
                 var existingBalance = await _dbContextConfig.Balances
@@ -451,20 +516,38 @@ namespace QuickRectify.Service
                 if (existingBalance == null)
                     return false;
 
+                if (!existingBalance.OrderId.HasValue)
+                {
+                    var orderInput =
+                        await CreateOrEditOrderInputForBalance(existingBalance);
+
+                    int orderId = await SaveOrderAsyncAndReturnId(orderInput);
+
+                    if (orderId == 0)
+                        throw new Exception("Failed to create Order.");
+
+                    existingBalance.OrderId = orderId;
+                    await _dbContextConfig.SaveChangesAsync();
+                }
+
                 int rows = await PayPartsByBalanceAsync(balanceInput);
 
-                if (rows >= 1)
-                {
-                    existingBalance.IsPaid = true;
-                    existingBalance.DateOfPayment = DateTime.UtcNow;
+                if (rows < 1)
+                    return false;
 
-                    await _dbContextConfig.SaveChangesAsync();
-                    return true;
-                }
-                return false;
+                existingBalance.IsPaid = true;
+                existingBalance.DateOfPayment = DateTime.UtcNow;
+
+                await _dbContextConfig.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return true;
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
+
                 HttpExceptionHandler.HandleCommonExceptions(ex);
                 return false;
             }
@@ -522,12 +605,22 @@ namespace QuickRectify.Service
             try
             {
                 var orderIds = await _dbContextConfig.Orders
-                        .Where(o =>
-                            o.Id >= balanceInput.InitialOrder &&
-                            o.Id <= balanceInput.FinalOrder &&
-                            o.Consumer.Id == balanceInput.ConsumerId)
-                        .Select(o => o.Id)
-                        .ToListAsync();
+                    .Where(o =>
+                        o.Id >= balanceInput.InitialOrder &&
+                        o.Id <= balanceInput.FinalOrder &&
+                        o.ConsumerId == balanceInput.ConsumerId)
+                    .Select(o => o.Id)
+                    .ToListAsync();
+
+                var balanceOrderId = await _dbContextConfig.Balances
+                    .Where(b => b.Id == balanceInput.Id)
+                    .Select(b => b.OrderId)
+                    .FirstOrDefaultAsync();
+
+                if (balanceOrderId != 0)
+                {
+                    orderIds.Add(balanceOrderId ?? throw new Exception("OrderId is null."));
+                }
 
                 return await _dbContextConfig.Parts
                     .Where(p => orderIds.Contains(p.OrderId))

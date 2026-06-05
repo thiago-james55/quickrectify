@@ -19,9 +19,15 @@ namespace QuickRectify.Models
         [ForeignKey(nameof(ConsumerId))]
         public Consumer Consumer { get; set; }
 
+        [ForeignKey(nameof(OrderId))]
+        public Order Order { get; set; }
+
+
         [Required]
         public int ConsumerId { get; set; }
-        
+
+        public int? OrderId { get; set; }
+
         [Required]
         public float PriceTotal { get; set; }
 
@@ -29,6 +35,11 @@ namespace QuickRectify.Models
         public bool IsPaid { get; set; }
 
         public Balance() { }
+
+        public string ToStringBasic()
+        {
+            return $"Id: ({Id}) - OS Inicial: ({InitialOrder}) - OS Final: ({FinalOrder})";
+        }
 
     }
 }

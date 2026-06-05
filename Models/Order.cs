@@ -25,6 +25,8 @@ namespace QuickRectify.Models
         [Required]
         public ICollection<Part> Parts { get; set; } = new List<Part>();
 
+        public ICollection<Balance> Balances { get; set; } = new List<Balance>();
+
         public byte[]? EngineBlockNumberImage { get; set; } = null;
 
         public Order () { }

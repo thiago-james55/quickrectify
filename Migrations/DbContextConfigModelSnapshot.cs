@@ -54,12 +54,17 @@ namespace QuickRectify.Migrations
                     b.Property<bool>("IsPaid")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<float>("PriceTotal")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ConsumerId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Balances");
                 });
@@ -189,7 +194,14 @@ namespace QuickRectify.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("QuickRectify.Models.Order", "Order")
+                        .WithMany("Balances")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.Navigation("Consumer");
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("QuickRectify.Models.Order", b =>
@@ -223,6 +235,8 @@ namespace QuickRectify.Migrations
 
             modelBuilder.Entity("QuickRectify.Models.Order", b =>
                 {
+                    b.Navigation("Balances");
+
                     b.Navigation("Parts");
                 });
 #pragma warning restore 612, 618

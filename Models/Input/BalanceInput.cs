@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.IO;
 
 namespace QuickRectify.Models.Input
@@ -36,7 +37,7 @@ namespace QuickRectify.Models.Input
                 InitialOrder = InitialOrder,
                 FinalOrder = FinalOrder,
                 ExcludedOrders = ExcludedOrders != null ? string.Join(",", ExcludedOrders) : null,
-                Description = Description,
+                Description = Description != null ? await CapitalizeDescription(Description) : null,
                 ConsumerId = ConsumerId,
                 PriceTotal = PriceTotal,
                 IsPaid = IsPaid,
@@ -44,6 +45,16 @@ namespace QuickRectify.Models.Input
 
             return balance;
         }
-        
+
+        private async Task<string> CapitalizeDescription(string description)
+        {
+
+            TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+
+            string capitalized = textInfo.ToTitleCase(description.ToLower());
+
+            return capitalized;
+        }
+
     }
 }

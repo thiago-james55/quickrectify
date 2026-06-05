@@ -1,24 +1,21 @@
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using QuickRectify.Config;
 using QuickRectify.Service;
-using Microsoft.AspNetCore.ResponseCompression;
+using QuickRectify.Services;
 using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DbContextConfig>((options) =>
+builder.Services.AddDbContext<DbContextConfig>(options =>
 {
-    options.UseMySql(DbContextConfig.ConnectionURL, ServerVersion.Parse("8.0.33"), mySqlOptions =>
-    {
-        mySqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 5,
-            maxRetryDelay: TimeSpan.FromSeconds(30),
-            errorNumbersToAdd: null
-        );
-    });
+    options.UseMySql(
+        DbContextConfig.ConnectionURL,
+        ServerVersion.Parse("8.0.33"));
 });
 
-builder.Services.AddScoped<RequestService, RequestService>();
+builder.Services.AddScoped<RequestService>();
+builder.Services.AddScoped<ChartService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
