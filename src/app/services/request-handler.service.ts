@@ -14,7 +14,7 @@ import { SimpleBalance } from './simple-balance.entity';
 export class RequestHandlerService {
 
   private readonly SERVER = "http://host.docker.internal:5000";
-  //private readonly SERVER = "http://localhost:5164"; //USE VSTUDIO LAUNCH "HTTP"
+  //private readonly SERVER = "http://localhost:5000"; //USE VSTUDIO LAUNCH "HTTP"
   private readonly CONSUMERS_URL = `${this.SERVER}/Consumers`;
   private readonly ORDERS_URL = `${this.SERVER}/Orders`;
   private readonly BALANCE_URL = `${this.SERVER}/Balances`;
@@ -293,12 +293,7 @@ export class RequestHandlerService {
   async convertSerializedDateOfOrder(data: Order[] | Order | undefined): Promise<void> {
     if (!data) return;
 
-    const adjust = (o: Order) => {
-      if (o.date) {
-        o.date = new Date(o.date);
-        o.date.setHours(o.date.getHours() - 3);
-      }
-    };
+    const adjust = (o: Order) => { if (o.date) o.date = new Date(o.date); };
 
     if (Array.isArray(data)) data.forEach(adjust);
     else adjust(data);
@@ -308,8 +303,8 @@ export class RequestHandlerService {
     if (!data) return;
 
     const adjust = (b: Balance) => {
-      if (b.date) { b.date = new Date(b.date); b.date.setHours(b.date.getHours() - 3); }
-      if (b.dateOfPayment) { b.dateOfPayment = new Date(b.dateOfPayment); b.dateOfPayment.setHours(b.dateOfPayment.getHours() - 3); }
+      if (b.date) b.date = new Date(b.date);
+      if (b.dateOfPayment)  b.dateOfPayment = new Date(b.dateOfPayment) ;
     };
 
     if (Array.isArray(data)) data.forEach(adjust);

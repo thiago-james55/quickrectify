@@ -8,6 +8,7 @@ import { Order } from '../../services/order.entity';
 import { ToastService } from '../../services/toast.service';
 import { Router } from '@angular/router';
 import { RequestHandlerService } from '../../services/request-handler.service';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-order-handler',
@@ -55,10 +56,8 @@ export class OrderHandlerComponent implements OnInit {
   }
 
   sumRow(part: Part): void {
-    if (part.quantity && part.pricePerQuantity) {
-      part.priceTotal = part.quantity * part.pricePerQuantity;
-      this.sumTotal();
-    }
+    part.priceTotal = (part.quantity ?? 0) * (part.pricePerQuantity ?? 0);
+    this.sumTotal();
   }
 
   sumTotal(): void {
@@ -68,7 +67,10 @@ export class OrderHandlerComponent implements OnInit {
       return;
     }
 
+    this.order.priceSubTotal = 0;
+
     this.order.priceSubTotal = this.order.parts.reduce((accumulator, part) => accumulator + (part.priceTotal || 0), 0);
+
     this.order.priceTotal = this.order.priceSubTotal;
 
     if (this.order.discountCash) this.order.priceTotal -= this.order.discountCash;
@@ -203,7 +205,7 @@ export class OrderHandlerComponent implements OnInit {
   }
 
   removeEngineBlockImage() {
-      this.order.engineBlockNumberImage = undefined;
+    this.order.engineBlockNumberImage = undefined;
   }
 
   checkAllPartsIsPaid() {
@@ -221,6 +223,44 @@ export class OrderHandlerComponent implements OnInit {
 
   orderHaveParts(): boolean {
     return this.order.parts.length > 0;
+  }
+
+  @HostListener('document:paste', ['$event'])
+  onPaste(event: ClipboardEvent): void {
+
+    const items = event.clipboardData?.items;
+
+    if (!items) {
+      return;
+    }
+
+    for (let i = 0; i < items.length; i++) {
+
+      const item = items[i];
+
+      if (item.type.startsWith('image/')) {
+
+        const file = item.getAsFile();
+
+        if (file) {
+          this.processClipboardImage(file);
+        }
+
+        break;
+      }
+    }
+  }
+
+  private processClipboardImage(file: Blob): void {
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const base64String = (reader.result as string).split(',')[1];
+      this.order.engineBlockNumberImage = base64String;
+    };
+
+    reader.readAsDataURL(file);
   }
 
 
