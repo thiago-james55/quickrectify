@@ -33,7 +33,7 @@ namespace QuickRectify.Models.Input
             Balance balance = new Balance
             {
                 Id = Id,
-                Date = Date ?? DateTime.UtcNow,
+                Date = Date ?? DateTime.Now,
                 InitialOrder = InitialOrder,
                 FinalOrder = FinalOrder,
                 ExcludedOrders = ExcludedOrders != null ? string.Join(",", ExcludedOrders) : null,

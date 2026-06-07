@@ -9,7 +9,7 @@ namespace QuickRectify.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public DateTime Date { get; set; } = DateTime.UtcNow;
+        public DateTime Date { get; set; } = DateTime.Now;
         public DateTime? DateOfPayment { get; set; }
         public int InitialOrder { get; set; }
         public int FinalOrder { get; set; }

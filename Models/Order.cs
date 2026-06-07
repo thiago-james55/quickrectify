@@ -8,7 +8,7 @@ namespace QuickRectify.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public DateTime Date { get; set; } = DateTime.UtcNow;
+        public DateTime Date { get; set; } = DateTime.Now;
         public float DiscountPercent { get; set; } = 0;
         public float DiscountCash { get; set; } = 0;
         [Required]

@@ -30,7 +30,7 @@ namespace QuickRectify.Models
             Order order = new Order
             {
                 Id = Id,
-                Date = Date ?? DateTime.UtcNow,
+                Date = Date ?? DateTime.Now,
                 DiscountPercent = DiscountPercent,
                 DiscountCash = DiscountCash,
                 PriceSubTotal = PriceSubTotal,

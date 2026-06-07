@@ -62,7 +62,7 @@ namespace QuickRectify.Service
         public async Task<List<OrderDTO>> GetAllOrdersOfDateAsync(DateFilterInput dateFilterInput)
         {
 
-            if (dateFilterInput.Final == null) dateFilterInput.Final = DateTime.UtcNow;
+            if (dateFilterInput.Final == null) dateFilterInput.Final = DateTime.Now;
 
             try
             {
@@ -536,7 +536,7 @@ namespace QuickRectify.Service
                     return false;
 
                 existingBalance.IsPaid = true;
-                existingBalance.DateOfPayment = DateTime.UtcNow;
+                existingBalance.DateOfPayment = DateTime.Now;
 
                 await _dbContextConfig.SaveChangesAsync();
 

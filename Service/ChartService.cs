@@ -16,7 +16,7 @@ namespace QuickRectify.Services
 
         public async Task<DashboardChartResponse> GetDashboardAsync()
         {
-            var today = DateTime.UtcNow;
+            var today = DateTime.Now;
 
             var weekStart = today.Date.AddDays(-(int)today.DayOfWeek);
             var monthStart = new DateTime(today.Year, today.Month, 1);
